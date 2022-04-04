@@ -18,3 +18,14 @@ curl -s http://169.254.169.254/latest/meta-data/public-ipv4
 - Open a web browser to access the following url
 [](images/project2/3-access-nginx-browser.png)
 
+> Step 2 — Installing MySQL
+- Install MySql using apt
+sudo apt install mysql-server
+- Run a security script that comes pre-installed with MySQL
+sudo mysql_secure_installation
+-Test if you’re able to log in to the MySQL console by typing:
+sudo mysql
+[](images/project2/4-test-msql-connection.png)
+- Exit MySql console
+exit
+
