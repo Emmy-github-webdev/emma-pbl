@@ -95,3 +95,34 @@ phpinfo();
 
 - Access the page in your browser:
 http://`server_domain_or_IP`/info.php
+
+> Step 6 - RETRIEVING DATA FROM MYSQL DATABASE WITH PHP
+
+- Connect MySql:
+sudo mysql
+- Create Database:
+mysql> CREATE DATABASE `example_database`;
+- Create User:
+CREATE USER 'example_user'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
+- Grant user permission on the DB
+- GRANT ALL ON example_database.* TO 'example_user'@'%';
+- Exit
+
+- Test if the user has a proper permission by logging in:
+mysql -u example_user -p
+- Show database:
+SHOW DATABASES;
+
+- Create table todo_list:
+CREATE TABLE example_database.todo_list (
+mysql>     item_id INT AUTO_INCREMENT,
+mysql>     content VARCHAR(255),
+mysql>     PRIMARY KEY(item_id)
+mysql> );
+
+- Insert a row
+
+mysql> INSERT INTO example_database.todo_list (content) VALUES ("My first important item");
+
+- Select the table:
+SELECT * FROM example_database.todo_list;
