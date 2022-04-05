@@ -7,7 +7,7 @@ sudo apt update
 sudo apt install nginx
 - Verify that Nginx server successfuly installed.  It should be green and running
 sudo systemctl status nginx.
-[Image](images/project2/1-active-nginx.png)
+[Image](images/project2/active-nginx.png)
 -  Add a rule to EC2 configuration to open inbound connection through port 80
 - Access it locally in our Ubuntu shell (curl http://localhost:80
 or
