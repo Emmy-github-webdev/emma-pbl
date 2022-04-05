@@ -29,3 +29,59 @@ sudo mysql
 - Exit MySql console
 exit
 
+> STEP 3 – INSTALLING PHP
+
+- Install PHP 
+sudo apt install php-fpm php-mysql
+
+> Step 4 — Configure Nginx to Use PHP Processor
+- Create the root web directory for your_domain:
+sudo mkdir /var/www/projectLEMP
+- Assign ownership of the directory with the $USER environment variable, which will reference your current system user:
+sudo chown -R $USER:$USER /var/www/projectLEMP
+- Open a new configuration file in Nginx’s sites-available directory
+-  Paste in the following bare-bones configuration:
+
+#/etc/nginx/sites-available/projectLEMP
+
+server {
+    listen 80;
+    server_name projectLEMP www.projectLEMP;
+    root /var/www/projectLEMP;
+
+    index index.html index.htm index.php;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+     }
+
+    location ~ /\.ht {
+        deny all;
+    }
+
+}
+
+[](images/project2/5-edit-config-file.png)
+
+- Activate your configuration by linking to the config file from Nginx’s sites-enabled directory:
+sudo ln -s /etc/nginx/sites-available/projectLEMP /etc/nginx/sites-enabled/
+- Test your configuration for syntax errors by typing:
+sudo nginx -t
+
+[](images/project2/6-nginx connected.png)
+
+- Disable default Nginx host that is currently configured to listen on port 80, for this run:
+sudo unlink /etc/nginx/sites-enabled/default
+- Reload Nginx to apply the changes:
+sudo systemctl reload nginx
+- The new website is now active, but the web root /var/www/projectLEMP is still empty. Create an index.html file in that location and test new server block works as expected:
+
+sudo echo 'Hello LEMP from hostname' $(curl -s http://169.254.169.254/latest/meta-data/public-hostname) 'with public IP' $(curl -s http://169.254.169.254/latest/meta-data/public-ipv4) > /var/www/projectLEMP/index.html
+
+- Refresh the URL
+[](images/project2/7-fresh.png)
