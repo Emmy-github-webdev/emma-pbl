@@ -94,4 +94,58 @@ const router = express.Router();
 	})
 	module.exports = router;
 
+> SETP 3 -  MODELS
+
+### Change directory to Todo folder and install mongoose
+	- Cd ..
+	- npm install mongoose
+### Create model folder
+	- mkdir models
+### Change directory to models and create todo.js file
+	- Cd models
+	- Touch todo.js
+### Open the todo.js file and paste the following
+	- Vim todo.js
+- 	const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+	//create schema for todo
+const TodoSchema = new Schema({
+action: {
+type: String,
+required: [true, 'The todo text field is required']
+}
+})
+	//create model for todo
+const Todo = mongoose.model('todo', TodoSchema);
+	module.exports = Todo;
+	
+### Update api.js in  routes 
+- const express = require ('express');
+const router = express.Router();
+const Todo = require('../models/todo');
+router.get('/todos', (req, res, next) => {
+//this will return all the data, exposing only the id and action field to the client
+Todo.find({}, 'action')
+.then(data => res.json(data))
+.catch(next)
+});
+router.post('/todos', (req, res, next) => {
+if(req.body.action){
+Todo.create(req.body)
+.then(data => res.json(data))
+.catch(next)
+}else {
+res.json({
+error: "The input field is empty"
+})
+}
+});
+router.delete('/todos/:id', (req, res, next) => {
+Todo.findOneAndDelete({"_id": req.params.id})
+.then(data => res.json(data))
+.catch(next)
+})
+module.exports = router;
+
+
 
