@@ -85,3 +85,13 @@ sudo echo 'Hello LEMP from hostname' $(curl -s http://169.254.169.254/latest/met
 
 - Refresh the URL
 [](images/project2/7-fresh.png)
+
+> STEP 5 – TESTING PHP WITH NGINX
+- Create a test PHP file in the document root:
+sudo nano /var/www/projectLEMP/info.php
+- Paste the following line:
+<?php
+phpinfo();
+
+- Access the page in your browser:
+http://`server_domain_or_IP`/info.php
