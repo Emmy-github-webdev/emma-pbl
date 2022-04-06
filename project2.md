@@ -12,11 +12,11 @@ sudo systemctl status nginx.
 - Access it locally in our Ubuntu shell (curl http://localhost:80
 or
 curl http://127.0.0.1:80)
-[Image](images/project2/2-access-nginx-locally.png)
+![](images/project2/2-access-nginx-locally.png)
 -Another way to retrieve your Public IP address, other than to check it in AWS Web console, is to use following command:
 curl -s http://169.254.169.254/latest/meta-data/public-ipv4
 - Open a web browser to access the following url
-[Image](images/project2/3-access-nginx-browser.png)
+![](images/project2/3-access-nginx-browser.png)
 
 > Step 2 — Installing MySQL
 - Install MySql using apt
@@ -25,7 +25,7 @@ sudo apt install mysql-server
 sudo mysql_secure_installation
 -Test if you’re able to log in to the MySQL console by typing:
 sudo mysql
-[image](images/project2/4-test-msql-connection.png)
+![](images/project2/4-test-msql-connection.png)
 - Exit MySql console
 exit
 
@@ -66,14 +66,14 @@ server {
 
 }
 
-[image](images/project2/5-edit-config-file.png)
+![](images/project2/5-edit-config-file.png)
 
 - Activate your configuration by linking to the config file from Nginx’s sites-enabled directory:
 sudo ln -s /etc/nginx/sites-available/projectLEMP /etc/nginx/sites-enabled/
 - Test your configuration for syntax errors by typing:
 sudo nginx -t
 
-[image](images/project2/6-nginx connected.png)
+![](images/project2/6-nginx connected.png)
 
 - Disable default Nginx host that is currently configured to listen on port 80, for this run:
 sudo unlink /etc/nginx/sites-enabled/default
@@ -84,7 +84,7 @@ sudo systemctl reload nginx
 sudo echo 'Hello LEMP from hostname' $(curl -s http://169.254.169.254/latest/meta-data/public-hostname) 'with public IP' $(curl -s http://169.254.169.254/latest/meta-data/public-ipv4) > /var/www/projectLEMP/index.html
 
 - Refresh the URL
-[image](images/project2/7-fresh.png)
+![](images/project2/7-fresh.png)
 
 > STEP 5 – TESTING PHP WITH NGINX
 - Create a test PHP file in the document root:
