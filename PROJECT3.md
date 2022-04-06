@@ -64,11 +64,14 @@ console.log(`Server running on port ${port}`)
 
 ### Start the server
 - node index.js
+![image](images/project3/startserver.png)
 
 ### Add custom TCP port 5000  to the EC2 instance
 
 ### On the browser type the url
 - http://<PublicIP-or-PublicDNS>:5000
+
+![image](images/project3/welcometoexperess.png)
 
 ## Routes
 
@@ -185,6 +188,8 @@ console.log(`Server running on port ${port}`)
 });
 ## Start the server and you should see message, Database connected successfully
 
+![image](images/project3/postman.png)
+
 > Step 4 – Frontend creation
 
 ### create react app
@@ -199,6 +204,7 @@ console.log(`Server running on port ${port}`)
 "start-watch": "nodemon index.js",
 "dev": "concurrently \"npm run start-watch\" \"cd client && npm start\""
 }
+
 
 ### change directory to client 
 - Cd client
@@ -443,6 +449,6 @@ monospace;
 }
 
 
-![](images/project3/complete.png)
+![image](images/project3/complete.png)
 
 
