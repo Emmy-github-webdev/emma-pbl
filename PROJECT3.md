@@ -64,15 +64,14 @@ console.log(`Server running on port ${port}`)
 
 ### Start the server
 - node index.js
-![image](images/project3/startserver.png)
-![](images/project3/startserver.png)
+![](images/project3/startserv.png)
 
 ### Add custom TCP port 5000  to the EC2 instance
 
 ### On the browser type the url
 - http://<PublicIP-or-PublicDNS>:5000
 
-![image](images/project3/welcometoexperess.png)
+![](images/project3/welcometoexperes.png)
 
 ## Routes
 
@@ -189,7 +188,7 @@ console.log(`Server running on port ${port}`)
 });
 ## Start the server and you should see message, Database connected successfully
 
-![image](images/project3/postman.png)
+![](images/project3/postm.png)
 
 > Step 4 – Frontend creation
 
@@ -450,6 +449,6 @@ monospace;
 }
 
 
-![image](images/project3/complete.png)
+![](images/project3/comp.png)
 
 
