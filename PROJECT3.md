@@ -65,7 +65,7 @@ console.log(`Server running on port ${port}`)
 ### Start the server
 - node index.js
 ![image](images/project3/startserver.png)
-![](images/project2/4-test-msql-connection.png)
+![](images/project3/startserver.png)
 
 ### Add custom TCP port 5000  to the EC2 instance
 
