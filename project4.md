@@ -248,4 +248,4 @@ cd ../..
 ![](images/project4/start-sever.png)
 
 * On the browser type the url
-- http://<PublicIP-or-PublicDNS>:3300
+- http://3.92.239.160/:3300
