@@ -244,7 +244,8 @@ cd ../..
 - cd ..
 * Start the server by running this command:
 - node server.js
+
 ![](images/project4/start-sever.png)
 
 * On the browser type the url
-- http://<PublicIP-or-PublicDNS>:5000
+- http://<PublicIP-or-PublicDNS>:3300
