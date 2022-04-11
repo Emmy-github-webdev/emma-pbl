@@ -21,3 +21,5 @@ mysql> SHOW DATABASES;
 ![](images/project5/mysql-query.png)
 - Exit MySql console
 exit
+
+[Resources](https://www.digitalocean.com/community/questions/error-2002-hy000-can-t-connect-to-local-mysql-server-through-socket-var-run-mysqld-mysqld-sock-2)
