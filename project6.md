@@ -29,13 +29,11 @@ Three-tier Architecture is a client-server software architecture pattern that co
 - Under EBS(Elastic Block Store), select volumes
 - click create volume in the reading pane
 - select the espected information and create
-- mount the aws EBS on the Linux server
 - Select the created volume and right click to select attach
 - Select the server you want to attach the EBS to
 - Click attach
 - login to the server and list all the blocks - lsblk
 - Use df -h command to see all mounts and free space on your server
-- Use gdisk utility to create a single partition on each of the 3 disks
 
 * Create partition in the 3 volumes
 - List all the blocks - lsblk
@@ -65,8 +63,8 @@ Verify that your Logical Volume has been created successfully by running sudo lv
 
 - check if it has file system - file -s /dev/webdata-vg(the EBS name)
 - if it shows data, then the file system has not been create. Create it by 
-- sudo mkfs -t ext4 /dev/vg-webdata/apps-lv
-- sudo mkfs -t ext4 /dev/vg-webdata/logs-lv
+- sudo mkfs -t ext4 /dev/webdata-vg/apps-lv
+- sudo mkfs -t ext4 /dev/webdata-vg/logs-lv
 - create a folder and point it to the drive 
 * Create /var/www/html directory to store website files
 - sudo mkdir -p /var/www/html
@@ -108,6 +106,18 @@ important)
 - Reload the Daemon - sudo systemctl daemon-reload
 - Verify the database - df -h
 ![](images/project6/ws-setup.png)
+
+> Step 2 — Prepare the Database Server
+- Launch a second RedHat EC2 instance that will have a role – ‘DB Server’
+- Repeat the same steps as for the Web Server, but instead of apps-lv create db-lv and mount it to /db directory instead of /var/www/html/.
+
+![Partition created](images/project6/db-partition.png)
+
+* Use lvcreate utility to create 2 logical volumes. apps-lv (Use half of the PV size), and logs-lv Use the remaining space of the PV size. NOTE: apps-lv will be used to store data for the Website while, logs-lv will be used to store data for logs.
+- sudo lvcreate -n db-lv -L 14G webdata-vg
+- sudo lvcreate -n logs-lv -L 14G webdata-vg
+
+![](images/project6/db.png)
 
 
 
