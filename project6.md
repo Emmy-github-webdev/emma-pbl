@@ -90,4 +90,24 @@ important)
 - Confirm everything is working fine - mount -a
 - df -hT
 
+> Update the `/etc/fstab` file
+
+- The UUID of the device will be used to updfate the /etc/fstab file
+- Run - sudo blkid
+- Copy the following to notepad
+- /dev/mapper/--: UUID="6846ad84---" BLOCK_SIZE="4096" TYPE="ext4"
+- /dev/mapper/--: UUID="887f43ec-e7e3-4--" BLOCK_SIZE="4096" TYPE="ext4"
+- Update the etc/fstab - sudo vim /etc/fstab
+
+- Edit the mappers above as shown below and paste
+- UUID=6846ad84-f8d2-4b40-b429-93fa920fb07b /var/www/html ext4 defaults, nofail 0 0
+- UUID=887f43ec-e7e3-4cba-82f8-04a72b7d5d6a /var/log ext4 defaults 0 0
+
+- run sudo mount -a to ensure there is no error
+
+- Reload the Daemon - sudo systemctl daemon-reload
+- Verify the database - df -h
+![](images/project6/ws-setup.png)
+
+
 
