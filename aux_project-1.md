@@ -1,5 +1,7 @@
 # AUX PROJECT 1: SHELL SCRIPTING
 
+- [Resources](https://www.techrepublic.com/article/how-to-create-users-and-groups-in-linux-from-the-command-line/#:~:text=1%20How%20to%20create%20users%20and%20groups%20in,were%20concerned%20that%20managing%20users%20on%20Linux%20)
+
 > In this project, I need to onboard 20 new Linux users onto a server. Create a shell script that reads a csv file that contains the first name of the users to be onboarded.
 
 * Create the project folder called Shell
