@@ -2,6 +2,8 @@
 
 [Resource](https://www.youtube.com/watch?v=fJnjuG-CK4g)
 
+- Uw(9VjGmafSa8FDju2
+
 > Three-tier Architecture
 * Generally, web, or mobile solutions are implemented based on what is called the Three-tier Architecture.
 
@@ -150,8 +152,40 @@ important)
 - sudo chcon -t httpd_sys_rw_content_t /var/www/html/wordpress -R
 - sudo setsebool -P httpd_can_network_connect=1
 > Step 4 — Install MySQL on your DB Server EC2
-- 
+- sudo yum update
+- sudo yum install mysql-server
+* Verify that the service is up and running by using sudo systemctl status mysqld, if it is not running, restart the service and enable it so it will be running even after reboot:
+- sudo systemctl restart mysqld
+- sudo systemctl enable mysqld
 
+![](images/project6/service-png)
 
+> Step 5 — Configure DB to work with WordPress
+- sudo mysql
+- CREATE DATABASE wordpress;
+- CREATE USER 'Emmanuel'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
+- GRANT ALL ON wordpress.* TO 'Emmanuel'@'%';
+- FLUSH PRIVILEGES;
+- SHOW DATABASES;
 
+![](images/project6/create-db.png)
+
+- exit
+-  sudo vi /etc/my.cnf
+- Add [mysqld]
+- bind-address=0.0.0.0
+
+> Step 6 — Configure WordPress to connect to remote database.
+- Open MySQL port 3306 on DB Server EC2. For extra security, you shall allow access to the DB server ONLY from your Web Server’s IP address, so in the Inbound Rule configuration specify source as /32 
+* Install MySQL client and test that you can connect from your Web Server to your DB server by using mysql-client
+- sudo yum install mysql
+
+![](images/project6/change-permission-and-configure-so-apache-work-with-wordpress.png)
+
+![](images/project6/php-active.png)
+
+![](images/project6/redhat-install.png)
+
+![](images/project6/reach-wordpress.png)
+![](images/project6/wordpress-install.png)
 
