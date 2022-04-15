@@ -1,5 +1,6 @@
 # Ansible
 
+[project 11 resources](https://www.youtube.com/watch?v=uuhhOhWTrrs)
 - Ansible is a popular IT automation engine that automates task that are either cubersome or repetitive or complex like configuration managment, clould provisioning, software deployment, and intra-service orchestration.
 > Benefits of Ansible in DevOps is to response and scale in pace with the demand.
 
@@ -12,7 +13,11 @@
 
 > Setup Lab
 
-- Create three Machines (Using RedHat on AWS EC2 Instances): Ansible-controller, Ansible-target-1, Ansible-target-2
+- Create three Machines (Using RedHat on AWS EC2 Instances): ansible-controller, ansible-target-1, ansible-target-2
+
+
+#######################################################################
+#### Not Mandatory
 - Connect to your vms using SSH
 - Rename the hostname: sudo vi /etc/hostname
 - In the open file, type the name you want to give the host. Eg Ansible-controller. 
@@ -23,15 +28,15 @@
 
 - Restart your system: shutdown now -r
 - Repeat the same step for Ansible-target-1, Ansible-target-2
-
-> Install Ansible on the Ansible-controller
-- sudo yum install python3-pip
-- sudo pip3 install ansible
+############################################################################
+### Install Ansible on the Ansible-controller
+- sudo yum update
+- sudo yum install ansible
 - Verify that Ansible is installed: ansible --version
 
-> Ansible Inventory
+## Ansible Inventory
 
-Ansible is agentless because it can connect to multiple servers using SSH for linux and powershell for Windows. Ansible can start managing remote machines immediately without any agent software installed.
+- Ansible is agentless because it can connect to multiple servers using SSH for linux and powershell for Windows. Ansible can start managing remote machines immediately without any agent software installed.
 
 - The information about this target systems are stored in the inventory file. If you do not create inventory file, Ansible will store it in the default location /etc/ansible/hosts 
 ### Inventroy parameters are
@@ -73,9 +78,12 @@ cat id_rsa.pub
 ### Test connectivity to Ansible
 - Ansible-controller> create a folder called "test-project"
 - Ansible-controller> cd test-project
-- Ansible-controller test-project> cat > inventory.txt Ansible-target-1 ansible_host=Ansible-target-1IP_address ansibl_ssh_pass=password
+- Ansible-controller test-project> cat > inventory.txt 
+- Press enter key
+- Type: Ansible-target-1 ansible_host=Ansible-target-1IP_address ansibl_ssh_pass=password
+- Press enter key
 - Ansible-controller test-project> cat  inventory.txt - To read the inventory fie
-- Ansible-controller test-project> ansible Ansible-target-1 -m ping -1 inventory.txt - To ping ansible on the target machine and verify the ansible controller can communitace with terget machine
+- Ansible-controller test-project> ansible Ansible-target-1 -m ping -i inventory.txt - To ping ansible on the target machine and verify the ansible controller can communitace with terget machine
 
 ### Modify inventory file
 - Ansible-controller test-project> vi inventory.txt
@@ -83,7 +91,11 @@ cat id_rsa.pub
 - Ansible-target-2 ansible_host=Ansible-target-1IP_address ansibl_ssh_pass=password
 - save
 ### Test ping to Ansible-target-2 
-- Ansible-controller test-project> cat > inventory.txt Ansible-target-2 ansible_host=Ansible-target-1IP_address ansibl_ssh_pass=password
-- Ansible-controller test-project> cat  inventory.txt - To read the inventory fie
-- Ansible-controller test-project> ansible Ansible-target-2 -m ping -1 inventory.txt - To ping ansible on the target machine and verify the ansible controller can communitace with terget machine
+- Ansible-controller test-project> cat > inventory.txt 
+- Press enter key
+- Type: ansible-target-2 ansible_host=Ansible-target-1IP_address ansibl_ssh_pass=password
+- ansible-controller test-project> cat  inventory.txt - To read the inventory fie
+- ansible-controller test-project> ansible ansible-target-2 -m ping -i inventory.txt - To ping ansible on the target machine and verify the ansible controller can communitace with terget machine
+
+![](images/ansible/test-ansible.png)
 
