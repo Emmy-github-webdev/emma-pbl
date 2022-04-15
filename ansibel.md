@@ -34,7 +34,7 @@
 Ansible is agentless because it can connect to multiple servers using SSH for linux and powershell for Windows. Ansible can start managing remote machines immediately without any agent software installed.
 
 - The information about this target systems are stored in the inventory file. If you do not create inventory file, Ansible will store it in the default location /etc/ansible/hosts 
-- Inventroy parameters are
+### Inventroy parameters are
 * ansible_host - To specify the Address of the server
 * ansible_connection - ssh/winrm/localhost
 * ansible_port - 22/5986
@@ -45,3 +45,24 @@ Ansible is agentless because it can connect to multiple servers using SSH for li
 - db ansible_host=server2.example.com ansible_connection=winrm ansible_user=admin
 - mail ansible_host=server3.example.com ansible_connection=ssh ansible_user=p@#
 - web2 ansible_host=server4.example.com ansible_connection=winrm
+
+> Demo - Ansible Inventory
+### Test connectivity 
+- Ansible-controller> ssh target_server_IP address
+### Test connectivity to Ansible
+- Ansible-controller> create a folder called "test-project"
+- Ansible-controller> cd test-project
+- Ansible-controller test-project> cat > inventory.txt Ansible-target-1 ansible_host=Ansible-target-1IP_address ansibl_ssh_pass=password
+- Ansible-controller test-project> cat  inventory.txt - To read the inventory fie
+- Ansible-controller test-project> ansible Ansible-target-1 -m ping -1 inventory.txt - To ping ansible on the target machine and verify the ansible controller can communitace with terget machine
+
+### Modify inventory file
+- Ansible-controller test-project> vi inventory.txt
+-   Add information about target 2 as shown below
+- Ansible-target-2 ansible_host=Ansible-target-1IP_address ansibl_ssh_pass=password
+- save
+### Test ping to Ansible-target-2 
+- Ansible-controller test-project> cat > inventory.txt Ansible-target-2 ansible_host=Ansible-target-1IP_address ansibl_ssh_pass=password
+- Ansible-controller test-project> cat  inventory.txt - To read the inventory fie
+- Ansible-controller test-project> ansible Ansible-target-2 -m ping -1 inventory.txt - To ping ansible on the target machine and verify the ansible controller can communitace with terget machine
+
