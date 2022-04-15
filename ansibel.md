@@ -47,6 +47,27 @@ Ansible is agentless because it can connect to multiple servers using SSH for li
 - web2 ansible_host=server4.example.com ansible_connection=winrm
 
 > Demo - Ansible Inventory
+### Configure SSH Connection on the server
+- Ansible-controller> cd .ssh
+- Ansible-controller .ssh> ls 
+- There should be two files: Authorized-keys and known_hosts
+- cat known_hosts - to view the content
+- cat authorized-key - to view the content
+### To generate a key for ssh connection
+- Ansible-controller .ssh> ssh-keygen
+- Ansible-controller .ssh> ls
+- There should be id_rsa, id_rsa.pub
+cat id_rsa.pub
+### Copy the key in the id_rsa.pub to the client machine
+- sudo vi id_rsa.pub
+- Copy the key
+### On the client machine
+- Connect to the client machine
+- Ansible-target-1> cd .ssh
+- Ansible-target-1 .ssh> ls
+- There should be authorized_keys
+- Ansible-target-1 .ssh> sudo vi authorized_keys
+- Paste the key from the id_rsa.pub above to this location and save
 ### Test connectivity 
 - Ansible-controller> ssh target_server_IP address
 ### Test connectivity to Ansible
