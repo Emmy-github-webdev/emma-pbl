@@ -25,5 +25,23 @@
 - Repeat the same step for Ansible-target-1, Ansible-target-2
 
 > Install Ansible on the Ansible-controller
-- sudo yum install ansible
+- sudo yum install python3-pip
+- sudo pip3 install ansible
 - Verify that Ansible is installed: ansible --version
+
+> Ansible Inventory
+
+Ansible is agentless because it can connect to multiple servers using SSH for linux and powershell for Windows. Ansible can start managing remote machines immediately without any agent software installed.
+
+- The information about this target systems are stored in the inventory file. If you do not create inventory file, Ansible will store it in the default location /etc/ansible/hosts 
+- Inventroy parameters are
+* ansible_host - To specify the Address of the server
+* ansible_connection - ssh/winrm/localhost
+* ansible_port - 22/5986
+* ansible_user - root/administrator
+* ansible_ssh_pass - Password
+* Example: 
+- web ansible_host=server1.example.com ansible_connection=ssh ansible_user=root
+- db ansible_host=server2.example.com ansible_connection=winrm ansible_user=admin
+- mail ansible_host=server3.example.com ansible_connection=ssh ansible_user=p@#
+- web2 ansible_host=server4.example.com ansible_connection=winrm
