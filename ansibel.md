@@ -99,3 +99,65 @@ cat id_rsa.pub
 
 ![](images/ansible/test-ansible.png)
 
+### Introduction to YAML
+
+- YAML is a data serialization language that is often used for writing configuration files. Depending on whom you ask, YAML stands for yet another markup language or YAML ain’t markup language (a recursive acronym), which emphasizes that YAML is for data, not documents
+
+### What is YAML used for?
+- One of the most common uses for YAML is to create configuration files. It's recommended that configuration files be written in YAML rather than JSON, even though they can be used interchangeably in most cases, because YAML has better readability and is more user-friendly.  
+
+- In addition to its use in Ansible, YAML is used for Kubernetes resources and deployments. 
+
+- A benefit of using YAML is that YAML files can be added to source control, such as Github, so that changes can be tracked and audited. 
+
+### YAML Syntax
+##### Key value pair
+> Fruit: Apple
+> Vegetable: Carrot
+> Liquid: Water
+> Meat: Chicken
+
+##### Array/Lists
+> Fruits:
+   - Orange
+   - Apple
+   - Banana
+
+> Vegetables:
+   - Carrot
+   - Cauliflower
+   - Tomato
+
+##### Dictonary/MAP
+>Banana:
+  - Calories: 105
+  - fat: 0.4g
+  - Carbs: 27g
+
+> Grapes:
+   - Calories: 62
+   - Fat: 0.3g
+   - Carbs: 16g
+
+![](images/ansible/dl.png)
+
+### Ansible Playbook
+
+- Ways of accessing ansible are using ansible command as shown above, and ansible-playbook command 
+
+- An ansible playbook is a blue print of automation task.
+[Resources](https://www.redhat.com/en/topics/automation/what-is-an-ansible-playbook)
+[Ansible Playbook Documentation](https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html)
+
+> Create a playbook file
+- ansible-controller test-project > vi playbook-pingtest.yaml
+- Populate the file with the data in the diagram below
+![]((images/ansible/dl.png))
+
+- save
+
+- ansible-controller test-project > cat playbook-pingtest.yaml
+- ansible-controller test-project> ansible-playbook playbook-pingtest.yaml -i inventory.txt
+- Enter
+
+
