@@ -149,15 +149,16 @@ cat id_rsa.pub
 [Resources](https://www.redhat.com/en/topics/automation/what-is-an-ansible-playbook)
 [Ansible Playbook Documentation](https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html)
 
-> Create a playbook file
+> Create a playbook.yaml file
 - ansible-controller test-project > vi playbook-pingtest.yaml
+- Add dash (-) to the first line
 - Populate the file with the data in the diagram below
-![]((images/ansible/dl.png))
+![]((images/ansible/playbook.png)
 
 - save
 
 - ansible-controller test-project > cat playbook-pingtest.yaml
 - ansible-controller test-project> ansible-playbook playbook-pingtest.yaml -i inventory.txt
 - Enter
-
+![]((images/ansible/playbook-pingtest.png)
 
