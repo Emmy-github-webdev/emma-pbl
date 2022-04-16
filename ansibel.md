@@ -176,4 +176,7 @@ cat id_rsa.pub
 
 [Ansible Modules Documentastion](https://docs.ansible.com/ansible/2.9/modules/list_of_all_modules.html)
 
+### Ansible Variables
+- Variables are used to store information that varies with each host
+
 
