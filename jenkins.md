@@ -43,5 +43,21 @@ On the getting started page, unlock jenkins with the password copied from the st
 - Set it as you desire
 - Go back to Manage jinkins and select Configure System
 
+### Download common tools used for Jenkins
+- Install the required tools maven, nunit, nuget, git using chocolatey which is software management automation for Windows 10
+- Go to [chocolatey](https://chocolatey.org/)
+- Click on download chocolatey now
+- Open Powershell on Windows 10
+- Run Get-ExecutionPolicy to check if it is restricted.
+- If the executionPoilcy is restricted, run Set-ExecutionPolicy RemoteSigned
+- Run Get-ExecutionPolicy to check if it has been removed.
+- Copy the command to install chocolatey on the machine
+- After installation is complete, go to the chocolatey page and click on packages
+- On the search, type git
+- Copy the choco command to install git and run on the pwershell
+- Repaet the steps for all the tools
+
+
+
 
 
