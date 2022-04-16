@@ -35,4 +35,13 @@ On the getting started page, unlock jenkins with the password copied from the st
 - Fill create first admin user page
 - Save and finish
 
+### Configure Jenkins for Build + Deploy + Test
+> Click on Manage Jenkins 
+- Select Configure global security
+- Set it as you desire
+- Go back to Manage jinkins and select Global Tool Configuration
+- Set it as you desire
+- Go back to Manage jinkins and select Configure System
+
+
 
