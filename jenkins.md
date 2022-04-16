@@ -22,8 +22,8 @@
 > Git
 
 ### Install Jenkins
-- Go to https://jenkins.io to download jenkins 
-- Install [JAVA](https://java.com/en/download/windows_manual.jsp)
+- Go to https://jenkins.io to download jenkins [Step by Step](https://www.jenkins.io/doc/book/installing/)
+- Install [JAVA](https://java.com/en/download/windows_manual.jsp), [Step by Step](https://phoenixnap.com/kb/install-java-windows)
 - Go to the location Jenkins.war was downloaded and open with commad prompt
 - Type: > Java -jar jenkins.war
 - Press enter key
