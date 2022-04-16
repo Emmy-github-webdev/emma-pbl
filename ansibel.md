@@ -160,5 +160,20 @@ cat id_rsa.pub
 - ansible-controller test-project > cat playbook-pingtest.yaml
 - ansible-controller test-project> ansible-playbook playbook-pingtest.yaml -i inventory.txt
 - Enter
-![]((images/ansible/playbook-pingtest.png)
+
+
+### Ansible Modules
+- Modules are categories into various groups based on their functionality
+
+![]((images/ansible/module-category.png)
+
+- System modules are the action to be perform at the system level like creating users and group, modifying user
+
+![]((images/ansible/system-module.png)
+
+- Command modules are used to execute command or script on host. \it is called task plugin or library plugins which are used from the command line or playbook task
+![]((images/ansible/command-module.png)
+
+[Ansible Modules Documentastion](https://docs.ansible.com/ansible/2.9/modules/list_of_all_modules.html)
+
 
