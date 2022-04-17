@@ -51,13 +51,62 @@ On the getting started page, unlock jenkins with the password copied from the st
 - Run Get-ExecutionPolicy to check if it is restricted.
 - If the executionPoilcy is restricted, run Set-ExecutionPolicy RemoteSigned
 - Run Get-ExecutionPolicy to check if it has been removed.
-- Copy the command to install chocolatey on the machine
+- Copy the command to install chocolatey on the machine: Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 - After installation is complete, go to the chocolatey page and click on packages
 - On the search, type git
 - Copy the choco command to install git and run on the pwershell
 - Repaet the steps for all the tools
 
+### Building project with maven
+
+>Building project with Maven commandline interface (Manual)
+
+- The github to use for this project is https://github.com/executeautomation
+
+- For java, let us cucumberbasic repo: https://github.com/executeautomation/cucumberbasic
+- clone the repo
+- Open the project directory with command line and type: mvn
+- Clean the project: mvn clean
+- Compile the project: mvn compile
+- At the completion of compilation: a "target" folder will be created containing the class file
+
+> Creating and working with Freestyle project using Jenkins
+- On the Jenkins portal, click create new job
+- Add item name: BasicEAFreestyle
+- Select a freestyle project
+- Click okay to create the job for us
+- Select Source code management
+- Select git and add the repo url
+- Select Build Environment tab
+- Under Build, select "Invoke to-level Maven targets"
+- In the Goals type: compile
+- Save
+- On the Jenkins page, select Build now
+- If the build fails, restart your machine
+- Rebuild again.
+- Console output can help with logs to check error
 
 
-
+### Creating Pipeline project using Jenkins
+- In the Jenkins portal, create a new item E.g "SeleniumWithCucumberPipeline"
+- Select pipeline and cliclk ok to create pipeline project
+- Go back to the Jenkins portal and click the SeleniumWithCucumberPipeline
+- Under Advanced Project Options tab, go to Pipeline part
+- Under the pipeline, click Pipeline syntax
+- In the syntax, select git in the sample step
+- Add the clone url of https://github.com/executeautomation/SeleniumWithCucucumber in the Repository URL
+- Click Generate pipeline script
+- copy the script and let go back to the advanced project options
+- Pipeline definition, select Pipeline script
+- Paste the script syntax and to the script 
+- Go back to the Pipeline syntax snipet
+- If you do not see maven in the sample step, select windows batch script
+- In the batch script, type mvn verify
+- Generate Pipeline script and copy it to paste in the Pipeline script
+- Go back to the Pipeline syntax snipet
+- Select node Allocate node in the sample step
+- In the label type: master
+- Generate pipeline script and copy it to paste in the Pipeline script
+- save
+- Click build now
 
