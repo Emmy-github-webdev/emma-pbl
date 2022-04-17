@@ -126,3 +126,15 @@ On the getting started page, unlock jenkins with the password copied from the st
 - Rebuild the pipeline
 - After the complition, there should be cucumber report.
 - Click on it to see the reports
+
+### Creating staging in Pipeline project
+- On the SeleniumWithCucumberPipeline jenkins portal
+- Go back to the Pipeline syntax snipet
+- In the sample step, select stage stage
+- Enter stage name: checkout
+- Generate Pipeline scripts and copy it to paste in the Pipeline script
+
+![](images/jenkins/stage.png)
+
+- save and rebuild
+
