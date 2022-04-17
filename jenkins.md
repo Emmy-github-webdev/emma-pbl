@@ -110,3 +110,19 @@ On the getting started page, unlock jenkins with the password copied from the st
 - save
 - Click build now
 
+### Creating Pipeline project Reporting using Jenkins
+- Go to the Jenkins portal, click manage Jenkins
+- Go to manage plugins
+- click the available tab
+- Search for cucumber reports
+- Select cucumber reports
+- Click install and restart
+- Log out and login for the changes to take effect
+- After login, go to the SeleniumWithCucumberPipeline configure
+- Go back to the Pipeline syntax snipet
+- In the sample step, select step: General Build Step
+- Build Step, select Cucumber reports
+- Generate Pipeline scripts and copy it to paste in the Pipeline script
+- Rebuild the pipeline
+- After the complition, there should be cucumber report.
+- Click on it to see the reports
