@@ -111,8 +111,54 @@ To check your subnet cidr – open your EC2 details in AWS web console and locat
     sudo systemctl restart nfs-server
 
 > STEP 2 — CONFIGURE THE DATABASE SERVER
+1. Create Ubuntu instance for the database with the following information
+    * Secutity group rule: Type info - MYSQL/Aurora
+    * Lunch instances
+2. Connect to the server from the terminal
+3. Update the server: sudo apt update
+4. Install Mysql server: sudo apt install mysql-server -y
+5. Check the Mysql status: sudo service mysql status
+6. Create Database tooling;
+7. Create user: create user 'webaccess'@'%' identified with mysql_native_password by 'password';
+8. Grant user privileges: grant all privileges on tooling.* to 'webaccess'@'%';
+9. Flush privileges: flush privileges;
+
+
 > Step 3 — Prepare the Web Servers
 5. Install [Remi's respository](http://www.servermom.org/how-to-enable-remi-repo-on-centos-7-6-and-5/2790/), Apache and PHP
 
+1. Create two RedHat instances for webservers with
+    * Http inbound security rule on port 80
+2. Conect to the webserver remotely
+3. create script file to run the following copy the code below to the next step
+```
+#!/bin/bash
+
+sudo yum -y update
+sudo yum install nfs-utils nfs4-acl-tools -y
+sudo mkdir /var/www
+sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/www
+sudo echo '<NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0' >> /etc/fstab
+sudo yum install httpd -y
+
+sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y
+
+sudo dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
+
+sudo dnf module reset php -y
+
+sudo dnf module enable php:remi-7.4 -y
+
+sudo dnf install php php-opcache php-gd php-curl php-mysqlnd -y
+
+sudo systemctl start php-fpm
+
+sudo systemctl enable php-fpm
+
+setsebool -P httpd_execmem 1
+
+```
+4. sudo vi shell.sh && sudo chmod +x shell.sh
+5. Paste the code above and save
 
 
