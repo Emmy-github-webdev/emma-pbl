@@ -71,6 +71,7 @@ _In this project you will implement a solution that consists of following compon
     * Copy the UUIDs
     * sudo vi /etc/fstab
     * Paste the UUID in the fstab as shown below
+
     ![](images/project7/fstab.png)
     * Save and close the Vi
     * Verify the vi was set properly: sudo mount -a
@@ -80,6 +81,9 @@ _In this project you will implement a solution that consists of following compon
     * sudo systemctl start nfs-server.service
     * sudo systemctl enable nfs-server.service
     * sudo systemctl status nfs-server.service
+
+     ![](images/project7/start-nfs.png)
+
 17. Make sure we set up permission that will allow our Web servers to read, write and execute files on NFS:
     * sudo chown -R nobody: /mnt/apps
     * sudo chown -R nobody: /mnt/logs
@@ -118,6 +122,9 @@ To check your subnet cidr – open your EC2 details in AWS web console and locat
 3. Update the server: sudo apt update
 4. Install Mysql server: sudo apt install mysql-server -y
 5. Check the Mysql status: sudo service mysql status
+
+![](images/project7/mysql-status.png)
+
 6. Create Database tooling;
 7. Create user: create user 'webaccess'@'%' identified with mysql_native_password by 'password';
 8. Grant user privileges: grant all privileges on tooling.* to 'webaccess'@'%';
@@ -160,5 +167,9 @@ setsebool -P httpd_execmem 1
 ```
 4. sudo vi shell.sh && sudo chmod +x shell.sh
 5. Paste the code above and save
+6. Verify it is created: ls
+7. Change user to the root directory: sudo su
+8. Run: ./shell.sh
+
 
 
