@@ -59,7 +59,7 @@ On the getting started page, unlock jenkins with the password copied from the st
 
 ### Building project with maven
 
->Building project with Maven commandline interface (Manual)
+> Building project with Maven commandline interface (Manual)
 
 - The github to use for this project is https://github.com/executeautomation
 
@@ -137,4 +137,27 @@ On the getting started page, unlock jenkins with the password copied from the st
 ![](images/jenkins/stage.png)
 
 - save and rebuild
+
+## Working with Jenkins for .Net based application
+> Creating Freestyle project for .Net application
+- Install Dotnet 4.5 on the machine
+- Repo to use: https://github.com/executeautomation/SeleniumNUnitParam
+- Required tools are MSBuild, Nuget, Nunit on the device using chocolatey
+- Go to manage plugins
+- click the available tab
+- Install MSBuild plugin
+- Re-login
+- Use chocolatey to install MsBuild(Microsoft-Build-tool) on the machine
+- In the configuration tool, under MSBuild provide the MSBuild Name
+- Go to the program file and copy the MSBuild path: e.g c:\program files (x86\14.0\bin\MSBuild), paste it on the path to MSBuild
+- save
+- Create a new item e.g DotNetFreestyle
+- Select FreeStyle project
+- Ok
+- Under the source control, Select Git and add the repo clone url
+- Under Build Trigger,In the Build Add build step, select Build a visual studio project of solution using MSBuild
+- In the Build Environment, specify the msbuild version(MSBuildLocal, MSBuildGlobal or default)
+- In the MSBuild Build File, paste the solution file name form the project file. In this case is SeleniumNUnitParam.sln
+- Save
+-
 
