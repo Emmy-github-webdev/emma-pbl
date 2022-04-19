@@ -1,7 +1,10 @@
 ## DEVOPS TOOLING WEBSITE SOLUTION
 
 [resources](https://us02web.zoom.us/rec/share/EbAd9iPszpOMtp-sCHLCnK3wP5g3py3fZ8fsiy7g-eKLstzToeDmybxgQQxCTKKe.OGxI7nm9U91B_RSv)
+
+[Youtube](https://www.youtube.com/watch?app=desktop&v=O7VXWWE_qGw)
 - Access Passcode: y?h0xEH4
+
 
 The tools we want to use are well known and widely used by multiple DevOps teams, so we will introduce a single DevOps Tooling Solution that will consist of:
 
