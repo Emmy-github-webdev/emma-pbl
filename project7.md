@@ -74,6 +74,12 @@ _In this project you will implement a solution that consists of following compon
     * Copy the UUIDs
     * sudo vi /etc/fstab
     * Paste the UUID in the fstab as shown below
+    ```
+    UUID=da6d877e-7e9f-4d77-a192-715dcde55bd7 /mnt/apps xfs defaults 0 0
+    UUID=a42dbac4-bee6-451a-820b-966cffa4baf7 /mnt/logs xfs defaults 0 0
+    UUID=129bbdca-14f7-41f8-8d18-6591086c4f9b /mnt/opt xfs defaults 0 0
+    
+    ```
 
     ![](images/project7/fstab.png)
     * Save and close the Vi
