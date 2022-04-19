@@ -137,39 +137,36 @@ To check your subnet cidr – open your EC2 details in AWS web console and locat
 1. Create two RedHat instances for webservers with
     * Http inbound security rule on port 80
 2. Conect to the webserver remotely
-3. create script file to run the following copy the code below to the next step
-```
-#!/bin/bash
+3. Update the server: sudo yum update
+4. Install NFS client: sudo yum install nfs-utils nfs4-acl-tools -y
+5. Mount /var/www/ and target the NFS server’s export for apps
+    * sudo mkdir /var/www
+    * sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/www
+6. Verify that NFS was mounted successfully by running df -h. Make sure that the changes will persist on Web Server after reboot: sudo vi /etc/fstab
+7. add following line: <NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0
+8. Install Remi’s repository, Apache and PHP
+    * sudo yum install httpd -y
 
-sudo yum -y update
-sudo yum install nfs-utils nfs4-acl-tools -y
-sudo mkdir /var/www
-sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/www
-sudo echo '<NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0' >> /etc/fstab
-sudo yum install httpd -y
+    * sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 
-sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y
+    * sudo dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
 
-sudo dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
+    * sudo dnf module reset php
 
-sudo dnf module reset php -y
+    * sudo dnf module enable php:remi-7.4
 
-sudo dnf module enable php:remi-7.4 -y
+    * sudo dnf install php php-opcache php-gd php-curl php-mysqlnd
 
-sudo dnf install php php-opcache php-gd php-curl php-mysqlnd -y
+    * sudo systemctl start php-fpm
 
-sudo systemctl start php-fpm
+    * sudo systemctl enable php-fpm
 
-sudo systemctl enable php-fpm
+    * setsebool -P httpd_execmem 1
+9. Repeat the same step for web server 2
+10. Fork the tooling source code from [Darey.io Github Account](https://github.com/darey-io/tooling) to your Github account.
+11. Deploy the tooling website’s code to the Webserver. Ensure that the html folder from the repository is deployed to /var/www/html
+12.  If you encounter 403 Error – check permissions to your /var/www/html folder and also disable SELinux sudo setenforce 0
+To make this change permanent – open following config file sudo vi /etc/sysconfig/selinux and set SELINUX=disabledthen restrt httpd.
 
-setsebool -P httpd_execmem 1
-
-```
-4. sudo vi shell.sh && sudo chmod +x shell.sh
-5. Paste the code above and save
-6. Verify it is created: ls
-7. Change user to the root directory: sudo su
-8. Run: ./shell.sh
-
-
-
+ ![](images/project7/web-server-redhat-page.png)
+  ![](images/project7/index-php-page.png)
