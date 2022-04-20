@@ -70,7 +70,7 @@ sudo systemctl restart apache2
 You can also study and try other methods, like: bybusyness, byrequests, heartbeat
 
 - Verify that the configuration works – try to access your LB’s public IP address or Public DNS name from your browser:
-    * http://<Load-Balancer-Public-IP-Address-or-Public-DNS-Name>/index.php
+    * http://<Load-Balancer-Public-IP-Address-or-Public-DNS-Name>index.php
 
  ![](images/project8/access-on-browser.png)
 
