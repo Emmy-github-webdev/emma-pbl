@@ -3,7 +3,7 @@
 [resources](https://us02web.zoom.us/rec/share/EbAd9iPszpOMtp-sCHLCnK3wP5g3py3fZ8fsiy7g-eKLstzToeDmybxgQQxCTKKe.OGxI7nm9U91B_RSv)
 
 [Youtube](https://www.youtube.com/watch?app=desktop&v=O7VXWWE_qGw)
-- Access Passcode: y?h0xEH4
+
 
 
 The tools we want to use are well known and widely used by multiple DevOps teams, so we will introduce a single DevOps Tooling Solution that will consist of:
@@ -131,7 +131,9 @@ To check your subnet cidr – open your EC2 details in AWS web console and locat
 3. Update the server: sudo apt update
 4. Install Mysql server: sudo apt install mysql-server -y
 5. Check the Mysql status: sudo service mysql status
-
+6. Update the binding address to 0.0.0.0
+    * sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf
+    * sudo systemctl restart mysql
 ![](images/project7/mysql-status.png)
 
 6. Create Database tooling;
@@ -141,7 +143,7 @@ To check your subnet cidr – open your EC2 details in AWS web console and locat
 
 
 > Step 3 — Prepare the Web Servers
-5. Install [Remi's respository](http://www.servermom.org/how-to-enable-remi-repo-on-centos-7-6-and-5/2790/), Apache and PHP
+- Install [Remi's respository](http://www.servermom.org/how-to-enable-remi-repo-on-centos-7-6-and-5/2790/), Apache and PHP
 
 1. Create two RedHat instances for webservers with
     * Http inbound security rule on port 80
@@ -174,7 +176,30 @@ To check your subnet cidr – open your EC2 details in AWS web console and locat
 9. Repeat the same step for web server 2
 10. Fork the tooling source code from [Darey.io Github Account](https://github.com/darey-io/tooling) to your Github account.
 11. Deploy the tooling website’s code to the Webserver. Ensure that the html folder from the repository is deployed to /var/www/html
-12.  If you encounter 403 Error – check permissions to your /var/www/html folder and also disable SELinux sudo setenforce 0
+    * [ec2-user@ip-172-31-24-244 html]$ sudo mv tooling/* .
+    * delete tooling after moving everything from it to html
+    * Move everything in that hmtl to this parent html
+    * [ec2-user@ip-172-31-24-244 html]$ sudo mv ./html/* .
+12. Update function.php file
+    * sudo yum install mysql
+    * mysql -u webaccess -ppassword -h database_private_IP_Address
+    * exit
+    * mysql -u webaccess -ppassword -h database_private_IP_Address tooling < tooling
+      * mysql -u webaccess -ppassword -h database_private_IP_Address tooling < tooling-db.sql
+        * mysql -u webaccess -ppassword -h database_private_IP_Address tooling 
+        * > show tables
+        * > select * from users
+        exit
+        * sudo vi function.php
+        * Update the database connection as follows: $db = mysqli_connect('private_ip_address_database_server', 'username', 'password', 'database_name')
+
+        ![](images/project7/update-function-php.png)
+
+        * sudo systemctl start httpd
+        * sudo systemctl enable httpd
+        * sudo systemctl status httpd
+
+13.  If you encounter 403 Error – check permissions to your /var/www/html folder and also disable SELinux sudo setenforce 0
 To make this change permanent – open following config file sudo vi /etc/sysconfig/selinux and set SELINUX=disabledthen restrt httpd.
 
  ![](images/project7/web-server-redhat-page.png)
