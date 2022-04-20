@@ -9,7 +9,7 @@
 
 -  A Load Balancer (LB) distributes clients’ requests among underlying Web Servers and makes sure that the load is distributed in an optimal way.
 
-![](images/project7/arch.png)
+![](images/project8/arch.png)
 
 > Task
 _Deploy and configure an Apache Load Balancer for Tooling Website solution on a separate Ubuntu EC2 intance. Make sure that users can be served by Web servers through the Load Balancer._
@@ -62,7 +62,33 @@ sudo systemctl restart apache2
 
     ```
 
-    ![](images/project7/lb-config.png)
+    ![](images/project8/lb-config.png)
 
     * #Restart apache server: sudo systemctl restart apache2
-- Note: bytraffic balancing method will distribute incoming load between your Web Servers according to current traffic load
+- Note: bytraffic balancing method will distribute incoming load between your Web Servers according to current traffic load. We can control in which proportion the traffic must be distributed by loadfactor parameter.
+
+You can also study and try other methods, like: bybusyness, byrequests, heartbeat
+
+- Verify that the configuration works – try to access your LB’s public IP address or Public DNS name from your browser:
+    * http://<Load-Balancer-Public-IP-Address-or-Public-DNS-Name>/index.php
+
+ ![](images/project8/access-on-browser.png)
+
+> Optional Step – Configure Local DNS Names Resolution
+- Sometimes it is tedious to remember and switch between IP addresses, especially if you have a lot of servers under your management.
+```
+#Open this file on your LB server
+
+sudo vi /etc/hosts
+
+#Add 2 records into this file with Local IP address and arbitrary name for both of your Web Servers
+
+<WebServer1-Private-IP-Address> Web1
+<WebServer2-Private-IP-Address> Web2
+```
+- Update your LB config file with those names instead of IP addresses.
+```
+BalancerMember http://Web1:80 loadfactor=5 timeout=1
+BalancerMember http://Web2:80 loadfactor=5 timeout=1
+```
+- You can try to curl your Web Servers from LB locally curl http://Web1 or curl http://Web2
