@@ -23,7 +23,7 @@ As a member of a DevOps team, you will implement a tooling website solution whic
 _In this project you will implement a solution that consists of following components:_
 
 1. Infrastructure: AWS
-2. Webserver Linux: Red Hat Enterprise Linux 8
+2. 2 Webserver Linux: Red Hat Enterprise Linux 8
 3. Database Server: Ubuntu 20.04 + MySQL
 4. Storage Server: Red Hat Enterprise Linux 8 + NFS Server
 5. Programming Language: PHP

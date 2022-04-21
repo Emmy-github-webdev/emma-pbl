@@ -59,3 +59,45 @@ Here is how your updated architecture will look like upon competion of this proj
     * save and continue
 
      ![](images/project9/finish.png)
+
+> Step 2 – Configure Jenkins to retrieve source codes from GitHub using Webhooks
+- We will configure a simple Jenkins job/project that will be triggered by GitHub [webhooks](https://en.wikipedia.org/wiki/Webhook) and will execute a ‘build’ task to retrieve codes from GitHub and store it locally on Jenkins server.
+- Enable webhooks in your GitHub repository settings
+    * Click the repo and set the webhook settings below
+
+     ![](images/project9/webhook.png)
+
+    * Go to Jenkins web console, click "New Item" and create a "Freestyle project"
+
+    ![](images/project9/new-item.png)
+
+- To connect your GitHub repository, you will need to provide its URL, you can copy from the repository itself
+
+ ![](images/project9/github-url.png)
+
+ - In configuration of your Jenkins freestyle project choose Git repository, provide there the link to your Tooling GitHub repository and credentials (user/password) so Jenkins could access files in the repository.
+
+ ![](images/project9/add-github-link.png)
+
+ - Click on build now
+
+     ![](images/project9/build.png)
+
+ - Click "Configure" your job/project and add these
+    * Configure triggering the job from GitHub webhook
+    * Configure "Post-build Actions" to archive all the files – files resulted from a build are called "artifacts"
+
+        ![](images/project9/post-build.png)
+-  Make some change in any file in the GitHub repository (e.g. README.MD file) and push the changes to the master branch.
+
+- You will see that a new build has been launched automatically (by webhook) and you can see its results – artifacts, saved on Jenkins server.
+
+![](images/project9/readme-change.png)
+
+> Note: You have now configured an automated Jenkins job that receives files from GitHub by webhook trigger (this method is considered as ‘push’ because the changes are being ‘pushed’ and files transfer is initiated by GitHub). There are also other methods: trigger one job (downstreadm) from another (upstream), poll GitHub periodically and others. By default, the artifacts are stored on Jenkins server locally
+```
+    ls /var/lib/jenkins/jobs/tooling_github/builds/<build_number>/archive/
+
+```
+
+
