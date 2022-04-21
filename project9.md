@@ -1,6 +1,7 @@
 ## TOOLING WEBSITE DEPLOYMENT AUTOMATION WITH CONTINUOUS INTEGRATION. INTRODUCTION TO JENKINS
 
 [CI](https://circleci.com/continuous-integration/)
+[Resource](https://www.youtube.com/watch?v=DqiK1M-cH0g)
 
 - In this project we are going to start automating part of our routine tasks with a free and open source automation server – Jenkins. It is one of the mostl popular CI/CD tools, it was created by a former Sun Microsystems developer Kohsuke Kawaguchi and the project originally had a named "Hudson".
 - Acording to Circle CI, Continuous integration (CI) is a software development strategy that increases the speed of development while ensuring the quality of the code that teams deploy.
@@ -99,5 +100,45 @@ Here is how your updated architecture will look like upon competion of this proj
     ls /var/lib/jenkins/jobs/tooling_github/builds/<build_number>/archive/
 
 ```
+> Step 3 – Configure Jenkins to copy files to NFS server via SSH
+- Now we have our artifacts saved locally on Jenkins server, the next step is to copy them to our NFS server to /mnt/apps directory.
+    * Install "Publish Over SSH" plugin.
+
+![](images/project9/ss-plugin.png)
+- Configure the job/project to copy artifacts over to NFS server.
+    * On main dashboard select "Manage Jenkins" and choose "Configure System" menu item.
+
+    * Scroll down to Publish over SSH plugin configuration section and configure it to be able to connect to your NFS server:
+
+    * Provide a private key (content of .pem file that you use to connect to NFS server via SSH/Putty)
+    * Arbitrary name(Leave blank if the connection do not need authentication)
+    * Hostname – can be private IP address of your NFS server
+    * Username – ec2-user (since NFS server is based on EC2 with RHEL 8)
+    * Remote directory – /mnt/apps since our Web Servers use it as a mointing point to retrieve files from the NFS server
+    * Test the configuration and make sure the connection returns Success. Remember, that TCP port 22 on NFS server must be open to receive SSH connections.
+- Save the configuration, open your Jenkins job/project configuration page and add another one "Post-build Action"
+- Configure it to send all files probuced by the build into our previouslys define remote directory. In our case we want to copy all files and directories – so we use **.
+
+![](images/project9/add-post-build.png)
+
+![](images/project9/post-build-config.png)
+
+- Save this configuration and go ahead, change something in README.MD file in your GitHub Tooling repository.
+- If you noticed this error below, run the following command on the NFS server
+    ```
+     sudo chown -R nobody: /mnt
+     sudo chmod -R 777 /mnt
+
+    ```
+
+![](images/project9/build-error.png)
+
+- Rebuild and there should be success
+
+![](images/project9/last-build-success.png)
+
+
+
+
 
 
