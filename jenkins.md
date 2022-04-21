@@ -159,5 +159,15 @@ On the getting started page, unlock jenkins with the password copied from the st
 - In the Build Environment, specify the msbuild version(MSBuildLocal, MSBuildGlobal or default)
 - In the MSBuild Build File, paste the solution file name form the project file. In this case is SeleniumNUnitParam.sln
 - Save
--
+
+> Creating Pipeline project for .Net application
+- In the Jenkins portal, create a new item called DotnetPipeline
+- Select Pipeline 
+- Go to the Advanced Project Options
+- Click Pipeline Syntax
+- Follow the same step in Java above
+
+### Configuring Email Notification with Jenkins
+- Install docker for Windows - [Docker](https://docs.docker.com/desktop/windows/install/)
+- Run the command on Powershell:  docker pull djfarrlly/maildev
 

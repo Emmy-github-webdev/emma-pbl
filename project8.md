@@ -5,7 +5,7 @@
 [Layer 4 Load balancing](https://www.nginx.com/resources/glossary/layer-4-load-balancing/)
 [Layer 7 Load Balancing](https://www.nginx.com/resources/glossary/layer-7-load-balancing/)
 
-- In this project we will enhance our Tooling Website solution by adding a Load Balancer to disctribute traffic between Web Servers and allow users to access our website using a single URL.
+- In this project we will enhance our Tooling Website solution by adding a Load Balancer to disctribute traffic between Web Servers and allow users to access our website using a single URL. This uses horizontal scalability concept.
 
 -  A Load Balancer (LB) distributes clients’ requests among underlying Web Servers and makes sure that the load is distributed in an optimal way.
 
