@@ -10,3 +10,6 @@
 - AWS Availability Zones: AZ is one or more discrete data centers within redundant power, networking, and connectivity in an AWS region. Usually, each region has min of 3 , and max of 6 AZ.
 - AWS Data Centers
 - AWS Edge Locations / Points of presence
+
+### I AM
+- I AM  = Identity and access management
