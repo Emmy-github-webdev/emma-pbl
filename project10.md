@@ -16,18 +16,20 @@
 - Register a new domain
 - Go to the AWS portal and look for Route 53
 - Click create hosted zone
-    * In the domain name, add the domaon you register above
+    * In the domain name, add the domain you register above
     * Select public
     * create
-    * if you if you register your domain outside AWS, ensure to create the DNS records the for connectivity
+    * If you register your domain outside AWS, ensure to create the DNS records the for connectivity
     - Update /etc/hosts file for local DNS with Web Servers’ names (e.g. Web1 and Web2) and their local IP addresses
 - Install and configure Nginx as a load balancer to point traffic to the resolvable DNS names of the webservers
 2. Create A Record for the domain name
-    * Copy of the public IP address of the load balancerr created above
+    * Copy of the public IP address of the load balancer created above
     * In Create records, past the IP Address in the value tab
 2. Create www Record for the domain name
     * Copy of the public IP address of the load balancerr created above
     * In Create records, past the IP Address in the value tab
+ 
+ ![](images/project10/dns-record.png)
 
 - At this point, connection is created between load balancer and the Route 53
 
@@ -62,26 +64,33 @@ server {
 - Configure Nginx to recognize your new domain name
     * Update your nginx.conf with server_name www.your-domain-name.com instead of server_name www.domain.com
 
+    ![](images/project10/update-nginx-config-file.png)
+
+
 - Restart Nginx and make sure the service is up and running
 ```
 sudo systemctl restart nginx
-sudo systemctl status nginx
+  sudo systemctl status nginx
 
 ```
+ ![](images/project10/nginx-status.png)
 
 - Remove the default file so the reverse proxy will be rediected to the newconfiguration file
-```
-sudo rm -f /etc/ngnix/site-enabled/default
-```
-- Check if Ngnix ic successfully configured
-```
-sudo ngnix -t
-```
 
 - Change directory to Ngnix site enabled
 ```
-cd /etc/ngnix/sites-enabled/
+cd /etc/nginx/sites-enabled/
 ```
+
+```
+sudo rm -rf default
+```
+- Check if Nginx is successfully configured
+```
+sudo nginx -t
+```
+ ![](images/project10/test-config.png)
+
 
 - Link loade balancer config file with the site enabled
 
@@ -91,16 +100,44 @@ ls
 ll
 ```
 
-- Lunch the domian and it should redirect to the webs erver
+- Lunch the domian and it should redirect to the webs erver: www.oche.link/login.php
+
+ ![](images/project10/web-server-reachable.png)
+
 
 - Install [certbot](https://certbot.eff.org/) and request for an SSL/TLS certificate
-```
-sudo install certbot -y
-sudo apt install python3-certbot-nginx -y 
-```
 
+  * Make sure snapd service is active and running
+  ```
+  sudo systemctl status snapd
+  ```
+  * Install certbot
+  ```
+  sudo snap install --classic certbot
+  ```
+  * Request your certificate
+  ```
+  sudo ln -s /snap/bin/certbot /usr/bin/certbot
+  sudo certbot --nginx
+  ```
 - Reload Nginx
-    * sudo ngnix -t && sudo nginx -s reload
+    * sudo nginx -t && sudo nginx -s reload
+- Setup SSl/TLS
+- Test secure access to your website by using https: https://www.oche.link
 
 > [HTTP Load Balancing](https://docs.nginx.com/nginx/admin-guide/load-balancer/http-load-balancer/)
-   
+
+- Set up periodical renewal of your SSL/TLS certificate
+    * You can test renewal command in dry-run mode
+    ```
+    sudo certbot renew --dry-run
+    ```
+    * Best pracice is to have a scheduled job that to run renew command periodically. Let us configure a cronjob to run the command twice a day. To do so, lets edit the crontab file with the following command:
+    ```
+    crontab -e
+    ```
+    * Add the following 
+    ```
+    * */12 * * *   root /usr/bin/certbot renew > /dev/null 2>&1
+    ```
+   [online cron expression editor.](https://crontab.guru/)
