@@ -9,7 +9,7 @@
 
  ![](images/project11/web-server-reachable.png)
 
- > INSTALL AND CONFIGURE ANSIBLE ON EC2 INSTANCE
+ > STEP 1 - INSTALL AND CONFIGURE ANSIBLE ON EC2 INSTANCE
 
  - In your GitHub account create a new repository and name it ansible-config-mgt.
 
@@ -65,4 +65,13 @@ cd /var/lib/jenkins/jobs/ansible/builds/<build_number>/archive/
 cat the_file_name e.g cat README.md
 exit
 ```
+
+> Step 2 – Prepare your development environment using Visual Studio Code
+- Download and Install VS code
+- Install Remote development extension
+- Clone the ansible-config-mgt repo
+
+> Step 3 - BEGIN ANSIBLE DEVELOPMENT
+- In the ansible-config-mgt GitHub repository, create a new branch that will be used for development of a new feature.
+    * Tip: Give your branches descriptive and comprehensive names, for example, if you use Jira or Trello as a project management tool – include ticket number (e.g. PRJ-145) in the name of your branch and add a topic and a brief description what this branch is about – a bugfix, hotfix, feature, release (e.g. feature/prj-145-lvm)
 
