@@ -5,15 +5,17 @@
 > Task
 - Install and configure Ansible client to act as a Jump Server/Bastion Host
 - Create a simple Ansible playbook to automate servers configuration
+ ![](images/project11/architecture.png)
+
 - Update Name tag on your Jenkins EC2 Instance to Jenkins-Ansible. We will use this server to run playbooks
 
- ![](images/project11/web-server-reachable.png)
+ ![](images/project11/jaserv.png)
 
  > STEP 1 - INSTALL AND CONFIGURE ANSIBLE ON EC2 INSTANCE
 
  - In your GitHub account create a new repository and name it ansible-config-mgt.
 
-  ![](images/project11/web-server-reachable.png)
+  ![](images/project11/repo.png)
 
 - Instal Ansible
 ```
@@ -27,6 +29,45 @@
 ansible --version
 ```
 
+- Install Jenkins
+    ```
+        wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+        sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+        sudo apt-get update
+        sudo apt-get install jenkins
+    ```
+-  Verify jenkins is up and runningh
+    ```
+        sudo systemctl status jenkins
+    ```
+    ![](images/project9/jenkins-status.png)
+- Perform Iniatial Jenkins Setup
+    * From browser, access http://Jenkins-Server-Public-IP-Address-or-Public-DNS-Name:8080
+
+    ![](images/project9/unlock-page.png)
+
+    * Retrieve the adminstrator password from your server: sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+
+      ![](images/project9/admin-password.png)
+
+    * Enter the password in the administrator page above and click continue
+
+    ![](images/project9/after-admin-login.png)
+
+    * Click Install suggested plugins
+    * Create admin account after plugins installation is completed
+
+      ![](images/project9/create-new-acct.png)
+
+    * Jenkins URL - http://34.229.141.79:8080/
+
+    ![](images/project9/jenkins-url.png)
+
+    * save and continue
+
+     ![](images/project9/finish.png)
+  ![](images/project11/ansible-install.png)
+
 - Configure webhook to communicatw with Jenkins whenever changes are made
     * In the GitHub repo, go to the settings
     * Click Webhooks
@@ -37,22 +78,48 @@ ansible --version
     * Leave active checked
     * Click Add
 
+    ![](images/project11/add-webhook.png)
+
 - Configure Jenkins build job to save your repository content every time you change it
     * Create a new Freestyle project ansible in Jenkins
+
+      ![](images/project11/add-freestyle.png)
+
     * Go to the "Source Code Management of the Ansible freestyle"
     * Select Git
     * Copy the Git repo URL for ansible-config-mgt and paste in the Repository URL
     * Select type the branch name
+
+       ![](images/project11/git.png)
+
     * Under Build Triggers, select "GitHub hook trigger for GITScm polling"
     * Under "Post-build Actions", select "Archive the artifacts"
     * In the File to archive type two stars " ** "
     * click on Save
+
+     ![](images/project11/buildenvi.png)
+
     * Go back to the Ansible freestyle project and click on "Build now"
-- Test your setup by making some change in README.MD file in master branch and make sure that builds starts automatically and Jenkins saves the files (build artifacts) in following folder
+
+     ![](images/project11/build1.png)
+- Test your setup by making some change in README.MD file in master branch and make sure that builds starts automatically
+
+ ![](images/project11/editreadme.png)
+
+ ![](images/project11/build2.png)
+
+
+- Jenkins saves the files (build artifacts) in following folder
 ```
-ls /var/lib/jenkins/jobs/ansible/builds
+sudo ls /var/lib/jenkins/jobs/ansible/builds
 ```
+> Note - Check your build console, your path may be different due to the project name
+
 * It should display the number of builds
+
+ ![](images/project11/buildworkspace.png)
+
+
 
 ```
 ls /var/lib/jenkins/jobs/ansible/builds/<build_number>/archive/
