@@ -55,7 +55,7 @@ server {
     location / {
       proxy_pass http://myproject;
     }
-  }
+}
 
 #comment out this line
 #       include /etc/nginx/sites-enabled/*;
@@ -95,7 +95,7 @@ sudo nginx -t
 - Link loade balancer config file with the site enabled
 
 ```
-sudo ln -s ../sites-available/load_balancer.conf .
+ubuntu@ip-172-31-16-220:/etc/nginx/sites-enabled$> sudo ln -s ../sites-available/load_balancer.conf 
 ls
 ll
 ```
@@ -124,6 +124,9 @@ ll
     * sudo nginx -t && sudo nginx -s reload
 - Setup SSl/TLS
 - Test secure access to your website by using https: https://www.oche.link
+ ![](images/project10/tsl-1.png)
+
+![](images/project10/tsl-2.png)
 
 > [HTTP Load Balancing](https://docs.nginx.com/nginx/admin-guide/load-balancer/http-load-balancer/)
 
