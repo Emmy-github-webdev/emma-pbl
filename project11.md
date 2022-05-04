@@ -158,11 +158,16 @@ Save below inventory structure in the inventory/dev file to start configuring yo
  ssh-add <path-to-private-key>
 ```
 Where path-to-private-key is the .pem key
+
+![](images/project11/add-private-key.png)
+
+
 - Confirm the key has been added
 
 ```
 ssh-add -l
 ```
+![](images/project11/confirm-ssh-add.png)
 
 - Now, ssh into your Jenkins-Ansible server using ssh-agent
 
@@ -170,6 +175,16 @@ ssh-add -l
 ssh -A ubuntu@public-ip
 
 ```
+
+![](images/project11/ssh-jenkins-server.png)
+
+- Confirm the key has been added
+
+```
+ssh-add -l
+```
+![](images/project11/confirm.png)
+
 - Notice, that your Load Balancer user is ubuntu and user for RHEL-based servers is ec2-user, and use the .pem configure above
 
 - Spin up four RedHat servers and one Ubuntu
@@ -180,6 +195,8 @@ ssh ubuntu@x.x.x.x
 ```
 
 - Note ubuntu@x.x.x.x is the load balancer server. Check the rest servers too (Web, db, nfs)
+
+![](images/project11/ssh-from-jenkin.png)
 
 - Update your inventory/dev.yml file with this snippet of code:
 
@@ -199,6 +216,8 @@ ssh ubuntu@x.x.x.x
 <Load-Balancer-Private-IP-Address> ansible_ssh_user='ubuntu'
 
 ```
+![](images/project11/dev-file.png)
+
 
 > Step 5 – Create a Common Playbook
 - It is time to start giving Ansible the instructions on what you needs to be performed on all servers listed in inventory/dev.
