@@ -17,7 +17,8 @@
 
   ![](images/project11/repo.png)
 
-- Instal Ansible
+- [Instal Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+
 ```
  sudo apt update
 
@@ -28,15 +29,20 @@
 ```
 ansible --version
 ```
+ ![](images/project11/install-ansible.png)
 
-- Install Jenkins
+- [Install Jenkins](https://pkg.jenkins.io/debian-stable/)
     ```
         wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
         sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
         sudo apt-get update
         sudo apt-get install jenkins
     ```
--  Verify jenkins is up and runningh
+
+      ![](images/project11/jenkins-version.png)
+
+
+-  Verify jenkins is up and running
     ```
         sudo systemctl status jenkins
     ```
@@ -287,6 +293,8 @@ ansible-playbook -i /var/lib/jenkins/jobs/jenkins-ansible-freestyle/builds/3/arc
 
 ```
 ![](images/project11/playbook-error.png)
+
+![](images/project11/connect2.PNG)
 
 - You can go to each of the servers and check if wireshark has been installed by running
 ```

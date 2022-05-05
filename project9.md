@@ -18,6 +18,8 @@ Here is how your updated architecture will look like upon competion of this proj
 > Step 1 - Install Jenkins Server
 1. Create an AWS EC2 server based on Ubuntu server 20.04 LTS and name it "Jenkins" with TCP port 8080 open in the inbound rule
 2. Install[JDK](https://en.wikipedia.org/wiki/Java_Development_Kit)
+
+[Download Jenkins](https://www.jenkins.io/download/)
    ```
     sudo apt update
     sudo apt install default-jdk-headless
