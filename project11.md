@@ -81,7 +81,7 @@ ansible --version
     ![](images/project11/add-webhook.png)
 
 - Configure Jenkins build job to save your repository content every time you change it
-    * Create a new Freestyle project ansible in Jenkins
+    * Create a new Freestyle project ansible in Jenkins - jenkins-ansible-freestyle
 
       ![](images/project11/add-freestyle.png)
 
@@ -111,7 +111,7 @@ ansible --version
 
 - Jenkins saves the files (build artifacts) in following folder
 ```
-sudo ls /var/lib/jenkins/jobs/ansible/builds
+sudo ls /var/lib/jenkins/jobs/jenkins-ansible-freestyle/builds
 ```
 > Note - Check your build console, your path may be different due to the project name
 
@@ -122,13 +122,13 @@ sudo ls /var/lib/jenkins/jobs/ansible/builds
 
 
 ```
-ls /var/lib/jenkins/jobs/ansible/builds/<build_number>/archive/
+ls /var/lib/jenkins/jobs/jenkins-ansible-freestyle/builds/<build_number>/archive/
 ```
 * It should display the file that changes were made. For this case is README.md
 * To view the content of the file 
 
 ```
-cd /var/lib/jenkins/jobs/ansible/builds/<build_number>/archive/
+cd /var/lib/jenkins/jobs/jenkins-ansible-freestyle/builds/<build_number>/archive/
 cat the_file_name e.g cat README.md
 exit
 ```
@@ -273,7 +273,7 @@ git commit -m "commit message"
 ![](images/project11/pull-request.png)
 
 
-- Once your code changes appear in master branch – Jenkins will do its job and save all the files (build artifacts) to /var/lib/jenkins/jobs/ansible/builds/build_number/archive/ directory on Jenkins-Ansible server. You can confirm
+- Once your code changes appear in master branch – Jenkins will do its job and save all the files (build artifacts) to /var/lib/jenkins/jobs/jenkins-ansible-freestyle/builds/build_number/archive/ directory on Jenkins-Ansible server. You can confirm
 
 ![](images/project11/check-build.png)
 
@@ -283,7 +283,7 @@ git commit -m "commit message"
 ![](images/project11/connect1.png)
 
 ```
-ansible-playbook -i /var/lib/jenkins/jobs/jenkins-ansible-freestyle/builds/4/archive/inventory/dev.yml  /var/lib/jenkins/jobs/jenkins-ansible-freestyle/builds/4/archive/playbooks/common.yml
+ansible-playbook -i /var/lib/jenkins/jobs/jenkins-ansible-freestyle/builds/3/archive/inventory/dev.yml  /var/lib/jenkins/jobs/jenkins-ansible-freestyle/builds/3/archive/playbooks/common.yml
 
 ```
 ![](images/project11/playbook-error.png)
