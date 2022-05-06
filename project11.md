@@ -294,6 +294,8 @@ ansible-playbook -i /var/lib/jenkins/jobs/jenkins-ansible-freestyle/builds/3/arc
 ```
 ![](images/project11/playbook-error.png)
 
+- Generate keygen and add the public key to the servers
+
 ![](images/project11/connect2.PNG)
 
 - You can go to each of the servers and check if wireshark has been installed by running
