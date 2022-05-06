@@ -161,7 +161,7 @@ Save below inventory structure in the inventory/dev file to start configuring yo
 
 ```
  eval `ssh-agent -s`
- ssh-add <path-to-private-key>
+ ssh-add -k <path-to-private-key>
 ```
 Where path-to-private-key is the .pem key
 
@@ -289,14 +289,29 @@ git commit -m "commit message"
 ![](images/project11/connect1.png)
 
 ```
-ansible-playbook -i /var/lib/jenkins/jobs/jenkins-ansible-freestyle/builds/3/archive/inventory/dev.yml  /var/lib/jenkins/jobs/jenkins-ansible-freestyle/builds/3/archive/playbooks/common.yml
+
+ansible-playbook -i /var/lib/jenkins/jobs/ansible/builds/5/archive/inventory/dev.yml  /var/lib/jenkins/jobs/ansible/builds/5/archive/playbooks/common.yml
+
 
 ```
 ![](images/project11/playbook-error.png)
 
-- Generate keygen and add the public key to the servers
+- If you have the error above, the workaround with ansible would be to add this line in ansible.cfg under [defaults] section,
 
-![](images/project11/connect2.PNG)
+```
+[defaults]
+host_key_checking = False
+```
+- Run the ansible-playbook 
+
+```
+
+ansible-playbook -i /var/lib/jenkins/jobs/ansible/builds/5/archive/inventory/dev.yml  /var/lib/jenkins/jobs/ansible/builds/5/archive/playbooks/common.yml
+
+
+```
+
+![](images/project11/success-output.png)
 
 - You can go to each of the servers and check if wireshark has been installed by running
 ```
@@ -304,3 +319,5 @@ which wireshark
  or 
 wireshark --version
 ```
+
+![](images/project11/wireshark-version.png)
