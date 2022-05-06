@@ -96,3 +96,47 @@ ssh-add -l
     * Click Add
 
     ![](images/project11/add-webhook.png)
+
+> Step 2 – Jenkins job enhancement
+- Go to your Jenkins-Ansible server and create a new directory called _ansible-config-artifact_ – we will store there all artifacts after each build.
+
+```
+sudo mkdir /home/ubuntu/ansible-config-artifact
+```
+
+- Change permissions to this directory, so Jenkins could save files there – chmod -R 0777 /home/ubuntu/ansible-config-artifact
+
+- Go to Jenkins web console -> Manage Jenkins -> Manage Plugins -> on Available tab search for Copy Artifact and install this plugin without restarting Jenkins
+
+- Configure Jenkins build job to save your repository content every time you change it
+    * Create a new Freestyle project ansible in Jenkins - ansible
+
+      ![](images/project11/add-freestyle.png)
+
+    * Go to the "Source Code Management of the Ansible freestyle"
+    * Select Git
+    * Copy the Git repo URL for ansible-config-mgt and paste in the Repository URL
+    * Select type the branch name
+
+       ![](images/project11/git.png)
+
+    * Under Build Triggers, select "GitHub hook trigger for GITScm polling"
+    * Under "Post-build Actions", select "Archive the artifacts"
+    * In the File to archive type two stars " ** "
+    * click on Save
+    * click build now to confirm the build
+
+     ![](images/project11/buildenvi.png)
+
+ - This project will be triggered by completion of your existing ansible project. Configure it accordingly:
+     * Create a new Freestyle project ansible in Jenkins - save_artifacts
+     * Follow the image below for the configuration
+
+      ![](images/project12/trigger-completion.png)
+
+- The main idea of save_artifacts project is to save artifacts into /home/ubuntu/ansible-config-artifact directory. To achieve this, create a Build step and choose Copy artifacts from other project, specify ansible as a source project and /home/ubuntu/ansible-config-artifact as a target directory.
+
+  ![](images/project12/artifacts-copy.png)
+
+- Test your set up by making some change in README.MD file inside your ansible-config-mgt repository (right inside master branch).
+If both Jenkins jobs have completed one after another – you shall see your files inside /home/ubuntu/ansible-config-artifact directory and it will be updated with every commit to your master branch.
