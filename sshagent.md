@@ -6,3 +6,5 @@
 > For Windows - [ssh-agent on windows](https://www.youtube.com/watch?v=OplGrY74qog)
 
 - [Install OpenSSH server and client](https://docs.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse)
+
+> For Linux - [ssh-agent on Linux](https://www.youtube.com/watch?v=OplGrY74qog)
