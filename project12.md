@@ -84,3 +84,15 @@ ssh -A ubuntu@public-ip
 ssh-add -l
 ```
 ![](images/project11/confirm.png)
+
+- Configure webhook to communicatw with Jenkins whenever changes are made
+    * In the GitHub repo, go to the settings
+    * Click Webhooks
+    * Click add webhook
+    * In the payload URL, add the Jenkins URL: https://x.x.x.x:8080/github-webhook/
+    * In content type, select ""application/json
+    * Under "Which events would you like to trigger webhook", select"Just the push event"
+    * Leave active checked
+    * Click Add
+
+    ![](images/project11/add-webhook.png)
