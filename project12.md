@@ -9,12 +9,13 @@
 
 ```
 sudo mkdir /home/ubuntu/ansible-config-artifact
+sudo mkdir /ansible-config-artifact
 ```
 
 - Change permissions to this directory, so Jenkins could save files there 
 ```
-sudo chmod 0777 /home
-sudo chmod 0777 /home/ubuntu
+sudo chmod 777 /home
+sudo chmod 777 /home/ubuntu
 sudo chmod 0777 /home/ubuntu/ansible-config-artifact
 ```
 
@@ -36,24 +37,32 @@ ll
 
 - This project will be triggered by completion of your existing ansible project. Configure it accordingly:
 
-  * Under General tab, select "Discard olf builds"
-  * A new input form will be open, add tha max # of builds to keep
-  Under build triggers, select "Build after other projects are built"
+  * Under General tab, select "Discard old builds"
+  * A new input form will be open, add the max # of builds to keep
+  * Under build triggers, select "Build after other projects are built"
   * In the input form that open, enter project to watch. In tis case we use the "Ansible" in project 11.
   * Select trigger only if the build is stable
   * Under "Build" select ""Copy artifacts from another project
   * In the input form that open, enter the project name, in this case "Ansible"
   * In the artifact copy, type "**"
-  * In the targer directory, enter the directory created above "home/ubuntu/ansible-config-artifact"
+  * In the target directory, enter the directory created above "home/ubuntu/ansible-config-artifact"
   * save
 
   ![](images/project12/config-1.png)
 
-   ![](images/project12/config-2.png)
+  ![](images/project12/config-2.png)
 
-    ![](images/project12/config-3.png)
+  ![](images/project12/config-3.png)
 
-     ![](images/project12/config-4.png)
+  ![](images/project12/config-4.png)
+
+- Test your set up by making some change in README.MD file inside your ansible-config-mgt repository (right inside master branch).
+
+  ![](images/project12/test-work.png)
+
+- If both Jenkins jobs have completed one after another – you shall see your files inside /ansible-config-artifact directory and it will be updated with every commit to your master branch.
+
+![](images/test-save-artifact.png)
 
 
 > Step 2 – Refactor Ansible code by importing other playbooks into site.yml
