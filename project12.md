@@ -13,6 +13,8 @@ sudo mkdir /home/ubuntu/ansible-config-artifact
 
 - Change permissions to this directory, so Jenkins could save files there 
 ```
+sudo chmod 0777 /home
+sudo chmod 0777 /home/ubuntu
 sudo chmod 0777 /home/ubuntu/ansible-config-artifact
 ```
 
@@ -22,9 +24,16 @@ ll
 
 ```
 
+![](images/project12/chmod-permission.png)
+
 - Go to Jenkins web console -> Manage Jenkins -> Manage Plugins -> on Available tab search for Copy Artifact and install this plugin without restarting Jenkins
 
+![](images/project12/install-pluggin.png)
+
 - Create a new Freestyle project (you have done it in Project 9) and name it save_artifacts.
+
+![](images/project12/save-artifact.png)
+
 - This project will be triggered by completion of your existing ansible project. Configure it accordingly:
 
   * Under General tab, select "Discard olf builds"
@@ -36,6 +45,16 @@ ll
   * In the input form that open, enter the project name, in this case "Ansible"
   * In the artifact copy, type "**"
   * In the targer directory, enter the directory created above "home/ubuntu/ansible-config-artifact"
+  * save
+
+  ![](images/project12/config-1.png)
+
+   ![](images/project12/config-2.png)
+
+    ![](images/project12/config-3.png)
+
+     ![](images/project12/config-4.png)
+
 
 > Step 2 – Refactor Ansible code by importing other playbooks into site.yml
 
