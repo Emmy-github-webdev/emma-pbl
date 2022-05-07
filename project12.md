@@ -59,7 +59,7 @@ ll
 
 - If both Jenkins jobs have completed one after another – you shall see your files inside /ansible-config-artifact directory and it will be updated with every commit to your master branch.
 
-![](images/test-save-artifact.png)
+![](images/project12/test-save-artifact.png)
 
 
 > Step 2 – Refactor Ansible code by importing other playbooks into site.yml
@@ -76,7 +76,7 @@ ll
 ```
 ---
 - hosts: all
-- import_playbook: ../static-assignments/common.yml
+   import_playbook: ../static-assignments/common.yml
 
 ```
 
@@ -135,6 +135,12 @@ cd /home/ubuntu/ansible-config-mgt/
 ansible-playbook -i inventory/dev.yml playbooks/site.yaml
 
 ```
+
+![](images/project12/remove-wireshark.png)
+
+
 * Make sure that wireshark is deleted on all the servers by running wireshark --version
+
+![](images/project12/check-remove-wireshark)
 
 * Now you have learned how to use import_playbooks module and you have a ready solution to install/delete packages on multiple servers with just one command.
