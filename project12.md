@@ -144,3 +144,7 @@ ansible-playbook -i inventory/dev.yml playbooks/site.yaml
 ![](images/project12/check-remove-wireshark)
 
 * Now you have learned how to use import_playbooks module and you have a ready solution to install/delete packages on multiple servers with just one command.
+
+> Step 3 – Configure UAT Webservers with a role ‘Webserver’
+
+1. Launch 2 fresh EC2 instances using RHEL 8 image, we will use them as our uat servers, so give them names accordingly – Web1-UAT and Web2-UAT.
