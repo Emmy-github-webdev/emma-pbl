@@ -42,7 +42,7 @@ ll
   * Under "Build" select ""Copy artifacts from another project
   * In the input form that open, enter the project name, in this case "Ansible"
   * In the artifact copy, type "**"
-  * In the target directory, enter the directory created above "home/ubuntu/ansible-config-artifact"
+  * In the target directory, enter the directory created above "/ansible-config-artifact"
   * save
 
   ![](images/project12/config-1.png)
@@ -148,3 +148,126 @@ ansible-playbook -i inventory/dev.yml playbooks/site.yaml
 > Step 3 – Configure UAT Webservers with a role ‘Webserver’
 
 1. Launch 2 fresh EC2 instances using RHEL 8 image, we will use them as our uat servers, so give them names accordingly – Web1-UAT and Web2-UAT.
+2. To create a role, you must create a directory called roles/, relative to the playbook file or in /etc/ansible/ directory.
+  * Use an Ansible utility called ansible-galaxy inside ansible-config-mgt/roles directory (you need to create roles directory upfront)
+```
+  mkdir roles
+  cd roles
+  ansible-galaxy init webserver
+```
+* Create the directory/files structure manually
+* The entire folder structure should look like below, but if you create it manually – you can skip creating tests, files, and vars or remove them if you used ansible-galaxy
+```
+└── webserver
+    ├── README.md
+    ├── defaults
+    │   └── main.yml
+    ├── files
+    ├── handlers
+    │   └── main.yml
+    ├── meta
+    │   └── main.yml
+    ├── tasks
+    │   └── main.yml
+    ├── templates
+    ├── tests
+    │   ├── inventory
+    │   └── test.yml
+    └── vars
+        └── main.yml
+```
+* After removing unnecessary directories and files, the roles structure should look like this
+
+```
+└── webserver
+    ├── README.md
+    ├── defaults
+    │   └── main.yml
+    ├── handlers
+    │   └── main.yml
+    ├── meta
+    │   └── main.yml
+    ├── tasks
+    │   └── main.yml
+    └── templates
+```
+3. Update your inventory ansible-config-mgt/inventory/uat.yml file with IP addresses of your 2 UAT Web servers use ssh agent to connect Jenkins-Ansible instance
+
+```
+[uat-webservers]
+<Web1-UAT-Server-Private-IP-Address> ansible_ssh_user='ec2-user' 
+
+<Web2-UAT-Server-Private-IP-Address> ansible_ssh_user='ec2-user'
+```
+4. In /etc/ansible/ansible.cfg file uncomment roles_path string and provide a full path to your roles directory roles_path  = /ansible-config/roles, so Ansible could know where to find configured roles.
+5. It is time to start adding some logic to the webserver role. Go into tasks directory, and within the main.yml file, start writing configuration tasks to do the following:
+* Install and configure Apache (httpd service)
+* Clone Tooling website from GitHub https://github.com/your-name/tooling.git.
+* Ensure the tooling website code is deployed to /var/www/html on each of 2 UAT Web servers.
+* Make sure httpd service is started
+* Your main.yml may consist of following tasks:
+
+```
+---
+- name: install apache
+  become: true
+  ansible.builtin.yum:
+    name: "httpd"
+    state: present
+
+- name: install git
+  become: true
+  ansible.builtin.yum:
+    name: "git"
+    state: present
+
+- name: clone a repo
+  become: true
+  ansible.builtin.git:
+    repo: https://github.com/<your-name>/tooling.git
+    dest: /var/www/html
+    force: yes
+
+- name: copy html content to one level up
+  become: true
+  command: cp -r /var/www/html/html/ /var/www/
+
+- name: Start service httpd, if not started
+  become: true
+  ansible.builtin.service:
+    name: httpd
+    state: started
+
+- name: recursively remove /var/www/html/html/ directory
+  become: true
+  ansible.builtin.file:
+    path: /var/www/html/html
+    state: absent
+```
+
+> Step 4 – Reference ‘Webserver’ role
+1. Within the static-assignments folder, create a new assignment for uat-webservers uat-webservers.yml. This is where you will reference the role.
+```
+---
+- hosts: uat-webservers
+  roles:
+     ../webserver
+```
+2. Remember that the entry point to our ansible configuration is the site.yml file. Therefore, you need to refer your uat-webservers.yml role inside site.yml.
+
+* So, we should have this in site.yml
+```
+---
+- hosts: all
+  import_playbook: ../static-assignments/common.yml
+
+- hosts: uat-webservers
+  import_playbook: ../static-assignments/uat-webservers.yml
+```
+
+> Step 5 – Commit & Test
+- Commit your changes, create a Pull Request and merge them to master branch, make sure webhook triggered two consequent Jenkins jobs, they ran successfully and copied all the files to your Jenkins-Ansible server into /ansible-config-mgt/ directory.
+- Now run the playbook against your uat inventory and see what happens:
+```
+sudo ansible-playbook -i /ansible-config-artifact/inventory/uat.yml /ansible-config-artifact/playbooks/site.yml
+```
