@@ -86,12 +86,40 @@ _Hint_: To preserve your your GitHub in actual state after you install a new rol
 
 then go to ‘ansible-config’ directory and run
 ```
-git init
-git pull https://github.com/<your-name>/ansible-config-mgt.git
-git remote add origin https://github.com/<your-name>/ansible-config-mgt.git
-git branch roles-feature
-git switch roles-feature
+sudo git init
+sudo git pull https://github.com/<your-name>/ansible-config-mgt.git
+sudo git remote add origin https://github.com/<your-name>/
+sudo ansible-config-mgt.git
+sudo git branch roles-feature
+sudo git switch roles-feature
 ```
+
+![](images/project13/1-git-pull.png)
+
+- Install Mysql role
+* Change directory to roles folser
+* run
+```
+sudo ansible-galaxy install geerlingguy.mysql
+```
+
+![](images/project13/2-install-ansible-galaxy.png)
+
+
+* Remane geerylingguy to mysql
+```
+sudo mv geerlingguy.mysql/ mysql
+```
+![](images/project13/3-rename-geerlinggut-to-mysql.png)
+
+* commit changes
+```
+git add .
+git commit -m "Commit new role files into GitHub"
+git push --set-upstream origin roles-feature
+```
+
+![](images/project13/4-add-git-add.png)
 
 > Load Balancer roles
 - We want to be able to choose which Load Balancer to use, Nginx or Apache, so we need to have two roles respectively:
