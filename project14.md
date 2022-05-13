@@ -91,19 +91,12 @@ You should have a subdomains list like this:
 | Server    |  Domain |
 |-----------|---------|
 | Jenkins    | https://ci.infradev.darey.io |
-|-----------|---------|
 | Sonarqube    |  https://sonar.infradev.darey.io |
-|-----------|---------|
 | Artifactory    |  https://artifacts.infradev.darey.io |
-|-----------|---------|
 | Production Tooling    |  https://tooling.darey.io |
-|-----------|---------|
 | Pre-Prod Tooling    |  https://tooling.preprod.darey.io |
-|-----------|---------|
 | Pentest Tooling    |  https://tooling.pentest.darey.io |
-|-----------|---------|
 | UAT Tooling   |  https://tooling.uat.darey.io |
-|-----------|---------|
 | SIT Tooling    |  https://tooling.sit.darey.io |
 |-----------|---------|
 | Dev Tooling    |  https://tooling.dev.darey.io |
