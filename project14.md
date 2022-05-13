@@ -98,18 +98,10 @@ You should have a subdomains list like this:
 | Pentest Tooling    |  https://tooling.pentest.darey.io |
 | UAT Tooling   |  https://tooling.uat.darey.io |
 | SIT Tooling    |  https://tooling.sit.darey.io |
-|-----------|---------|
 | Dev Tooling    |  https://tooling.dev.darey.io |
-|-----------|---------|
 | Production TODO-WebApp    |  https://todo.darey.io |
-|-----------|---------|
 | Pre-Prod TODO-WebApp    | https://todo.preprod.darey.io |
-|-----------|---------|
 | Pentest TODO-WebApp   |  https://todo.pentest.darey.io|
-|-----------|---------|
 | UAT TODO-WebApp   |  https://todo.uat.darey.io |
-|-----------|---------|
 | SIT TODO-WebApp    |  https://todo.sit.darey.io |
-|-----------|---------|
 | Dev TODO-WebApp    | https://todo.dev.darey.io |
-|-----------|---------|
