@@ -60,3 +60,63 @@ _Before we move on to observability metrics – let us list down the principles 
 11. **Application performance**: Before we even perform a deployment, we should configure monitoring tools like Retrace, DataDog, New Relic, or AppDynamics to look for performance problems, hidden errors, and other issues. During and after the deployment, we should also look for any changes in overall application performance and establish some benchmarks to know when things deviate from the norm.
 12. **Mean time to detection (MTTD)**: When problems happen, it is important that we identify them quickly. The last thing we want is to have a major partial or complete system outage and not know about it. Having robust application monitoring and good observability tools in place will help us detect issues quickly. Once they are detected, we also must fix them quickly!
 13. **Mean time to recovery (MTTR)**: This metric helps us track how long it takes to recover from failures. A key metric for the business is keeping failures to a minimum and being able to recover from them quickly. It is typically measured in hours and may refer to business hours, not calendar hours
+
+### SIMULATING A TYPICAL CI/CD PIPELINE FOR A PHP BASED APPLICATION
+
+![](images/project14/ci_cd-pipeline-for-php-todo-application.png)
+
+### Set Up
+
+_This project is partly a continuation of your Ansible work, so simply add and subtract based on the new setup in this project. It will require a lot of servers to simulate all the different environments from dev/ci all the way to production._
+
+What we want to achieve, is having Nginx to serve as a reverse proxy for our sites and tools. Each environment setup is represented in the below table and diagrams.
+
+![](images/project14/environment-setup.png)
+
+
+![](images/project14/project-14-ci-environment.png)
+
+Other Environments from Lower To Higher
+
+![](images/project14/project-14-ci-environment.png)
+
+### DNS requirements
+
+Make DNS entries to create a subdomain for each environment. Assuming your main domain is darey.io
+
+<br>
+
+You should have a subdomains list like this:
+
+| Server    |  Domain |
+|-----------|---------|
+| Jenkins    | https://ci.infradev.darey.io |
+|-----------|---------|
+| Sonarqube    |  https://sonar.infradev.darey.io |
+|-----------|---------|
+| Artifactory    |  https://artifacts.infradev.darey.io |
+|-----------|---------|
+| Production Tooling    |  https://tooling.darey.io |
+|-----------|---------|
+| Pre-Prod Tooling    |  https://tooling.preprod.darey.io |
+|-----------|---------|
+| Pentest Tooling    |  https://tooling.pentest.darey.io |
+|-----------|---------|
+| UAT Tooling   |  https://tooling.uat.darey.io |
+|-----------|---------|
+| SIT Tooling    |  https://tooling.sit.darey.io |
+|-----------|---------|
+| Dev Tooling    |  https://tooling.dev.darey.io |
+|-----------|---------|
+| Production TODO-WebApp    |  https://todo.darey.io |
+|-----------|---------|
+| Pre-Prod TODO-WebApp    | https://todo.preprod.darey.io |
+|-----------|---------|
+| Pentest TODO-WebApp   |  https://todo.pentest.darey.io|
+|-----------|---------|
+| UAT TODO-WebApp   |  https://todo.uat.darey.io |
+|-----------|---------|
+| SIT TODO-WebApp    |  https://todo.sit.darey.io |
+|-----------|---------|
+| Dev TODO-WebApp    | https://todo.dev.darey.io |
+|-----------|---------|
