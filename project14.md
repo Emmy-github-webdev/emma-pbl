@@ -193,3 +193,99 @@ _**Observations**:_
 - For example, If there are variables we need to be common between both pentest-todo and pentest-tooling, rather than setting these variables in many places, we can simply use the group_vars for pentest. Since in the inventory file it has been created as pentest:children Ansible recognizes this and simply applies that variable to both children.
 
 ### ANSIBLE ROLES FOR CI ENVIRONMENT
+
+Now go ahead and Add two more roles to ansible:
+- [SonarQube](https://www.sonarqube.org/) - It is an automatic code review tool to detect bug, vulnerabilities. SonarQube can help you write cleaner and safer code.  platform developed by SonarSource for continuous inspection of code quality, it is used to perform automatic reviews with static analysis of code to detect bugs,
+
+<br>
+
+#### Why do we need SonarQube?
+SonarQube is an open-sources
+
+- [Artifactory](https://jfrog.com/artifactory/) - It is a product by jFrog that serves as a binary repository manager. [Watch the video](https://www.youtube.com/watch?v=upJS4R6SbgM)
+
+
+### Configuring Ansible For Jenkins Deployment
+
+In previous projects, you have been launching Ansible commands manually from a CLI. Now, with Jenkins, we will start running Ansible from Jenkins UI.
+
+_To do this_
+
+1. Navigate to Jenkins URL
+2. Install & Open Blue Ocean Jenkins Plugin
+3. Create a new pipeline
+4. Select GitHub
+5. Connect Jemkins with GitHub
+6. Login to GitHub & Generate an Access Token
+7. Copy Access Token
+8. Paste the token and connect
+9. Create a new Pipeline
+
+_At this point you may not have a [Jenkinsfile](https://www.jenkins.io/doc/book/pipeline/jenkinsfile/) in the Ansible repository, so Blue Ocean will attempt to give you some guidance to create one. But we do not need that. We will rather create one ourselves. So, click on Administration to exit the Blue Ocean console._
+
+- Here is our newly created pipeline. It takes the name of your GitHub repository.
+- create our Jenkinsfile
+  * Inside the Ansible project, create a new directory _deploy_ and start a new file _Jenkinsfile_ inside the directory.
+
+  ![](images/project14/ansible-folder-structure)
+
+  * Add the code snippet below to start building the _Jenkinsfile_ gradually. This pipeline currently has just one stage called _Build_ and the only thing we are doing is using the _shell script_ module to echo _Building Stage_
+
+  ```
+  pipeline {
+    agent any
+
+    stages {
+      stage('Build') {
+        steps {
+          script {
+            sh 'echo "Building Stage"'
+          }
+        }
+      }
+      }
+  }
+
+  ```
+  * Now go back into the Ansible pipeline in Jenkins, and select configure
+
+  * Scroll down to _Build Configuration_ section and specify the location of the Jenkinsfile at _deploy/Jenkinsfile_
+  * Back to the pipeline again, this time click "_Build now_"
+  * _This will trigger a build and you will be able to see the effect of our basic **Jenkinsfile** configuration by going through the console output of the build._
+
+  * To really appreciate and feel the difference of Cloud Blue UI, it is recommended to try triggering the build again from Blue Ocean interface.
+   1. Click on Blue Ocean
+   2. Select your project
+   3. Click on the play button against the branch
+_Notice that this pipeline is a multibranch one. This means, if there were more than one branch in GitHub, Jenkins would have scanned the repository to discover them all and we would have been able to trigger a build for each branch._
+
+#### Let us see this in action.
+
+1. Create a new git branch and name it _feature/jenkinspipeline-stages_
+2. Currently we only have the _Build_ stage. Let us add another stage called _Test_. Paste the code snippet below and push the new changes to GitHub.
+
+```
+pipeline {
+    agent any
+
+  stages {
+    stage('Build') {
+      steps {
+        script {
+          sh 'echo "Building Stage"'
+        }
+      }
+    }
+
+    stage('Test') {
+      steps {
+        script {
+          sh 'echo "Testing Stage"'
+        }
+      }
+    }
+    }
+}
+```
+3. To make your new branch show up in Jenkins, we need to tell Jenkins to scan the repository.
+  * Click on the "Administration" button
