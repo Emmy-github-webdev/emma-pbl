@@ -383,3 +383,139 @@ systemctl start artifactory
 systemctl enable artifactory
 systemctl status artifactory
 ```
+> Phase 1 – Prepare Jenkins
+1. Fork the repository below into your GitHub account
+```
+https://github.com/darey-devops/php-todo.git
+
+```
+
+2. On you Jenkins server, install PHP, its dependencies and Composer tool (Feel free to do this manually at first, then update your Ansible accordingly later)
+```
+sudo apt install -y zip libapache2-mod-php phploc php-{xml,bcmath,bz2,intl,gd,mbstring,mysql,zip}
+```
+3. Install Jenkins plugins
+* [Plot plugin](https://plugins.jenkins.io/plot/)
+* [Artifactory plugin](https://www.jfrog.com/confluence/display/JFROG/Jenkins+Artifactory+Plug-in)
+  - We will use plot plugin to display tests reports, and code coverage information.
+ - The Artifactory plugin will be used to easily upload code artifacts into an Artifactory server.
+
+4. In Jenkins UI configure Artifactory
+
+> Phase 2 – Integrate Artifactory repository with Jenkins
+
+- Create a dummy Jenkinsfile in the repository
+- Using Blue Ocean, create a multibranch Jenkins pipeline
+- On the database server, create database and user
+
+```
+Create database homestead;
+CREATE USER 'homestead'@'%' IDENTIFIED BY 'sePret^i';
+GRANT ALL PRIVILEGES ON * . * TO 'homestead'@'%';
+```
+
+- Update the database connectivity requirements in the file _.env.sample_
+- Update _Jenkinsfile_ with proper pipeline configuration
+
+```
+pipeline {
+    agent any
+
+  stages {
+
+     stage("Initial cleanup") {
+          steps {
+            dir("${WORKSPACE}") {
+              deleteDir()
+            }
+          }
+        }
+
+    stage('Checkout SCM') {
+      steps {
+            git branch: 'main', url: 'https://github.com/darey-devops/php-todo.git'
+      }
+    }
+
+    stage('Prepare Dependencies') {
+      steps {
+             sh 'mv .env.sample .env'
+             sh 'composer install'
+             sh 'php artisan migrate'
+             sh 'php artisan db:seed'
+             sh 'php artisan key:generate'
+      }
+    }
+  }
+}
+```
+
+- Update the _Jenkinsfile_ to include Unit tests step
+```
+stage('Execute Unit Tests') {
+steps {
+        sh './vendor/bin/phpunit'
+} 
+```
+
+> Phase 3 – Code Quality Analysis
+
+For PHP the most commonly tool used for code quality analysis is [phploc](https://matthiasnoback.nl/2019/09/using-phploc-for-quick-code-quality-estimation-part-1/). [Read the article here for more](https://phpqa.io/projects/phploc.html)
+
+- The data produced by phploc can be ploted onto graphs in Jenkins.
+1. Add the code analysis step in _Jenkinsfile_. The output of the data will be saved in _build/logs/phploc.csv_ file.
+
+```
+stage('Code Analysis') {
+  steps {
+        sh 'phploc app/ --log-csv build/logs/phploc.csv'
+
+  }
+}
+```
+
+2. Plot the data using plot Jenkins plugin.
+3. Bundle the application code for into an artifact (archived package) upload to Artifactory
+
+```
+stage ('Package Artifact') {
+    steps {
+            sh 'zip -qr php-todo.zip ${WORKSPACE}/*'
+     }
+    }
+```
+
+4. Publish the resulted artifact into Artifactory
+
+```
+stage ('Upload Artifact to Artifactory') {
+          steps {
+            script { 
+                 def server = Artifactory.server 'artifactory-server'                 
+                 def uploadSpec = """{
+                    "files": [
+                      {
+                       "pattern": "php-todo.zip",
+                       "target": "<name-of-artifact-repository>/php-todo",
+                       "props": "type=zip;status=ready"
+
+                       }
+                    ]
+                 }""" 
+
+                 server.upload spec: uploadSpec
+               }
+            }
+
+        }
+```
+
+5. Deploy the application to the _dev_ environment by launching Ansible pipeline
+```
+stage ('Deploy to Dev Environment') {
+    steps {
+    build job: 'ansible-project/main', parameters: [[$class: 'StringParameterValue', name: 'env', value: 'dev']], propagate: false, wait: true
+    }
+  }
+```
+- The _build job_ used in this step tells Jenkins to start another job. In this case it is the _ansible-project_ job, and we are targeting the _main_ branch. Hence, we have _ansible-project/main_. Since the Ansible project requires _parameters_ to be passed in, we have included this by specifying the parameters section. The name of the parameter is _env_ and its value is _dev_. Meaning, deploy to the Development environment.
