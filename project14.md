@@ -289,3 +289,97 @@ pipeline {
 ```
 3. To make your new branch show up in Jenkins, we need to tell Jenkins to scan the repository.
   * Click on the "Administration" button
+  * Navigate to the Ansible project and click on "Scan repository now"
+  * Refresh the page and both branches will start building automatically, You can go into Blue Ocean and see both branches there too.
+  * In Blue Ocean, you can now see how the Jenkinsfile has caused a new step in the pipeline launch build for the new branch.
+4. A QUICK TASK FOR YOU!
+```
+1. Create a pull request to merge the latest code into the main branch
+2. After merging the PR, go back into your terminal and switch into the main branch.
+3. Pull the latest change.
+4. Create a new branch, add more stages into the Jenkins file to simulate below phases. (Just add an echo command like we have in build and test stages)
+   1. Package 
+   2. Deploy 
+   3. Clean up
+5. Verify in Blue Ocean that all the stages are working, then merge your feature branch to the main branch
+6. Eventually, your main branch should have a successful pipeline like this in blue ocean
+```
+
+### RUNNING ANSIBLE PLAYBOOK FROM JENKINS
+
+_Now that you have a broad overview of a typical Jenkins pipeline. Let us get the actual Ansible deployment to work by:_
+
+1. Installing Ansible on Jenkins (Follow the previous steps)
+
+[video](https://www.youtube.com/watch?v=PRpEbFZi7nI)
+ 
+2. Installing _Ansible_ plugin in Jenkins UI
+3. Configure the global tool configuration
+  * Go to Jenkins portal
+  * Click manage plugin
+  * Select global tool configuration
+  * Go down to the portion of Jenkins
+    - Give it a name "ansible2"
+    - Give the path to ansible e.h _/usr/bin. you can find this from Jenkins severby running this command on the termonal **which ansible**
+  * save
+4. Create new job
+  * Give the job a name _ansibledemo_
+  * Select pipeline and select okay
+5. Creating _Jenkinsfile_ from scratch. (Delete all you currently have in there and start all over to get Ansible to run successfully)
+
+* Update sit inventory with new servers
+
+```
+[tooling]
+<SIT-Tooling-Web-Server-Private-IP-Address>
+
+[todo]
+<SIT-Todo-Web-Server-Private-IP-Address>
+
+[nginx]
+<SIT-Nginx-Private-IP-Address>
+
+[db:vars]
+ansible_user=ec2-user
+ansible_python_interpreter=/usr/bin/python
+
+[db]
+<SIT-DB-Server-Private-IP-Address>
+```
+
+* Update _Jenkinsfile_ to introduce parameterization. Below is just one parameter. It has a default value in case if no value is specified at execution. It also has a description so that everyone is aware of its purpose.
+
+```
+pipeline {
+    agent any
+
+    parameters {
+      string(name: 'inventory', defaultValue: 'dev',  description: 'This is the inventory file for the environment to deploy configuration')
+    }
+...
+```
+
+* In the Ansible execution section, remove the hardcoded inventory/dev and replace with `${inventory}
+
+* Add another parameter. This time, introduce _tagging_ in Ansible. You can limit the Ansible execution to a specific role or playbook desired. Therefore, add an Ansible tag to run against _webserver_ only. Test this locally first to get the experience. Once you understand this, update_Jenkinsfile_ and run it from Jenkins.
+
+### CI/CD PIPELINE FOR TODO APPLICATION
+
+Our goal here is to deploy the application onto servers directly from _Artifactory_ rather than from git. [Configure Artifactory on Ubuntu 20.04](https://www.howtoforge.com/tutorial/ubuntu-jfrog/)
+
+```
+apt-get install gnupg2 -y
+
+wget -qO - https://api.bintray.com/orgs/jfrog/keys/gpg/public.key | apt-key add -
+
+# Next, add the JFrog Artifactory repository with the following command:
+
+echo "deb https://jfrog.bintray.com/artifactory-debs bionic main" | tee /etc/apt/sources.list.d/jfrog.list
+
+apt-get update -y
+apt-get install jfrog-artifactory-oss -y
+
+systemctl start artifactory
+systemctl enable artifactory
+systemctl status artifactory
+```
