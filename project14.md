@@ -519,3 +519,114 @@ stage ('Deploy to Dev Environment') {
   }
 ```
 - The _build job_ used in this step tells Jenkins to start another job. In this case it is the _ansible-project_ job, and we are targeting the _main_ branch. Hence, we have _ansible-project/main_. Since the Ansible project requires _parameters_ to be passed in, we have included this by specifying the parameters section. The name of the parameter is _env_ and its value is _dev_. Meaning, deploy to the Development environment.
+
+### SONARQUBE INSTALLATION
+
+> Install SonarQube on Ubuntu 20.04 With PostgreSQL as Backend Database
+```
+sudo sysctl -w vm.max_map_count=262144
+sudo sysctl -w fs.file-max=65536
+ulimit -n 65536
+ulimit -u 4096
+```
+
+- To make a permanent change, edit the file /etc/security/limits.conf and append the below
+
+```
+sonarqube   -   nofile   65536
+sonarqube   -   nproc    4096
+```
+
+- Before installing, let us update and upgrade system packages
+
+```
+sudo apt-get update
+sudo apt-get upgrade
+```
+
+- Install [wget](https://www.gnu.org/software/wget/) and [unzip](https://linux.die.net/man/1/unzip) packages
+
+```
+sudo apt-get install wget unzip -y
+```
+
+- Install [OpenJDK](https://openjdk.java.net/) and [Java Runtime Environment (JRE) 11](https://docs.oracle.com/goldengate/1212/gg-winux/GDRAD/java.htm#BGBFJHAB)
+
+```
+ sudo apt-get install openjdk-11-jdk -y
+ sudo apt-get install openjdk-11-jre -y
+ ```
+
+ - Set default JDK – To set default JDK or switch to OpenJDK enter below command:
+
+ ```
+ sudo update-alternatives --config java
+ ```
+ - Verify the set JAVA Version:
+ ```
+ java -version
+ ```
+
+  > Install and Setup PostgreSQL 10 Database for SonarQube
+
+  ```
+  sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+  wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
+
+  # Install PostgreSQL Database Server
+
+  sudo apt-get -y install postgresql postgresql-contrib
+
+  # Start PostgreSQL Database Server
+
+  sudo systemctl start postgresql
+
+  sudo systemctl enable postgresql
+
+  sudo passwd postgres
+
+  su - postgres
+
+  # Create a new user
+
+  createuser sonar
+
+  # Switch to the PostgreSQL shell
+  psql
+
+  # Set a password for the newly created user for SonarQube database
+
+  ALTER USER sonar WITH ENCRYPTED password 'sonar';
+
+  # Create a new database for PostgreSQL database by running:
+  CREATE DATABASE sonarqube OWNER sonar;
+
+  # Grant all privileges to sonar user on sonarqube Database.
+  grant all privileges on DATABASE sonarqube to sonar;
+
+  # Exit from the psql shell:
+
+  \q
+
+  # Switch back to the sudo user by running the exit command.
+exit
+
+  ```
+
+- Install SonarQube on Ubuntu 20.04 LTS
+ * Navigate to the _tmp_ directory to temporarily download the installation files
+
+ ```
+ cd /tmp && sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.9.3.zip
+ ```
+
+ - Unzip the archive setup to _/opt directory_
+
+ ```
+ sudo unzip sonarqube-7.9.3.zip -d /opt
+ ```
+
+ - Move extracted setup to _/opt/sonarqube directory_
+ ```
+ sudo mv /opt/sonarqube-7.9.3 /opt/sonarqube
+ ```
