@@ -630,3 +630,125 @@ exit
  ```
  sudo mv /opt/sonarqube-7.9.3 /opt/sonarqube
  ```
+
+ > CONFIGURE SONARQUBE
+<br>
+ We cannot run SonarQube as a root user, if you run using root user it will stop automatically. The ideal approach will be to create a separate group and a user to run SonarQube
+ <br>
+ Create a group _sonar_
+
+```
+sudo groupadd sonar
+```
+- Now add a user with control over the _/opt/sonarqube_ directory
+```
+ sudo useradd -c "user to run SonarQube" -d /opt/sonarqube -g sonar sonar 
+ sudo chown sonar:sonar /opt/sonarqube -R
+ ```
+
+ - Open SonarQube configuration file using your favourite text editor (e.g., nano or vim)
+
+```
+sudo vim /opt/sonarqube/conf/sonar.properties
+```
+
+- Find the following lines:
+
+```
+#sonar.jdbc.username=
+#sonar.jdbc.password=
+
+```
+- Uncomment them and provide the values of PostgreSQL Database username and password:
+
+- Edit the sonar script file and set RUN_AS_USER
+
+```
+sudo nano /opt/sonarqube/bin/linux-x86-64/sonar.sh
+
+```
+
+- Now, to start SonarQube we need to do following:
+
+```
+# Switch to sonar user
+sudo su sonar
+
+# Move to the script directory
+
+cd /opt/sonarqube/bin/linux-x86-64/
+
+# Run the script to start SonarQube
+./sonar.sh start
+```
+- Expected output shall be as:
+```
+Starting SonarQube...
+
+Started SonarQube
+```
+- Check SonarQube running status:
+
+```
+./sonar.sh status
+
+```
+
+- To check SonarQube logs, navigate to _/opt/sonarqube/logs/sonar.log_ directory
+
+```
+tail /opt/sonarqube/logs/sonar.log
+```
+
+> Configure SonarQube to run as a _systemd_ service
+
+```
+# Stop the currently running SonarQube service
+cd /opt/sonarqube/bin/linux-x86-64/
+
+# Run the script to start SonarQube
+
+./sonar.sh stop
+
+# Create a systemd service file for SonarQube to run as System Startup.
+
+ sudo nano /etc/systemd/system/sonar.service
+```
+
+- Add the configuration below for _systemd_ to determine how to start, stop, check status, or restart the SonarQube service.
+
+```
+[Unit]
+Description=SonarQube service
+After=syslog.target network.target
+
+[Service]
+Type=forking
+
+ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
+ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
+
+User=sonar
+Group=sonar
+Restart=always
+
+LimitNOFILE=65536
+LimitNPROC=4096
+
+[Install]
+WantedBy=multi-user.target
+```
+
+- Save the file and control the service with systemctl
+```
+sudo systemctl start sonar
+sudo systemctl enable sonar
+sudo systemctl status sonar
+```
+
+- Access SonarQube
+```
+# To access SonarQube using browser, type server’s IP address followed by port 9000
+
+http://server_IP:9000 OR http://localhost:9000
+```
