@@ -384,14 +384,24 @@ _Now that you have a broad overview of a typical Jenkins pipeline. Let us get th
 [video](https://www.youtube.com/watch?v=PRpEbFZi7nI)
  
 2. Installing _Ansible_ plugin in Jenkins UI
+
+  ![](images/project14/ansible-plugin.png)
+
+  ![](images/project14/install-ansible-plugin.png)
+
+
 3. Configure the global tool configuration
   * Go to Jenkins portal
   * Click manage plugin
   * Select global tool configuration
-  * Go down to the portion of Jenkins
+  * Go down to the portion of Ansible
+  - Click add ansible
     - Give it a name "ansible2"
-    - Give the path to ansible e.h _/usr/bin. you can find this from Jenkins severby running this command on the termonal **which ansible**
+    - Give the path to ansible e.g _/usr/bin. you can find this from Jenkins severby running this command on the termonal **which ansible**
   * save
+
+    ![](images/project14/config-ansible-plugin.png)
+
 4. Create new job
   * Give the job a name _ansibledemo_
   * Select pipeline and select okay
