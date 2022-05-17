@@ -282,13 +282,31 @@ _At this point you may not have a [Jenkinsfile](https://www.jenkins.io/doc/book/
   ```
   * Now go back into the Ansible pipeline in Jenkins, and select configure
 
+    ![](images/project14/click-configure.png)
+
   * Scroll down to _Build Configuration_ section and specify the location of the Jenkinsfile at _deploy/Jenkinsfile_
+
+    ![](images/project14/configure-jenkinsfile-path.png)
+
+    ![](images/project14/log-scan.png)
+
+
   * Back to the pipeline again, this time click "_Build now_"
+
+ ![](images/project14/build-branch.png)
+
+  ![](images/project14/main-branch.png)
+
+
   * _This will trigger a build and you will be able to see the effect of our basic **Jenkinsfile** configuration by going through the console output of the build._
 
   * To really appreciate and feel the difference of Cloud Blue UI, it is recommended to try triggering the build again from Blue Ocean interface.
    1. Click on Blue Ocean
    2. Select your project
+
+     ![](images/project14/ansible-on-blue-ocean.png)
+
+
    3. Click on the play button against the branch
 _Notice that this pipeline is a multibranch one. This means, if there were more than one branch in GitHub, Jenkins would have scanned the repository to discover them all and we would have been able to trigger a build for each branch._
 
@@ -322,8 +340,21 @@ pipeline {
 ```
 3. To make your new branch show up in Jenkins, we need to tell Jenkins to scan the repository.
   * Click on the "Administration" button
+
+  ![](images/project14/click-admin.png)
+
+
   * Navigate to the Ansible project and click on "Scan repository now"
+
+   ![](images/project14/scan-repo-now.png)
+
+   ![](images/project14/scan-repo-now.png)
+
+
   * Refresh the page and both branches will start building automatically, You can go into Blue Ocean and see both branches there too.
+
+  ![](images/project14/blue-ocean-build.png)
+
   * In Blue Ocean, you can now see how the Jenkinsfile has caused a new step in the pipeline launch build for the new branch.
 4. A QUICK TASK FOR YOU!
 ```
@@ -337,6 +368,12 @@ pipeline {
 5. Verify in Blue Ocean that all the stages are working, then merge your feature branch to the main branch
 6. Eventually, your main branch should have a successful pipeline like this in blue ocean
 ```
+
+ ![](images/project14/add-more-stages.png)
+
+  ![](images/project14/add-more-stage-screen.png)
+
+   ![](images/project14/blue-ocean-more-stages.png)
 
 ### RUNNING ANSIBLE PLAYBOOK FROM JENKINS
 
