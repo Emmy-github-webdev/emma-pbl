@@ -240,27 +240,27 @@ _To do this_
 
 8. Paste the token and connect
 
-![](images/project14/paste-token)
+![](images/project14/paste-token.png)
 
 
-![](images/project14/github-connected)
+![](images/project14/github-connected.png)
 
 9. Create a new Pipeline
 
-![](images/project14/choose-repo)
+![](images/project14/choose-repo.png)
 
-![](images/project14/pipeline-created)
+![](images/project14/pipeline-created.png)
 
 _At this point you may not have a [Jenkinsfile](https://www.jenkins.io/doc/book/pipeline/jenkinsfile/) in the Ansible repository, so Blue Ocean will attempt to give you some guidance to create one. But we do not need that. We will rather create one ourselves. So, click on Administration to exit the Blue Ocean console._
 
 - Here is our newly created pipeline. It takes the name of your GitHub repository.
 
-![](images/project14/pipeline-created)
+![](images/project14/pipeline-created.png)
 
 - create our Jenkinsfile
   * Inside the Ansible project, create a new directory _deploy_ and start a new file _Jenkinsfile_ inside the directory.
 
-  ![](images/project14/created-pipeline-on-jenkins)
+  ![](images/project14/created-pipeline-on-jenkins.png)
 
   * Add the code snippet below to start building the _Jenkinsfile_ gradually. This pipeline currently has just one stage called _Build_ and the only thing we are doing is using the _shell script_ module to echo _Building Stage_
 
