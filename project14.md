@@ -213,21 +213,54 @@ _To do this_
 
 1. Navigate to Jenkins URL
 2. Install & Open Blue Ocean Jenkins Plugin
+
+![](images/project14/blue-ocean-availability.png)
+
+![](images/project14/blue-ocean-installed.png)
+
 3. Create a new pipeline
+
+![](images/project14/create-pipeline-windows.png)
+
 4. Select GitHub
+
+![](images/project14/select-github.png)
+
 5. Connect Jemkins with GitHub
+
+![](images/project14/github-auth-path)
+
+![](images/project14/select-github.png)
+
 6. Login to GitHub & Generate an Access Token
+
+![](images/project14/generate-token.png)
+
 7. Copy Access Token
+
 8. Paste the token and connect
+
+![](images/project14/paste-token)
+
+
+![](images/project14/github-connected)
+
 9. Create a new Pipeline
+
+![](images/project14/choose-repo)
+
+![](images/project14/pipeline-created)
 
 _At this point you may not have a [Jenkinsfile](https://www.jenkins.io/doc/book/pipeline/jenkinsfile/) in the Ansible repository, so Blue Ocean will attempt to give you some guidance to create one. But we do not need that. We will rather create one ourselves. So, click on Administration to exit the Blue Ocean console._
 
 - Here is our newly created pipeline. It takes the name of your GitHub repository.
+
+![](images/project14/pipeline-created)
+
 - create our Jenkinsfile
   * Inside the Ansible project, create a new directory _deploy_ and start a new file _Jenkinsfile_ inside the directory.
 
-  ![](images/project14/ansible-folder-structure)
+  ![](images/project14/created-pipeline-on-jenkins)
 
   * Add the code snippet below to start building the _Jenkinsfile_ gradually. This pipeline currently has just one stage called _Build_ and the only thing we are doing is using the _shell script_ module to echo _Building Stage_
 
@@ -752,3 +785,112 @@ sudo systemctl status sonar
 
 http://server_IP:9000 OR http://localhost:9000
 ```
+
+> CONFIGURE SONARQUBE AND JENKINS FOR QUALITY GATE
+
+- In Jenkins, install [SonarScanner plugin](https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-jenkins/)
+- Navigate to configure system in Jenkins. Add SonarQube server as shown below:
+
+```
+ Manage Jenkins > Configure System
+ ```
+ - Generate authentication token in SonarQube
+
+ ```
+  User > My Account > Security > Generate Tokens
+  ```
+
+  - Configure Quality Gate Jenkins Webhook in SonarQube – The URL should point to your Jenkins server **http://{JENKINS_HOST}/sonarqube-webhook/**
+
+  ```
+  Administration > Configuration > Webhooks > Create
+  ```
+  - Setup SonarQube scanner from Jenkins – Global Tool Configuration
+  ```
+  Manage Jenkins > Global Tool Configuration
+  ```
+  - Update Jenkins Pipeline to include SonarQube scanning and Quality Gate
+  _Below is the snippet for a Quality Gate stage in Jenkinsfile._
+
+```
+  stage('SonarQube Quality Gate') {
+    environment {
+        scannerHome = tool 'SonarQubeScanner'
+    }
+    steps {
+        withSonarQubeEnv('sonarqube') {
+            sh "${scannerHome}/bin/sonar-scanner"
+        }
+
+    }
+}
+```
+
+- Configure sonar-scanner.properties – From the step above, Jenkins will install the scanner tool on the Linux server. You will need to go into the tools directory on the server to configure the properties file in which SonarQube will require to function during pipeline execution.
+
+```
+cd /var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarQubeScanner/conf/
+```
+
+- Open sonar-scanner.properties file
+
+```
+sudo vi sonar-scanner.properties
+```
+
+- Add configuration related to php-todo project
+```
+sonar.host.url=http://<SonarQube-Server-IP-address>:9000
+sonar.projectKey=php-todo
+#----- Default source code encoding
+sonar.sourceEncoding=UTF-8
+sonar.php.exclusions=**/vendor/**
+sonar.php.coverage.reportPaths=build/logs/clover.xml
+sonar.php.tests.reportPath=build/logs/junit.xml
+```
+
+- To generate Jenkins code, navigate to the dashboard for the php-todo pipeline and click on the Pipeline Syntax menu item
+
+```
+Dashboard > php-todo > Pipeline Syntax 
+```
+
+- Click on Steps and select _withSonarQubeEnv_ – This appears in the list because of the previous SonarQube configurations you have done in Jenkins. Otherwise, it would not be there.
+
+- Navigate to php-todo project in SonarQube
+
+- If you click on php-todo project for further analysis, you will see that there is 6 hours’ worth of technical debt, code smells and security issues in the code.
+<br>
+_Let us update our Jenkinsfile to implement this:_
+
+- First, we will include a When condition to run Quality Gate whenever the running branch is either develop, hotfix, release, main, or master
+
+```
+when { branch pattern: "^develop*|^hotfix*|^release*|^main*", comparator: "REGEXP"}
+```
+
+- Then we add a timeout step to wait for SonarQube to complete analysis and successfully finish the pipeline only when code quality is acceptable.
+```
+  timeout(time: 1, unit: 'MINUTES') {
+        waitForQualityGate abortPipeline: true
+    }
+    ```
+
+    - The complete stage will now look like this:
+
+    ```
+    stage('SonarQube Quality Gate') {
+      when { branch pattern: "^develop*|^hotfix*|^release*|^main*", comparator: "REGEXP"}
+        environment {
+            scannerHome = tool 'SonarQubeScanner'
+        }
+        steps {
+            withSonarQubeEnv('sonarqube') {
+                sh "${scannerHome}/bin/sonar-scanner -Dproject.settings=sonar-project.properties"
+            }
+            timeout(time: 1, unit: 'MINUTES') {
+                waitForQualityGate abortPipeline: true
+            }
+        }
+    }
+    ```

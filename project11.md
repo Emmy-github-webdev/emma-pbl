@@ -31,7 +31,7 @@ ansible --version
 ```
  ![](images/project11/install-ansible.png)
 
-- [Install Jenkins](https://pkg.jenkins.io/debian-stable/)
+- [Install Jenkins](https://pkg.jenkins.io/debian-stable/) for [ubuntu 20.04](https://devopsarticle.com/how-to-install-jenkins-on-aws-ec2-ubuntu-20-04/)
     ```
         wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
         sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
