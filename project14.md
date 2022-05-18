@@ -407,6 +407,80 @@ _Now that you have a broad overview of a typical Jenkins pipeline. Let us get th
   * Select pipeline and select okay
 5. Creating _Jenkinsfile_ from scratch. (Delete all you currently have in there and start all over to get Ansible to run successfully)
 
+  ![](images/project14/jenkinsfile-from-scratch.png)
+
+
+ - Go to the ansibledemo configfure -> pipeline tabe
+
+   ![](images/project14/demo-pipeline.png)
+
+    ![](images/project14/start-pipeline.png)
+
+  - How to use  Pipeline syntax to update Pipeline script above
+   * click the **Pipeline script**
+
+    ![](images/project14/click-pipeline-syntax.png)
+
+    * New pages will open
+
+    ![](images/project14/snipet-generator.png)
+
+    * Script to clone **Github Repo**
+    - Under sample step, select Git
+
+    ![](images/project14/repo-clone.png)
+
+    - Copy the generated script to pepile script definition
+
+    ![](images/project14/snipet-generator.png)
+
+    - On the connectionCredential, click add
+      ![](images/project14/ssh-connection.png)
+
+    - Add the .pem key from the local pc as shown below
+
+    ![](images/project14/ansible-ssh-connection.png)
+
+    - Update pipeline
+
+     ![](images/project14/update-pepiline-syntax.png)
+
+#### Possible issues to watch out for when you implement this
+
+1. Remember that **ansible.cfg** must be exported to environment variable so that Ansible knows where to find **Roles**. But because you will possibly run Jenkins from different git branches, the location of Ansible roles will change. Therefore, you must handle this dynamically. You can use Linux Stream Editor sed to update the section **roles_path** each time there is an execution. You may not have this issue if you run only from the main branch.
+
+![](images/project14/ansible-cfg.png)
+
+
+2. If you push new changes to **Git** so that Jenkins failure can be fixed. You might observe that your change may sometimes have no effect. Even though your change is the actual fix required. This can be because Jenkins did not download the latest code from GitHub. Ensure that you start the **Jenkinsfile** with a clean up step to always delete the previous workspace before running a new one. Sometimes you might need to login to the Jenkins Linux server to verify the files in the workspace to confirm that what you are actually expecting is there. Otherwise, you can spend hours trying to figure out why Jenkins is still failing, when you have pushed up possible changes to fix the error.
+
+3. Another possible reason for Jenkins failure sometimes, is because you have indicated in the **Jenkinsfile** to check out the **main** git branch, and you are running a pipeline from another branch. So, always verify by logging onto the Jenkins box to check the workspace, and run **git branch** command to confirm that the branch you are expecting is there.
+<br>
+
+If everything goes well for you, it means, the Dev environment has an up-to-date configuration. But what if we need to deploy to other environments?
+
+- Are we going to manually update the **Jenkinsfile** to point inventory to those environments? such as **sit**, **uat**, **pentest**, etc.
+- Or do we need a dedicated git branch for each environment, and have the **inventory** part hard coded there.
+
+<br>
+
+Think about those for a minute and try to work out which one sounds more like a better solution.
+
+<br>
+
+Manually updating the **Jenkinsfile** is definitely not an option. And that should be obvious to you at this point. Because we try to automate things as much as possible.
+
+<br>
+
+Well, unfortunately, we will not be doing any of the highlighted options. What we will be doing is to parameterise the deployment. So that at the point of execution, the appropriate values are applied.
+
+#### Parameterizing Jenkinsfile For Ansible Deployment
+
+To deploy to other environments, we will need to use parameters.
+    
+
+    
+
 * Update sit inventory with new servers
 
 ```
