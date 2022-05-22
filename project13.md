@@ -2,6 +2,18 @@
 
 [Ansible Documentation](https://docs.ansible.com/)
 
+### Ansible dependencies
+
+```
+- sudo apt-get install python3 python3-pip wget unzip git -y
+- sudo python3 -m pip install --upgrade setuptools
+- sudo python3 -m pip install --upgrade pip
+- sudo python3 -m pip install PyMySQL
+- sudo python3 -m pip install mysql-connector-python
+- sudo python3 -m pip install psycopg2==2.7.5 --ignore-installed
+
+```
+
 > Introducing Dynamic Assignment Into Our structure
 1. In your https://github.com/your-name/ansible-config GitHub repository (Project fro project 12) start a new branch and call it dynamic-assignments.
 2. Create a new folder, name it dynamic-assignments. Then inside this folder, create a new file and name it env-vars.yml. We will instruct site.yml to include this playbook later. For now, let us keep building up the structure.

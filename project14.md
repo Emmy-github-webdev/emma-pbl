@@ -402,6 +402,21 @@ _Now that you have a broad overview of a typical Jenkins pipeline. Let us get th
 
     ![](images/project14/config-ansible-plugin.png)
 
+  * Update Ansible-config pipeline syntax
+
+    ![](images/project14/pipeline-syntax-1.png)
+
+    ![](images/project14/pipeline-syntax-2.png)
+
+    ![](images/project14/pipeline-syntax-3.png)
+
+    * Add the generated script to the "Run ansible playbook stage" in jenkinsfile
+
+    ```
+    ansiblePlaybook colorized: true, credentialsId: 'private-key', disableHostKeyChecking: true, installation: 'ansible2', inventory: 'inventory/dev', playbook: 'playbooks/site.yml'
+    
+    ```
+
 4. Create new job
   * Give the job a name _ansibledemo_
   * Select pipeline and select okay
@@ -514,6 +529,8 @@ pipeline {
 ```
 
 * In the Ansible execution section, remove the hardcoded inventory/dev and replace with `${inventory}
+
+![](images/project14/inventory-date.png)
 
 * Add another parameter. This time, introduce _tagging_ in Ansible. You can limit the Ansible execution to a specific role or playbook desired. Therefore, add an Ansible tag to run against _webserver_ only. Test this locally first to get the experience. Once you understand this, update_Jenkinsfile_ and run it from Jenkins.
 

@@ -13,7 +13,8 @@ sudo mkdir /ansible-config-artifact
 
 - Change permissions to this directory, so Jenkins could save files there 
 ```
-sudo chmod 0777 /ansible-config-artifact
+sudo chmod -R 0777 /home/ubuntu/ansible-config-artifact
+sudo chmod 0775 /home/ubuntu/
 ```
 
 - Check the permission
@@ -75,8 +76,9 @@ ll
 4. Inside site.yml file, import common.yml playbook.
 ```
 ---
+---
 - hosts: all
-   import_playbook: ../static-assignments/common.yml
+- import_playbook: ../static-assignments/common.yml
 
 ```
 
@@ -95,6 +97,9 @@ The code above uses built in [import_playbook](https://docs.ansible.com/ansible/
 └── playbooks
     └── site.yml
 ```
+
+![](images/project12/ping-all-host.png)
+
 5. Run ansible-playbook command against the dev environment
 > Since you need to apply some tasks to your dev servers and wireshark is already installed – you can go ahead and create another playbook under static-assignments and name it common-del.yml. In this playbook, configure deletion of wireshark utility.
 
@@ -271,3 +276,23 @@ ansible-playbook -i inventory/dev.yml playbooks/site.yaml
 ```
 sudo ansible-playbook -i /ansible-config-artifact/inventory/uat.yml /ansible-config-artifact/playbooks/site.yml
 ```
+
+![](images/project12/run-webserver-role.png)
+
+
+![](images/project12/run-webserver-role.png)
+
+- You should be able to see both of your UAT Web servers configured and you can try to reach them from your browser:
+
+```
+http://<Web1-UAT-Server-Public-IP-or-Public-DNS-Name>/index.php
+
+or
+
+http://<Web1-UAT-Server-Public-IP-or-Public-DNS-Name>/index.php
+```
+
+![](images/project12/run-webserver-role.png)
+
+
+![](images/project12/run-webserver-role.png)

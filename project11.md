@@ -278,6 +278,16 @@ git commit -m "commit message"
 
 ![](images/project11/pull-request.png)
 
+* SSH Config in VS Code
+
+```
+Host jenkins
+	Hostname ec2-54-160-217-111.compute-1.amazonaws.com
+	User ubuntu
+	IdentityFile "C:\Users\emmanuel\Downloads\ansible-jenkins-integration.pem"
+	port 22
+
+```
 
 - Once your code changes appear in master branch – Jenkins will do its job and save all the files (build artifacts) to /var/lib/jenkins/jobs/jenkins-ansible-freestyle/builds/build_number/archive/ directory on Jenkins-Ansible server. You can confirm
 
