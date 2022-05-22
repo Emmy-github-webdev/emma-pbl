@@ -108,6 +108,8 @@ sudo git switch roles-feature
 
 ![](images/project13/1-git-pull.png)
 
+![](images/1-change-git-url-from-https-ssh.png)
+
 - Install Mysql role
 * Change directory to roles folser
 * run
@@ -130,14 +132,17 @@ git add .
 git commit -m "Commit new role files into GitHub"
 git push --set-upstream origin roles-feature
 ```
+![](images/project13/5-add-apache-nginx-roles.png)
 
-![](images/project13/4-add-git-add.png)
+![](images/project13/6-nginx-upstream.png)
 
 > Load Balancer roles
 - We want to be able to choose which Load Balancer to use, Nginx or Apache, so we need to have two roles respectively:
 
 1. Nginx
 2. Apache
+
+![](images/1-change-git-url-from-https-ssh.png)
 
 _Important Hints:_
 - Since you cannot use both Nginx and Apache load balancer, you need to add a condition to enable either one – this is where you can make use of variables.
@@ -147,6 +152,8 @@ _Important Hints:_
 - Set both values to false like this enable_nginx_lb: false and enable_apache_lb: false.
 
 - Declare another variable in both roles load_balancer_is_required and set its value to false as well
+
+![](images/project13/7-nginx-task-main-1.png)
 
 - Update both assignment and site.yml files respectively
 * loadbalancers.yml file
@@ -175,3 +182,9 @@ enable_nginx_lb: true
 load_balancer_is_required: true
 
 ```
+
+```
+ansible-playbook -i /home/ubuntu/ansible-config-artifact/inventory/uat.yml /home/ubuntu/ansible-config-artifact/playbooks.site.yml
+```
+
+![](images/project13/final.png)
