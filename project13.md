@@ -187,4 +187,4 @@ load_balancer_is_required: true
 ansible-playbook -i /home/ubuntu/ansible-config-artifact/inventory/uat.yml /home/ubuntu/ansible-config-artifact/playbooks.site.yml
 ```
 
-![](images/project13/final.png)
+![](images/projet13/final.png)

@@ -431,34 +431,35 @@ _Now that you have a broad overview of a typical Jenkins pipeline. Let us get th
 
     ![](images/project14/start-pipeline.png)
 
-  - How to use  Pipeline syntax to update Pipeline script above
+- How to use  Pipeline syntax to update Pipeline script above
    * click the **Pipeline script**
 
-    ![](images/project14/click-pipeline-syntax.png)
+  ![](images/project14/click-pipeline-syntax.png)
 
-    * New pages will open
+  * New pages will open
 
-    ![](images/project14/snipet-generator.png)
+  ![](images/project14/snipet-generator.png)
 
-    * Script to clone **Github Repo**
-    - Under sample step, select Git
+  * Script to clone **Github Repo**
+- Under sample step, select Git
 
-    ![](images/project14/repo-clone.png)
+   ![](images/project14/repo-clone.png)
 
-    - Copy the generated script to pepile script definition
+- Copy the generated script to pepile script definition
 
-    ![](images/project14/snipet-generator.png)
+  ![](images/project14/snipet-generator.png)
 
-    - On the connectionCredential, click add
-      ![](images/project14/ssh-connection.png)
+- On the connectionCredential, click add
 
-    - Add the .pem key from the local pc as shown below
+  ![](images/project14/ssh-connection.png)
 
-    ![](images/project14/ansible-ssh-connection.png)
+- Add the .pem key from the local pc as shown below
 
-    - Update pipeline
+  ![](images/project14/add-ssh-connection.png)
 
-     ![](images/project14/update-pepiline-syntax.png)
+- Update pipeline
+
+  ![](images/project14/update-pepiline-syntax.png)
 
 #### Possible issues to watch out for when you implement this
 
