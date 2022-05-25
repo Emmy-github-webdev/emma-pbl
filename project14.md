@@ -490,6 +490,13 @@ Manually updating the **Jenkinsfile** is definitely not an option. And that shou
 
 ![](images/project14/pipeline-error.png)
 
+- Solution
+
+```
+home/ubuntu/<copy_directory> to 777
+```
+![](images/project14/solution-error.png)
+
 Well, unfortunately, we will not be doing any of the highlighted options. What we will be doing is to parameterise the deployment. So that at the point of execution, the appropriate values are applied.
 
 #### Parameterizing Jenkinsfile For Ansible Deployment
