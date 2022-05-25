@@ -488,6 +488,8 @@ Manually updating the **Jenkinsfile** is definitely not an option. And that shou
 
 <br>
 
+![](images/project14/pipeline-error.png)
+
 Well, unfortunately, we will not be doing any of the highlighted options. What we will be doing is to parameterise the deployment. So that at the point of execution, the appropriate values are applied.
 
 #### Parameterizing Jenkinsfile For Ansible Deployment
