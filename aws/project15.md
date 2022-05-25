@@ -252,3 +252,184 @@ _for tooling_
 
 > [Amazon RDS](https://aws.amazon.com/rds/?trk=c0fcea17-fb6a-4c27-ad98-192318a276ff&sc_channel=ps&sc_campaign=acquisition&sc_medium=ACQ-P|PS-GO|Brand|Desktop|SU|Database|Solution|US|EN|Text&s_kwcid=AL!4422!3!548665196298!e!!g!!amazon%20relational%20db&ef_id=EAIaIQobChMIybH9rPD59wIVoG5vBB2OpAKCEAAYASABEgIRZPD_BwE:G:s&s_kwcid=AL!4422!3!548665196298!e!!g!!amazon%20relational%20db)
 
+1. Install [AWS Key Management Service](https://aws.amazon.com/kms/)
+
+- Click on create key
+- Select Symmentric
+- Leave the advance part at default
+- Click next
+- On the **Add labels**
+  * Alias - ACS-rds
+  * Add description
+  * Add tags, name - name, tag value - ACS-rds-key
+- next
+- On the **Define key useage permission**
+  * Select your name
+  * Leave the rest as default
+- Click finish
+
+2. Create subnet group
+- On the **RDS console** search for _Subnet group_
+- click _create DB Subnet group_
+- name - ACS-rds-subnet
+- Add description
+- Choose the VPC created above
+- On **Add subnets**
+- Choose your avaliability zone created earlier (us-east-1a, us-east-1b)
+- For subnet, choose all the private subnets created earlier
+- create/Finish
+
+3. Back to **RDS Console** to create database
+- Click create database
+- On **Choose a database creation method**, select **MySQL**
+- Go with the latest version
+- For template - Select free tier for learning purpose
+- DB Instance identifier - ACS-database
+- Credential settings
+ * master username - ACSadmin
+ * Master password - passpword
+- Connectivity
+  * VPC - select our VPC (ACS-VPC)
+_ VPC Security Group
+  * Choose existing 
+  * Existing VPC Security group - ACS-Datalayer(Created earlier)
+- Availability zone - Choose either availability zone
+- Initial database name - test
+- Create database
+
+> #### Proceed With Compute Resources
+
+You will need to set up and configure compute resources inside your VPC. The recources related to compute are:
+
+- [EC2 Instances](https://www.amazonaws.cn/en/ec2/instance-types/)
+- [Launch Templates](https://docs.aws.amazon.com/autoscaling/ec2/userguide/launch-templates.html)
+- [Target Groups](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html)
+- [Autoscaling Groups](https://docs.aws.amazon.com/autoscaling/ec2/userguide/auto-scaling-groups.html)
+- [TLS Certificates](https://en.wikipedia.org/wiki/Transport_Layer_Security)
+- [Application Load Balancer (ALB)](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html)
+
+1. Spin up 3 RedHat AMI with all traffic open
+ - Name the machines **webserver**, **bastion**, **nginx** respectively
+
+ 2. Connect to the **Bastion** AMI
+ - Change to super user 
+ ```
+ sudo su -
+ ```
+ _Install the following_
+
+ ```
+yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm 
+
+yum install -y dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm 
+
+yum install wget vim python3 telnet htop git mysql net-tools chrony -y 
+
+systemctl start chronyd 
+
+systemctl enable chronyd
+ ```
+
+
+3. Connect to the **Nginx** AMI
+- Change to super user 
+```
+sudo su -
+```
+- Install the following
+
+```
+yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+
+yum install -y dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+
+yum install wget vim python3 telnet htop git mysql net-tools chrony -y
+
+systemctl start chronyd
+
+systemctl enable chronyd
+```
+
+_configure selinux policies for the webservers and nginx servers_
+
+```
+setsebool -P httpd_can_network_connect=1
+setsebool -P httpd_can_network_connect_db=1
+setsebool -P httpd_execmem=1
+setsebool -P httpd_use_nfs 1
+```
+_[install amazon efs utils for mounting the target on the Elastic file system](https://docs.aws.amazon.com/efs/latest/ug/installing-amazon-efs-utils.html#installing-other-distro)_
+
+```
+git clone https://github.com/aws/efs-utils
+
+cd efs-utils
+
+yum install -y make
+
+yum install -y rpm-build
+
+make rpm 
+
+yum install -y  ./build/amazon-efs-utils*rpm
+```
+
+_[seting up self-signed certificate for the nginx instance](https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-on-centos-7)_
+
+```
+sudo mkdir /etc/ssl/private
+
+sudo chmod 700 /etc/ssl/private
+
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/ACS.key -out /etc/ssl/certs/ACS.crt
+
+sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+```
+4. Set Up Compute Resources for Webservers
+
+- Change to super user 
+```
+sudo su -
+```
+- Install the following
+
+```
+yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+
+yum install -y dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+
+yum install wget vim python3 telnet htop git mysql net-tools chrony -y
+
+systemctl start chronyd
+
+systemctl enable chronyd
+```
+
+_[install amazon efs utils for mounting the target on the Elastic file system](https://docs.aws.amazon.com/efs/latest/ug/installing-amazon-efs-utils.html#installing-other-distro)_
+
+```
+git clone https://github.com/aws/efs-utils
+
+cd efs-utils
+
+yum install -y make
+
+yum install -y rpm-build
+
+make rpm 
+
+yum install -y  ./build/amazon-efs-utils*rpm
+
+yum install -y mod_ssl
+
+openssl req -newkey rsa:2048 -nodes -keyout /etc/pki/tls/private/ACS.key -x509 -days 365 -out /etc/pki/tls/certs/ACS.crt
+
+vi /etc/httpd/conf.d/ssl.conf
+
+# change sslCertificateFile /etc/phi/tls/certs/localhost.crt tp /etc/phi/tls/certs/ASC.crt
+
+# change sslCertificateFile /etc/phi/tls/private/localhost.key to /etc/phi/tls/private/ASC.key
+```
+
+
+
