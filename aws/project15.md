@@ -1,4 +1,4 @@
-
+### AWS CLOUD SOLUTION FOR 2 COMPANY WEBSITES USING A REVERSE PROXY TECHNOLOGY
 
 > SET UP A VIRTUAL PRIVATE NETWORK (VPC)
 
@@ -431,5 +431,251 @@ vi /etc/httpd/conf.d/ssl.conf
 # change sslCertificateFile /etc/phi/tls/private/localhost.key to /etc/phi/tls/private/ASC.key
 ```
 
+> Create AMI for each of the EC2 Instances
+
+_Webserver_
+
+- On the EC2 instances console, 
+- Select the instance (Webserver)
+- click on the **Action** dropdown
+- Click Image and template
+- On **Create Image** page
+  * Image name - ACS-webserver-ami
+  * Add Tags - key - name, Value - ACS-webserver-ami
+- Create image
+
+_Bastion_
+
+- On the EC2 instances console, 
+- Select the instance (Bastion)
+- click on the **Action** dropdown
+- Click Image and template
+- On **Create Image** page
+  * Image name - ACS-bastion-ami
+  * Add Tags - key - name, Value - ACS-bastion-ami
+- Create image
+
+_Nginx_
+
+- On the EC2 instances console, 
+- Select the instance (nginx)
+- click on the **Action** dropdown
+- Click Image and template
+- On **Create Image** page
+  * Image name - ACS-nginx-ami
+  * Add Tags - key - name, Value - ACS-nginx-ami
+- Create image
+
+> Images
+- Go to the **Image** console
+- Click on **AMIs**
+- The images created above should display here
+
+> Create Target Group
+- Navigate to **Load balancing**  and select **Target Groups**
+- Click create **Target Groups**
+_For Nginx_
+- Choose a target type - Choose **Instances**
+- Target group name - ACS-nginx-target
+- Protocol - Https 443
+- VPC - ACS-VPC created earlier
+- On **Health Checks**
+  * Health check path - /healthstatus
+- On **Tags**
+  * key - name
+  * value - ACS-nginx-target
+- Next
+- Create target group
 
 
+_For wordpress_
+- Choose a target type - Choose **Instances**
+- Target group name - ACS-wordpress-target
+- Protocol - Https 443
+- VPC - ACS-VPC created earlier
+- On **Health Checks**
+  * Health check path - /healthstatus
+- On **Tags**
+  * key - name
+  * value - ACS-wordpress-target
+- Next
+- Create target group
+
+
+
+_For tooling_
+- Choose a target type - Choose **Instances**
+- Target group name - ACS-tooling-target
+- Protocol - Https 443
+- VPC - ACS-VPC created earlier
+- On **Health Checks**
+  * Health check path - /healthstatus
+- On **Tags**
+  * key - name
+  * value - ACS-tooling-target
+- Next
+- Create target group
+
+> Create Load balancer
+- Navigate to **Load balancing**  and select **Load Balancer**
+- Click **Create load balancer**
+- Create **HTTP HTTPS**
+
+_For Internet facing (External) Load Balancer_
+
+- Step 1. Configure Load balancer
+  * name - ACS-ext-ALB
+  * Scheme - Internat facing
+  * Load balancer Protocol - HTTPS (Secure HTTP)
+  * Availability zone
+    - VPC - ACS-VPC
+    - Availability Zones 
+      * US-east-1a - Select **Public subnet 1**, 
+      * US-east-1b - select **Public subnet 2**
+  * Add tags
+    - Key - name
+    - Value - ACS-ext-ALB
+  * Next
+- Step 2. Configure security settings
+  * Certificate type - Choose a certificate from ACM (Recommended)
+  * Certificate name - Certificated created should show up or choose
+  * Next
+- Step 3. Configure security group
+  * Assign a security group - Select an existing security group
+  * From the list of security groups, select all external load balancer
+- Next
+
+- Step 4. Configure security Routing
+  * Target group
+    - Target group - Existing target group
+    - Name - ACS-nginx-target
+  * next
+
+- Step 5.Register Targets
+  * next
+- Step 6. Review
+  * Create
+  * Close
+
+_For Internal facing Load Balancer_
+
+
+- Step 1. Configure Load balancer
+  * name - ACS-int-ALB
+  * Scheme - Internat facing
+  * Load balancer Protocol - HTTPS (Secure HTTP)
+  * Availability zone
+    - VPC - ACS-VPC
+    - Availability Zones 
+      * US-east-1a - Select **Private subnet 1**, 
+      * US-east-1b - select **Private subnet 2**
+  * Add tags
+    - Key - name
+    - Value - ACS-int-ALB
+  * Next
+- Step 2. Configure security settings
+  * Certificate type - Choose a certificate from ACM (Recommended)
+  * Certificate name - Certificated created should show up or choose
+  * Next
+- Step 3. Configure security group
+  * Assign a security group - Select an existing security group
+  * From the list of security groups, select all internal load balancer
+- Next
+
+- Step 4. Configure security Routing
+  * Target group
+    - Target group - Existing target group
+    - Name - ACS-wordpress-target
+  * next
+
+- Step 5.Register Targets
+  * next
+- Step 6. Review
+  * Create
+  * Close
+
+- Select the **ASC-int-ALB**
+- Click **Listners** tab
+- View and edit mode
+- Click on **+** sign to create a rule for caching tooling request
+- Insert rule
+_Under **If (all match)**_
+- Click **Insert rule**
+- Click **Add condition**
+- select **Host header**
+- Under the tooling header, select your domain names **oche.link**, **www.oche.link** 
+_Under **THEN**_
+- select ACS-tooling-target
+
+- Save
+
+> Launch Template
+- Navigate to instances console and select **Launch Template**
+_For Bastion Template_
+- Click **Create Launch Template**
+- Create Launch template
+  * Launch template name and description
+    * Launch template name - ACS-bastion-template
+  * Amazon machine image(AMI)
+    * Choose **ASC-bastion-ami**
+  * Instance type
+    * Choose **t2.micro**
+  * Key pair (Login)
+    * Key pair name - **"Select the .pem key generated**
+  * Network Setting
+    * Choose **VPC**
+  * Add Tag
+    * key - name
+    * Value -  ACS-bastion-template
+  * Network interfaces
+    * subnet - Choose either **public subnet 1** or **public subnet 2**
+    * Security groups - Choose **ASC-Bastion**
+    * Auto-assign public IP - Enable
+  * User data
+    * Copy and paste the following code
+    ```
+    #!/bin/bash 
+    yum install -y mysql 
+    yum install -y git tmux 
+    yum install -y ansible
+    ```
+  * Create launch template
+
+  _For Nginx Template_
+- Click **Create Launch Template**
+- Create Launch template
+  * Launch template name and description
+    * Launch template name - ACS-nginx-template
+  * Amazon machine image(AMI)
+    * Choose **ASC-nginx-ami**
+  * Instance type
+    * Choose **t2.micro**
+  * Key pair (Login)
+    * Key pair name - **"Select the .pem key generated**
+  * Network Setting
+    * Choose **VPC**
+  * Add Tag
+    * key - name
+    * Value -  ACS-nginx-template
+  * Network interfaces
+    * subnet - Choose either **public subnet 1** or **public subnet 2**
+    * Security groups - Choose **ASC-nginx**
+    * Auto-assign public IP - Enable
+  * User data
+    * Copy and paste the following code
+    ```
+    #!/bin/bash
+    yum install -y nginx
+    systemctl start nginx
+    systemctl enable nginx
+    git clone https://github.com/Emmy-github-webdev/ACS-project-config.git
+    mv /ACS-project-config/reverse.conf /etc/nginx/
+    mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf-distro
+    cd /etc/nginx/
+    touch nginx.conf
+    sed -n 'w nginx.conf' reverse.conf
+    systemctl restart nginx
+    rm -rf reverse.conf
+    rm -rf /ACS-project-config
+    ```
+  * Create launch template
