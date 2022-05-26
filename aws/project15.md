@@ -1085,4 +1085,4 @@ _For tooling_
 
 <br>
 
-![](images/project15/webserver-security.png)
+![](images/project15/wordpress.png)
