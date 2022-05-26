@@ -1,5 +1,7 @@
 ### AWS CLOUD SOLUTION FOR 2 COMPANY WEBSITES USING A REVERSE PROXY TECHNOLOGY
 
+![](images/project15/project-architecture.png)
+
 > SET UP A VIRTUAL PRIVATE NETWORK (VPC)
 
 1. Create a [VPC](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html) 
