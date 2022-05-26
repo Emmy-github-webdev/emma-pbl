@@ -8,23 +8,40 @@
   - name - asc-vpc
   - ipv4 CIDR block - 10.0.0.0/16
   - click ceate
+
+  ![](images/project15/create-vpc.png)
+
+  ![](images/project15/created-vpc.png)
+
 2. Edit DNS hostname
-   - Click pn action from the VPC created and select "Edit DNS hostname"
+   - Click on action from the VPC created and select "Edit DNS hostname"
    - Click enable
    - Save changes
+
+     ![](images/project15/edit-dns-hostname.png)
+
 3. Create [Internet gateway](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html)
   - Under the **Virtual Private Cloud** click internet gateway
   - Click internet gateway
   - name - ACS-igw
   - Click create internet gateway
+
+ ![](images/project15/internet-gateway.png)
+
   - Click on attach to a VPC
   - Select the VPC created above 
   - Click attached
+
+ ![](images/project15/attach-vpc.png)
+
 4. Create a route table and associate it with public subnets
 - Use [IP Info to create subnet](https://ipinfo.io/ips)
 - Click on 10.0.0.0/8
 - Click on 10.0.0.0/16
 - Note for safty: Set even numbers of the ip address to public network, old numbers to private network
+
+ ![](images/project15/ip-info.png)
+
 _Public Network_
 - Under the **Virtual Private Cloud** click subnet
 - create subnet
@@ -54,10 +71,13 @@ subnet - "ASC-private-subnet-3"
 subnet - "ASC-private-subnet-4"
 - Availability zone - "US East 1b"
 - IPV4 CIDR bloc - 10.0.7.0/24
-- Click
+- Create
+
+ ![](images/project15/subnet.png)
+
 5. Create a route table and associate it with public, and private subnets
 - Under the **Virtual Private Cloud** click Route tables
-- Click round table
+- Create route table
 _public route table_
 - name - "ASC-public-rtb"
 - VPC - Select the vpc created
