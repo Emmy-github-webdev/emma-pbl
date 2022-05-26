@@ -82,31 +82,39 @@ _public route table_
 - name - "ASC-public-rtb"
 - VPC - Select the vpc created
 - click on create
+
+ ![](images/project15/route-table.png)
+
 _public route table_
-- name - "ASC-private-rtb"
-- VPC - Select the vpc created
-- click on create
 - click on the ACS-public-rtb
 - click on subnet association tab
 - edit subnet association
 - Select all the public subnets
 - click associate
+
+![](images/project15/associate-public-subnet.png)
+
+
 _private route table_
-- name - "ASC-public-rtb"
-- VPC - Select the vpc created
-- click on create
 - click on the ACS-private-rtb
 - click on subnet association tab
 - edit subnet association
 - Select all the private subnets
 - click associate
-6. Edit a route in public route table, and associate it with the Internet Gateway. (This is what allows a public subnet to be accisble from the Internet)
+
+![](images/project15/associate-private-subnet.png)
+
+6. Edit a route in public route table, and associate it with the Internet Gateway. (This is what allows a public subnet to be accesisble from the Internet)
 - Select the ASC-public-rtb
 - On the action drop down, select edit route table
 - click on add route
 - Destination - 0.0.0.0/0
 - Target - Internet gateway - Select the internet gateway created
 - save
+
+![](images/project15/edit-public-route.png)
+
+
 7. Create 3 [Elastic IPs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html)
 
 - Under the **Virtual Private Cloud** click elastic IP
@@ -121,14 +129,20 @@ _private route table_
 - Subnet - Select public subnet 1 or 2
 - Elastic IP allocation ID - Select the elastic Ip created "ACS-NAT"
 - Create
+
+![](images/project15/nat-gateway.png)
+
 - On the route table, Select the ASC-private-rtb
 - On the action drop down, select edit route table
 - click on add route
 - Destination - 0.0.0.0/0
-- Target - Internet gateway - Select the NAT Gateway created
+- Target - NAt Gateway- Select the NAT Gateway created
 - save
+
+![](images/project15/edit-private-route.png)
+
 8. Create a Security Group
-- Under the **Virtual Private Cloud** Security group
+- Under the **Security** select Security group
 - click create security group
 _for Application Load Balancer: ALB will be available from the Internet_
 - security group name- ASC-ext-ALB
@@ -139,6 +153,8 @@ _for Application Load Balancer: ALB will be available from the Internet_
  * name - name
  * value - ASC-ext-ALB
  - create
+
+ ![](images/project15/security-group-for-ext.png)
 
  _for Bastion Servers: Access to the Bastion servers should be allowed only from workstations that need to SSH into the bastion servers. Hence, you can use your workstation public IP address. To get this information, simply go to your terminal and type curl www.canhazip.com_
 
@@ -151,9 +167,11 @@ _for Application Load Balancer: ALB will be available from the Internet_
  * value - ASC-bastion
  - create
 
+ ![](images/project15/bastion-security-group.png)
+
  _for Nginx Servers: Access to Nginx should only be allowed from a Application Load balancer (ALB). At this point, we have not created a load balancer, therefore we will update the rules later. For now, just create it and put some dummy records as a place holder._
 
-- security group name- ACS-nginx-reverse-proxy
+- security group name- ASC-nginx-reverse-proxy
 - VPC - select vpc
 - Add rule (http, https,ssh, port 80, 443, 22, source -  ASC-ext-ALB, ASC-ext-ALB, ASC-bastion respectivel)
  * inbounds rules 
@@ -165,10 +183,12 @@ _for Application Load Balancer: ALB will be available from the Internet_
  * value - ACS-nginx-reverse-proxy
  - create
 
+ ![](images/project15/nginx-security-group.png)
+
  _For internal load balancer_
 
 
-- security group name- ACS-int-alb
+- security group name- ASC-int-alb
 - VPC - select vpc
 - Add rule (http, https, port 80, 443, source -  ACS-nginx-reverse-proxy, ACS-nginx-reverse-proxy, respectivel)
  * inbounds rules 
@@ -179,32 +199,36 @@ _for Application Load Balancer: ALB will be available from the Internet_
  * value - ACS-int-alb
  - create
 
+  ![](images/project15/internal-security-group.png)
+
 _for Webservers: Access to Webservers should only be allowed from the Nginx servers. Since we do not have the servers created yet, just put some dummy records as a place holder, we will update it later._
 
-- security group name- ACS-webserver
+- security group name- ASC-webserver
 - VPC - select vpc
 - Add rule 
  * inbounds rules 
- * http, 80, ACS-int-alb
- * https, 443, ACS-int-alb
+ * http, 80, ASC-int-alb
+ * https, 443, ASC-int-alb
  * ssh, 22,  ASC-bastion
 - add tag
  * name - name
- * value - ACS-webserver
+ * value - ASC-webserver
  - create
+
+   ![](images/project15/webserver-security.png)
 
 _for Data Layer: Access to the Data layer, which is comprised of Amazon Relational Database Service (RDS) and Amazon Elastic File System (EFS) must be carefully desinged – only webservers should be able to connect to RDS, while Nginx and Webservers will have access to EFS Mountpoint._
 
-- security group name- ACS-datalayer
+- security group name- ASC-datalayer
 - VPC - select vpc
 - Add rule 
  * inbounds rules 
- * mysql/Aurora, 3306, ACS-webserver
- * nfs, 2049, ACS-webserver
+ * mysql/Aurora, 3306, ASC-webserver
+ * nfs, 2049, ASC-webserver
  * mysql, 3306,  ASC-bastion
 - add tag
  * name - name
- * value - ACS-datalayer
+ * value - ASC-datalayer
  - create
 
 > TLS Certificates From [Amazon Certificate Manager (ACM)](https://aws.amazon.com/certificate-manager/)
@@ -1055,3 +1079,10 @@ _For tooling_
    * record name - www.wordpress
   * Record type - A- Routers traffic to an IPV4 address and ..
   * Route traffic to - Alias to application and claasic load balancer, US East(N.Virgina[us-east-1]) depending on your region, choose the external load balancer
+<br>
+
+![](images/project15/tsl-1.png)
+
+<br>
+
+![](images/project15/webserver-security.png)
