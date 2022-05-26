@@ -679,3 +679,357 @@ _For Bastion Template_
     rm -rf /ACS-project-config
     ```
   * Create launch template
+
+- Navigate to load balancers, and select ACS-int-ALB
+- Click on the decription tab
+- Copy the DNS Name
+- Add the DNS name to reverse config file **line 743** _proxy-pass_
+
+```
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log;
+pid /run/nginx.pid;
+
+# Load dynamic modules. See /usr/share/doc/nginx/README.dynamic.
+include /usr/share/nginx/modules/*.conf;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile            on;
+    tcp_nopush          on;
+    tcp_nodelay         on;
+    keepalive_timeout   65;
+    types_hash_max_size 2048;
+
+    
+    default_type        application/octet-stream;
+
+    # Load modular configuration files from the /etc/nginx/conf.d directory.
+    # See http://nginx.org/en/docs/ngx_core_module.html#include
+    # for more information.
+    include /etc/nginx/conf.d/*.conf;
+
+     server {
+        listen       80;
+        listen       443 http2 ssl;
+        listen       [::]:443 http2 ssl;
+        root          /var/www/html;
+        server_name  *.oche.link;
+        
+        
+        ssl_certificate /etc/ssl/certs/ACS.crt;
+        ssl_certificate_key /etc/ssl/private/ACS.key;
+        ssl_dhparam /etc/ssl/certs/dhparam.pem;
+
+      
+
+        location /healthstatus {
+        access_log off;
+        return 200;
+       }
+    
+         
+        location / {
+            proxy_set_header             Host $host;
+            proxy_pass                   https://internal-ACS-int-ALB-869121596.us-east-1.elb.amazonaws.com/; 
+           }
+    }
+}
+
+```
+
+  _For wordpress Template_
+- Click **Create Launch Template**
+- Create Launch template
+  * Launch template name and description
+    * Launch template name - ACS-wordpress-template
+  * Amazon machine image(AMI)
+    * Choose **ASC-wordpress-ami**
+  * Instance type
+    * Choose **t2.micro**
+  * Key pair (Login)
+    * Key pair name - **"Select the .pem key generated**
+  * Network Setting
+    * Choose **VPC**
+  * Add Tag
+    * key - name
+    * Value -  ACS-wordpress-template
+  * Network interfaces
+    * subnet - Choose either **private subnet 1** or **private subnet 2**
+    * Security groups - Choose **ASC-wordpress**
+    * Auto-assign public IP - disable
+  
+  - Navigate to **Elastic File system**
+    * click on the access point
+    * Click on wordpress access point
+    * Click on attach
+    * Copy the command excluding the efs,
+    Past it to replace _sudo mount -t efs -o tls,accesspoint=fsap-0f9364679383ffbc0 fs-8b501d3f:/_ in the user data below
+  - Navigate to **RDS**
+    * select DB Instances
+    * Click on the acs-database
+    * Copy the endpoint, past it to replace _sed -i "s/localhost/acs-database.cdqpbjkethv0.us-east-1.rds.amazonaws.com_ in the code block below
+  * User data
+    * Copy and paste the following code
+    ```
+    #!/bin/bash
+    mkdir /var/www/
+    sudo mount -t efs -o tls,accesspoint=fsap-0f9364679383ffbc0 fs-8b501d3f:/ /var/www/
+    yum install -y httpd 
+    systemctl start httpd
+    systemctl enable httpd
+    yum module reset php -y
+    yum module enable php:remi-7.4 -y
+    yum install -y php php-common php-mbstring php-opcache php-intl php-xml php-gd php-curl php-mysqlnd php-fpm php-json
+    systemctl start php-fpm
+    systemctl enable php-fpm
+    wget http://wordpress.org/latest.tar.gz
+    tar xzvf latest.tar.gz
+    rm -rf latest.tar.gz
+    cp wordpress/wp-config-sample.php wordpress/wp-config.php
+    mkdir /var/www/html/
+    cp -R /wordpress/* /var/www/html/
+    cd /var/www/html/
+    touch healthstatus
+    sed -i "s/localhost/acs-database.cdqpbjkethv0.us-east-1.rds.amazonaws.com/g" wp-config.php 
+    sed -i "s/username_here/ACSadmin/g" wp-config.php 
+    sed -i "s/password_here/admin12345/g" wp-config.php 
+    sed -i "s/database_name_here/wordpressdb/g" wp-config.php 
+    chcon -t httpd_sys_rw_content_t /var/www/html/ -R
+    systemctl restart httpd
+    ```
+  * Create launch template
+
+    _For tooling Template_
+- Click **Create Launch Template**
+- Create Launch template
+  * Launch template name and description
+    * Launch template name - ACS-tooling-template
+  * Amazon machine image(AMI)
+    * Choose **ASC-tooling-ami**
+  * Instance type
+    * Choose **t2.micro**
+  * Key pair (Login)
+    * Key pair name - **"Select the .pem key generated**
+  * Network Setting
+    * Choose **VPC**
+  * Add Tag
+    * key - name
+    * Value -  ACS-tooling-template
+  * Network interfaces
+    * subnet - Choose either **private subnet 1** or **private subnet 2**
+    * Security groups - Choose **ASC-wordpress**
+    * Auto-assign public IP - disable
+    - Navigate to **Elastic File system**
+    * click on the access point
+    * Click on tooling access point
+    * Click on attach
+    * Copy the command excluding the efs,
+    Past it to replace _    sudo mount -t efs -o tls,accesspoint=fsap-01c13a4019ca59dbe fs-8b501d3f:/_ in the user data below
+  * User data
+    * Copy and paste the following code
+    ```
+    #!/bin/bash
+    mkdir /var/www/
+    sudo mount -t efs -o tls,accesspoint=fsap-01c13a4019ca59dbe fs-8b501d3f:/ /var/www/
+    yum install -y httpd 
+    systemctl start httpd
+    systemctl enable httpd
+    yum module reset php -y
+    yum module enable php:remi-7.4 -y
+    yum install -y php php-common php-mbstring php-opcache php-intl php-xml php-gd php-curl php-mysqlnd php-fpm php-json
+    systemctl start php-fpm
+    systemctl enable php-fpm
+    git clone https://github.com/Livingstone95/tooling-1.git
+    mkdir /var/www/html
+    cp -R /tooling-1/html/*  /var/www/html/
+    cd /tooling-1
+    mysql -h acs-database.cdqpbjkethv0.us-east-1.rds.amazonaws.com -u ACSadmin -p toolingdb < tooling-db.sql
+    cd /var/www/html/
+    touch healthstatus
+    sed -i "s/$db = mysqli_connect('mysql.tooling.svc.cluster.local', 'admin', 'admin', 'tooling');/$db = mysqli_connect('acs-database.cdqpbjkethv0.us-east-1.rds.amazonaws.com', 'ACSadmin', 'admin12345', 'toolingdb');/g" functions.php
+    chcon -t httpd_sys_rw_content_t /var/www/html/ -R
+    systemctl restart httpd
+    ```
+  * Create launch template
+
+> [Amazon EC2 Auto scaling](https://aws.amazon.com/ec2/autoscaling/)
+
+_For bastion_
+- click create auto scaling
+- Step 1 - Choose launch template for configuration
+  * name - ACS-bastion
+  * Launch Template - ACS-bastion-template
+- next
+- Step 2 - Configure settings
+  * Instance purchase option - Adhere to launch template
+  * Network
+    - VPC - ACS-VPC
+    - Subnets - public subnet 1 and 2
+- Next
+- Step 3 - Configure advanced option
+  * Health checks - choose ELB
+- Next
+- step 4 - Configure group size and scaling policies
+  * Scaling policies - Target tracking scaling policy
+  * Target value - 90
+- next
+- step 5 - Add Notification 
+  * Click add notification
+  * Create a topic and and name if none exist already
+- next
+- Setp 6 - Add Tags
+  * Key - name
+  * Value - ACS-Bastion
+- Next
+- step 7 - Review
+- Create auto scaling rule
+
+
+_For nginx_
+- click create auto scaling
+- Step 1 - Choose launch template for configuration
+  * name - ACS-nginx
+  * Launch Template - ACS-nginx-template
+- next
+- Step 2 - Configure settings
+  * Load balancer - attach to an existing load balancer
+  * attach to an existing load balancer
+    - Choose from your load balancer
+    - select **ACS-nginx-target| HTTPs**
+  * Instance purchase option - Adhere to launch template
+  * Network
+    - VPC - ACS-VPC
+    - Subnets - public subnet 1 and 2
+- Next
+- Step 3 - Configure advanced option
+  * Health checks - choose ELB
+- Next
+- step 4 - Configure group size and scaling policies
+  * Scaling policies - Target tracking scaling policy
+  * Target value - 90
+- next
+- step 5 - Add Notification 
+  * Click add notification - ASC Notification
+  * Create a topic and and name if none exist already
+- next
+- Setp 6 - Add Tags
+  * Key - name
+  * Value - ACS-nginx
+- Next
+- step 7 - Review
+- Create auto scaling rule
+
+> Create wordpress Database
+- Connect to bastion instance
+- Specify the rds endpoint as the host
+  - Go to RDS -> Database -> acs-database 
+  - Click on the connectivity and security tab
+  - Copy the Endpoint link
+  - replace it in the endpoint in the command below
+```
+mysql -h RDS Endpoint Link -u ACSadmin -p
+>Mysql > Create database wordpressdb
+Mysql > create database toolingDB
+```
+
+_For wordpress_
+- click create auto scaling
+- Step 1 - Choose launch template for configuration
+  * name - ACS-wordpress_
+  * Launch Template - ACS-wordpress-template
+- next
+- Step 2 - Configure settings
+  * Load balancer - attach to an existing load balancer
+  * attach to an existing load balancer
+    - Choose from your load balancer
+    - select **ACS-wordpress-target| HTTPs**
+  * Instance purchase option - Adhere to launch template
+  * Network
+    - VPC - ACS-VPC
+    - Subnets - private subnet 1 and 2
+- Next
+- Step 3 - Configure advanced option
+  * Health checks - choose ELB
+- Next
+- step 4 - Configure group size and scaling policies
+  * Scaling policies - Target tracking scaling policy
+  * Target value - 90
+- next
+- step 5 - Add Notification 
+  * Click add notification - ASC Notification
+  * Create a topic and and name if none exist already
+- next
+- Setp 6 - Add Tags
+  * Key - name
+  * Value - ACS-wordpress
+- Next
+- step 7 - Review
+- Create auto scaling rule
+
+
+_For tooling_
+- click create auto scaling
+- Step 1 - Choose launch template for configuration
+  * name - ACS-tooling
+  * Launch Template - ACS-tooling-template
+- next
+- Step 2 - Configure settings
+  * Load balancer - attach to an existing load balancer
+  * attach to an existing load balancer
+    - Choose from your load balancer
+    - select **ACS-tooling-target| HTTPs**
+  * Instance purchase option - Adhere to launch template
+  * Network
+    - VPC - ACS-VPC
+    - Subnets - private subnet 1 and 2
+- Next
+- Step 3 - Configure advanced option
+  * Health checks - choose ELB
+- Next
+- step 4 - Configure group size and scaling policies
+  * Scaling policies - Target tracking scaling policy
+  * Target value - 90
+- next
+- step 5 - Add Notification 
+  * Click add notification - ASC Notification
+  * Create a topic and and name if none exist already
+- next
+- Setp 6 - Add Tags
+  * Key - name
+  * Value - ACS-tooling
+- Next
+- step 7 - Review
+- Create auto scaling rule
+
+> Route 53
+- Navigate to your domain name
+- Create record
+  * record name - tooling
+  * Record type - A- Routers traffic to an IPV4 address and ..
+  * Route traffic to - Alias to application and claasic load balancer, US East(N.Virgina[us-east-1]) depending on your region, choose the external load balancer
+
+- Add another record for tooling
+   * record name - www.tooling
+  * Record type - A- Routers traffic to an IPV4 address and ..
+  * Route traffic to - Alias to application and claasic load balancer, US East(N.Virgina[us-east-1]) depending on your region, choose the external load balancer
+
+- Add another record for wordpress
+   * record name - wordpress
+  * Record type - A- Routers traffic to an IPV4 address and ..
+  * Route traffic to - Alias to application and claasic load balancer, US East(N.Virgina[us-east-1]) depending on your region, choose the external load balancer
+
+  - Add another record for wordpress
+   * record name - www.wordpress
+  * Record type - A- Routers traffic to an IPV4 address and ..
+  * Route traffic to - Alias to application and claasic load balancer, US East(N.Virgina[us-east-1]) depending on your region, choose the external load balancer
