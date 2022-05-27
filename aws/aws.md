@@ -1,4 +1,26 @@
-## AWS
+# AWS
+
+### Configuring Billing Alarm
+
+- On the AWS Console, search for **Billing**
+- Click on **Budget** under the **Billing**
+- Click on **Create a Budget**
+- Select **Cost Budget** and **Next**
+- On setup your budget page
+    * Budget name - **Monthly Budget**
+    * Peroid - **Monthly**
+    * Budget renewal type - **Recurring budget**
+    * Set start month
+    * Budgeting method - **Fixed**
+    * Enter your budgeted amount($) - **Enter and amount**
+    * Leave the rest as default and click next
+- On configure alerts
+    * Add an alert threshold
+    * Set alert threshold - **Add threshold**
+    * Email alert - **Enter an email for alert**
+- Next
+- Next
+- Create
 
 ### [AWS Global Infrastructure](https://aws.amazon.com/about-aws/global-infrastructure/regions_az/)
 
@@ -13,3 +35,6 @@
 
 ### I AM
 - I AM  = Identity and access management
+
+> Create IAm account for security
+- On the AWS console, search for **IAM**
