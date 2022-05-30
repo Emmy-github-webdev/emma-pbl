@@ -1,5 +1,7 @@
 # Introduction and prerequisites
 
+[Resources](https://github.com/derekm1215/mtc-terraform)
+
 > Adding security to your AWS account
 
 - On the AWS Console, search for **IAM** to open IAM management console
