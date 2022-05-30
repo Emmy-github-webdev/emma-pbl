@@ -330,6 +330,8 @@ enable_classiclink_dns_support = var.enable_classiclink
 }
 ```
 
+ [](images/project16/refactor.png)
+
 ##### Fixing multiple resource blocks
 
 This is where things become a little tricky. It’s not complex, we are just going to introduce some interesting concepts. Loops & Data sources
