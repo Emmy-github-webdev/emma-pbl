@@ -45,7 +45,7 @@ For easier authentication configuration – use [AWS CLI](https://aws.amazon.com
     aws s3 ls
     ```
 
-  [](images/project16/show-bucket.png)
+  ![](images/project16/show-bucket.png)
 <br>
 
 You shall see your previously created S3 bucket name – **yourname-dev-terraform-bucket**
@@ -108,7 +108,7 @@ Open your Visual Studio Code and:
 - Create a folder called **PBL**
 - Create a file in the folder, name it **main.tf**
 
- [](images/project16/pbl.png)
+ ![](images/project16/pbl.png)
 
 #### Provider and VPC resource section
 _Set up Terraform CLI as per this [instruction](https://learn.hashicorp.com/tutorials/terraform/install-cli)._
@@ -136,7 +136,7 @@ resource "aws_vpc" "main" {
 }
 ```
 
- [](images/project16/aws-provider.png)
+ ![](images/project16/aws-provider.png)
 
 - The next thing we need to do, is to download necessary plugins for Terraform to work. These plugins are used by **providers** and **provisioners**. At this stage, we only have **provider** in our **main.tf** file. So, Terraform will just download plugin for AWS provider.
 - Lets accomplish this with **terraform init** command as seen in the below demonstration.
@@ -147,7 +147,7 @@ sudo apt install tree
 terraform init
 ```
 
- [](images/project16/init-terraform.png)
+ ![](images/project16/init-terraform.png)
 
 _Observations:_
 
@@ -161,14 +161,14 @@ Moving on, let us create the only resource we just defined. **aws_vpc**. But bef
 ```
 terraform plan
 ```
- [](images/project16/terraform-plan.png)
+ ![](images/project16/terraform-plan.png)
 
 Then, if you are happy with changes planned, execute 
 ```
 terraform apply
 ```
 
- [](images/project16/terraform-apply.png)
+ ![](images/project16/terraform-apply.png)
 
 _Observations:_
 
@@ -245,13 +245,13 @@ terraform apply
 
 ```
 
- [](images/project16/vpc.png)
+ ![](images/project16/vpc.png)
 
  <br>
 
  Check the AWS console and confirm the VPC is created
 
-  [](images/project16/vpc-create.png)
+  ![](images/project16/vpc-create.png)
 
 _Observations:_
 
@@ -270,7 +270,7 @@ First, destroy the current infrastructure. Since we are still in development, th
 
 To destroy whatever has been created run _terraform destroy command_, and type _yes_ after evaluating the plan.
 
-  [](images/project16/destroy.png)
+  ![](images/project16/destroy.png)
 
 > #### FIXING THE PROBLEMS BY CODE REFACTORING
 
@@ -330,7 +330,7 @@ enable_classiclink_dns_support = var.enable_classiclink
 }
 ```
 
- [](images/project16/refactor.png)
+![](images/project16/refactor.png)
 
 ##### Fixing multiple resource blocks
 
@@ -425,7 +425,7 @@ You can experiment how this works by entering the **terraform console** and keep
 - Keep change the numbers and see what happens.
 - To get out of the console, type **exit**
 
- [](images/project16/terraform-console.png)
+ ![](images/project16/terraform-console.png)
 
 **The final problem to solve is removing hard** _coded_ **count value**.
 
@@ -666,10 +666,10 @@ You should also have this file structure in the PBL folder.
     └── variables.tf
 ```
 
-[](images/project16/final.png)
+![](images/project16/final.png)
 
 Run _terraform plan_ and ensure everything works
 
-[](images/project16/final-result-1.png)
+![](images/project16/final-result-1.png)
 
-[](images/project16/final-result-2.png)
+![](images/project16/final-result-2.png)
