@@ -44,17 +44,8 @@ For easier authentication configuration – use [AWS CLI](https://aws.amazon.com
     ```
     aws s3 ls
     ```
-<br>
 
-When you have configured authentication and installed _boto3_, make sure you can programmatically access your AWS account by running following commands in _>python_:
-
-```
-import boto3
-s3 = boto3.resource('s3')
-for bucket in s3.buckets.all():
-    print(bucket.name)
-```
-
+  [](images/project16/show-bucket.png)
 <br>
 
 You shall see your previously created S3 bucket name – **yourname-dev-terraform-bucket**
@@ -117,6 +108,8 @@ Open your Visual Studio Code and:
 - Create a folder called **PBL**
 - Create a file in the folder, name it **main.tf**
 
+ [](images/project16/pbl.png)
+
 #### Provider and VPC resource section
 _Set up Terraform CLI as per this [instruction](https://learn.hashicorp.com/tutorials/terraform/install-cli)._
 
@@ -143,6 +136,8 @@ resource "aws_vpc" "main" {
 }
 ```
 
+ [](images/project16/aws-provider.png)
+
 - The next thing we need to do, is to download necessary plugins for Terraform to work. These plugins are used by **providers** and **provisioners**. At this stage, we only have **provider** in our **main.tf** file. So, Terraform will just download plugin for AWS provider.
 - Lets accomplish this with **terraform init** command as seen in the below demonstration.
 ```
@@ -151,6 +146,8 @@ sudo apt install tree
 # Install pugins
 terraform init
 ```
+
+ [](images/project16/init-terraform.png)
 
 _Observations:_
 
@@ -164,11 +161,14 @@ Moving on, let us create the only resource we just defined. **aws_vpc**. But bef
 ```
 terraform plan
 ```
+ [](images/project16/terraform-plan.png)
 
 Then, if you are happy with changes planned, execute 
 ```
 terraform apply
 ```
+
+ [](images/project16/terraform-apply.png)
 
 _Observations:_
 
@@ -245,6 +245,14 @@ terraform apply
 
 ```
 
+ [](images/project16/vpc.png)
+
+ <br>
+
+ Check the AWS console and confirm the VPC is created
+
+  [](images/project16/vpc-create.png)
+
 _Observations:_
 
 - Hard coded values: Remember our best practice hint from the beginning? Both the **availability_zone** and **cidr_block** arguments are hard coded. We should always endeavour to make our work dynamic.
@@ -261,6 +269,8 @@ First, destroy the current infrastructure. Since we are still in development, th
 <br>
 
 To destroy whatever has been created run _terraform destroy command_, and type _yes_ after evaluating the plan.
+
+  [](images/project16/destroy.png)
 
 > #### FIXING THE PROBLEMS BY CODE REFACTORING
 
