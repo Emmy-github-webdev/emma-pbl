@@ -1,0 +1,2 @@
+grafana-prod-6w5i: 172.17.0.4:3000
+nodered-prod-hqsl: 172.17.0.3:1880
