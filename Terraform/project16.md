@@ -6,8 +6,13 @@
 
 - You must have completed Terraform course from the Learning dashboard
 - Create an IAM user, name it _terraform_ (ensure that the user has only programatic access to your AWS account) and grant this user AdministratorAccess permissions.
+
+![](images/project16/iam.png)
+
 - Copy the secret access key and access key ID. Save them in a notepad temporarily.
-- Configure programmatic access from your workstation to connect to AWS using the access keys copied above and a Python SDK (boto3). You must have Python 3.6 or higher on your workstation.
+- Configure programmatic access from your workstation to connect to AWS using the access keys copied above and a Python SDK (boto3). You must have [Python 3.6](https://www.python.org/downloads/) or higher on your workstation.
+
+![](images/project16/configure-aws-cli.png)
 
 <br>
 
@@ -27,7 +32,10 @@ For easier authentication configuration – use [AWS CLI](https://aws.amazon.com
 * Add tag 
   - key - **Name**
   - value - **emmanuel-dev-terraform-bucket**
-* leave other settings as default and click **CReate buket**
+* leave other settings as default and click **Create buket**
+
+![](images/project16/bucket.png)
+
 * Ensure your secret key and access key are configure
 * Check that the bucket is configure without any issue
   - Open the terminal
