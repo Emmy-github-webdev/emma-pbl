@@ -425,6 +425,8 @@ You can experiment how this works by entering the **terraform console** and keep
 - Keep change the numbers and see what happens.
 - To get out of the console, type **exit**
 
+ [](images/project16/terraform-console.png)
+
 **The final problem to solve is removing hard** _coded_ **count value**.
 
 If we cannot hard code a value we want, then we will need a way to dynamically provide the value based on some input. Since the data resource returns all the AZs within a region, it makes sense to count the number of AZs returned and pass that number to the count argument.
@@ -664,4 +666,10 @@ You should also have this file structure in the PBL folder.
     └── variables.tf
 ```
 
+[](images/project16/final.png)
+
 Run _terraform plan_ and ensure everything works
+
+[](images/project16/final-result-1.png)
+
+[](images/project16/final-result-2.png)
