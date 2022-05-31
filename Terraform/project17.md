@@ -152,8 +152,8 @@ resource "aws_internet_gateway" "ig" {
   tags = merge(
     var.tags,
     {
-      Name = format("%s-%s!", aws_vpc.main.id,"IG")
-    } 
+      Name = format("%s-%s-%s!", var.name, aws_vpc.main.id, "IG")
+    },
   )
 }
 ```
@@ -167,3 +167,66 @@ If any of the resources being created is either using the **count** function, or
 <br>
 
 For example, each of our subnets should have a unique name in the tag section. Without the **format()** function, we would not be able to see uniqueness. With the **format** function, each private subnet’s tag will look like this.
+
+> #### NAT Gateways
+
+Create 1 NAT Gateways and 1 Elastic IP (EIP) addresses
+
+<br>
+
+Now use similar approach to create the NAT Gateways in a new file called **natgateway.tf**.
+
+_natgateway.tf_
+
+```
+# Create aws elastic IP
+
+resource "aws_eip" "nat_eip" {
+  vpc        = true
+  depends_on = [aws_internet_gateway.ig]
+
+  tags = merge(
+    var.tags,
+    {
+      Name = format("%s-EIP-%s", var.name, var.environment)
+    },
+  )
+}
+
+# Create aws nat gateway
+
+resource "aws_nat_gateway" "nat" {
+  allocation_id = aws_eip.nat_eip.id
+  subnet_id     = element(aws_subnet.public.*.id, 0)
+  depends_on    = [aws_internet_gateway.ig]
+
+  tags = merge(
+    var.tags,
+    {
+      Name = format("%s-Nat-%s", var.name, var.environment)
+    },
+  )
+}
+```
+
+_variables.tf_
+
+```
+variable "environment" {
+  type = string
+  description = "Environment"
+}
+```
+
+_terraform.tfvars_
+
+```
+environment = "dev"
+
+```
+
+_run_
+
+```
+terraform plan
+```
