@@ -31,7 +31,6 @@ _variables.tf_
 
 ```
 variable "preferred_number_of_private_subnets" {
-  default = null
   type = number
   description = "Number of private subnets"
 }
@@ -52,3 +51,90 @@ terraform plan
 
 ```
 - Tags all the resources you have created so far. Explore how to use **format()** and **count** functions to automatically tag subnets with its respective number.
+
+##### A little bit more about Tagging
+
+_Tagging is a straightforward, but a very powerful concept that helps you manage your resources much more efficiently:_
+
+- Resources are much better organized in ‘virtual’ groups
+- They can be easily filtered and searched from console or programmatically
+- Billing team can easily generate reports and determine how much each part of infrastructure costs how much (by department, by type, by environment, etc.)
+- You can easily determine resources that are not being used and take actions accordingly
+- If there are different teams in the organisation using the same account, tagging can help differentiate who owns which resources.
+
+**Note**: You can add multiple tags as a default set. for example, in out terraform.tfvars file we can have default tags defined.
+
+<br>
+
+_main.tf_
+
+```
+# Create public subnets
+resource "aws_subnet" "public" {
+  count  = var.preferred_number_of_public_subnets == null ? length(data.aws_availability_zones.available.names) : var.preferred_number_of_public_subnets   
+  vpc_id = aws_vpc.main.id
+  cidr_block              = cidrsubnet(var.vpc_cidr, 8 , count.index)
+  map_public_ip_on_launch = true
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
+
+  tags = merge(
+    var.tags,
+    {
+      Name = format("%s-publicSubnet-%s", var.name, count.index)
+    },
+  )
+}
+```
+
+```
+# Create private subnets
+resource "aws_subnet" "private" {
+  count  = var.preferred_number_of_private_subnets == null ? length(data.aws_availability_zones.available.names) : var.preferred_number_of_private_subnets   
+  vpc_id = aws_vpc.main.id
+  cidr_block              = cidrsubnet(var.vpc_cidr, 8 , count.index + 2)
+  map_public_ip_on_launch = true
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
+
+  tags = merge(
+  var.tags,
+    {
+      Name = format("%s-privateubnet-%s", var.name, count.index)
+    },
+  )
+
+}
+```
+
+_variables.tf_
+
+```
+variable "name" {
+  type = string
+  default = "ACS"
+}
+```
+
+```
+variable "tags" {
+  description = "A mapping of tags to assign to all resources."
+  type = map(string)
+  default = {}
+}
+
+_terraform.tfvars_
+
+```
+tags = {
+  Enviroment      = "production" 
+  Owner-Email = "ogaemmanuel@ymail.com"
+  Managed-By = "Terraform"
+  Billing-Account = "1234567890"
+}
+```
+
+_run_
+
+```
+terraform plan
+```
+The nice thing about this is – anytime we need to make a change to the tags, we simply do that in one single place (terraform.tfvars).
