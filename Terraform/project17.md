@@ -299,4 +299,394 @@ _run_
 
 ```
 terraform plan
+terraform apply
+```
+
+> #### CREATE CERTIFICATE FROM AMAZON CERIFICATE MANAGER
+
+_Create **cert.tf** file and add the following code snippets to it._
+
+**NOTE**: Read Through to change the domain name to your own domain name and every other name that needs to be changed.
+
+- Check out the terraform documentation for AWS Certifivate mangarer
+
+_cert.tf_
+
+```
+# The entire section create a certiface, public zone, and validate the certificate using DNS method
+
+# Create the certificate using a wildcard for all the domains created in oche.link
+resource "aws_acm_certificate" "oche" {
+  domain_name       = "*.oche.link"
+  validation_method = "DNS"
+}
+
+# calling the hosted zone
+data "aws_route53_zone" "oche" {
+  name         = "oche.link"
+  private_zone = false
+}
+
+# selecting validation method
+resource "aws_route53_record" "oche" {
+  for_each = {
+    for dvo in aws_acm_certificate.oche.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = data.aws_route53_zone.oche.zone_id
+}
+
+# validate the certificate through DNS method
+resource "aws_acm_certificate_validation" "oche" {
+  certificate_arn         = aws_acm_certificate.oche.arn
+  validation_record_fqdns = [for record in aws_route53_record.oche : record.fqdn]
+}
+
+# create records for tooling
+resource "aws_route53_record" "tooling" {
+  zone_id = data.aws_route53_zone.oche.zone_id
+  name    = "tooling.oche.link"
+  type    = "A"
+
+  alias {
+    name                   = aws_lb.ext-alb.dns_name
+    zone_id                = aws_lb.ext-alb.zone_id
+    evaluate_target_health = true
+  }
+}
+
+# create records for wordpress
+resource "aws_route53_record" "wordpress" {
+  zone_id = data.aws_route53_zone.oche.zone_id
+  name    = "wordpress.oche.link"
+  type    = "A"
+
+  alias {
+    name                   = aws_lb.ext-alb.dns_name
+    zone_id                = aws_lb.ext-alb.zone_id
+    evaluate_target_health = true
+  }
+}
+```
+
+> #### Create an external (Internet facing) [Application Load Balancer (ALB)](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancer-getting-started.html)
+
+Create a file called **alb.tf**
+
+<br>
+
+First of all we will create the ALB, then we create the target group and lastly we will create the lsitener rule.
+
+<br>
+
+Useful Terraform Documentation, go through this documentation and understand the arguement needed for each resources:
+
+- [ALB](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb)
+- [ALB-target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group)
+- [ALB-listener](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener)
+
+_alb.tf_
+
+```
+resource "aws_lb" "ext-alb" {
+  name     = "ext-alb"
+  internal = false
+  security_groups = [
+    aws_security_group.ext-alb-sg.id,
+  ]
+
+  subnets = [
+    aws_subnet.public[0].id,
+    aws_subnet.public[1].id
+  ]
+
+   tags = merge(
+    var.tags,
+    {
+      Name = "ACS-ext-alb"
+    },
+  )
+
+  ip_address_type    = "ipv4"
+  load_balancer_type = "application"
+}
+```
+
+_To inform our ALB to where route the traffic we need to create a [Target Group](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html) to point to its targets:_
+
+```
+resource "aws_lb_target_group" "nginx-tgt" {
+  health_check {
+    interval            = 10
+    path                = "/healthstatus"
+    protocol            = "HTTPS"
+    timeout             = 5
+    healthy_threshold   = 5
+    unhealthy_threshold = 2
+  }
+  name        = "nginx-tgt"
+  port        = 443
+  protocol    = "HTTPS"
+  target_type = "instance"
+  vpc_id      = aws_vpc.main.id
+}
+```
+
+_Then we will need to create a [Listner](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-listeners.html) for this target Group
+
+```
+resource "aws_lb_listener" "nginx-listner" {
+  load_balancer_arn = aws_lb.ext-alb.arn
+  port              = 443
+  protocol          = "HTTPS"
+  certificate_arn   = aws_acm_certificate_validation.oyindamola.certificate_arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.nginx-tgt.arn
+  }
+}
+```
+
+_Add the following outputs to **output.tf** to print them on screen_
+
+```
+output "alb_dns_name" {
+  value = aws_lb.ext-alb.dns_name
+}
+
+output "alb_target_group_arn" {
+  value = aws_lb_target_group.nginx-tgt.arn
+}
+```
+
+> #### Create an Internal (Internal) Application Load Balancer (ALB)
+
+_Add the code snippets inside the **alb.tf** file_
+
+```
+# ----------------------------
+#Internal Load Balancers for webservers
+#---------------------------------
+
+resource "aws_lb" "ialb" {
+  name     = "ialb"
+  internal = true
+  security_groups = [
+    aws_security_group.int-alb-sg.id,
+  ]
+
+  subnets = [
+    aws_subnet.private[0].id,
+    aws_subnet.private[1].id
+  ]
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "ACS-int-alb"
+    },
+  )
+
+  ip_address_type    = "ipv4"
+  load_balancer_type = "application"
+}
+```
+
+_To inform our ALB to where route the traffic we need to create a **Target Group** to point to its targets:_
+
+```
+# --- target group  for wordpress -------
+
+resource "aws_lb_target_group" "wordpress-tgt" {
+  health_check {
+    interval            = 10
+    path                = "/healthstatus"
+    protocol            = "HTTPS"
+    timeout             = 5
+    healthy_threshold   = 5
+    unhealthy_threshold = 2
+  }
+
+  name        = "wordpress-tgt"
+  port        = 443
+  protocol    = "HTTPS"
+  target_type = "instance"
+  vpc_id      = aws_vpc.main.id
+}
+
+# --- target group for tooling -------
+
+resource "aws_lb_target_group" "tooling-tgt" {
+  health_check {
+    interval            = 10
+    path                = "/healthstatus"
+    protocol            = "HTTPS"
+    timeout             = 5
+    healthy_threshold   = 5
+    unhealthy_threshold = 2
+  }
+
+  name        = "tooling-tgt"
+  port        = 443
+  protocol    = "HTTPS"
+  target_type = "instance"
+  vpc_id      = aws_vpc.main.id
+}
+```
+
+_Then we will need to create a **Listner** for this **target Group**_
+
+```
+# For this aspect a single listener was created for the wordpress which is default,
+# A rule was created to route traffic to tooling when the host header changes
+
+resource "aws_lb_listener" "web-listener" {
+  load_balancer_arn = aws_lb.ialb.arn
+  port              = 443
+  protocol          = "HTTPS"
+  certificate_arn   = aws_acm_certificate_validation.oyindamola.certificate_arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.wordpress-tgt.arn
+  }
+}
+
+# listener rule for tooling target
+
+resource "aws_lb_listener_rule" "tooling-listener" {
+  listener_arn = aws_lb_listener.web-listener.arn
+  priority     = 99
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tooling-tgt.arn
+  }
+
+  condition {
+    host_header {
+      values = ["tooling.oyindamola.gq"]
+    }
+  }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+> #### AWS Identity and Access Management
+
+[IaM](https://docs.aws.amazon.com/iam/index.html) and [Roles](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html)
+
+_We want to pass an IAM role our EC2 instances to give them access to some specific resources, so we need to do the following:_
+
+1. Create [AssumeRole](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html)
+
+<br>
+
+Assume Role uses Security Token Service (STS) API that returns a set of temporary security credentials that you can use to access AWS resources that you might not normally have access to. These temporary credentials consist of an access key ID, a secret access key, and a security token. Typically, you use **AssumeRole** within your account or for cross-account access.
+
+<br>
+
+Add the following code to a new file named **roles.tf**
+
+```
+resource "aws_iam_role" "ec2_instance_role" {
+name = "ec2_instance_role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "aws assume role"
+    },
+  )
+}
+```
+
+In this code we are creating **AssumeRole** with **AssumeRole policy**. It grants to an entity, in our case it is an EC2, permissions to assume the role.
+
+2. Create [IAM policy ](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_create.html) for this role
+<br>
+
+This is where we need to define a required policy (i.e., permissions) according to our requirements. For example, allowing an IAM role to perform action **describe** applied to EC2 instances:
+
+```
+resource "aws_iam_policy" "policy" {
+  name        = "ec2_instance_policy"
+  description = "A test policy"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ec2:Describe*",
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+    ]
+
+  })
+
+  tags = merge(
+    var.tags,
+    {
+      Name =  "aws assume policy"
+    },
+  )
+
+}
+
+```
+
+3. Attach the **Policy** to the **IAM Role**
+
+_This is where, we will be attaching the policy which we created above, to the role we created in the first step._
+
+```
+resource "aws_iam_role_policy_attachment" "test-attach" {
+    role       = aws_iam_role.ec2_instance_role.name
+    policy_arn = aws_iam_policy.policy.arn
+}
+```
+
+4. Create an [Instance Profile](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html) and interpolate the **IAM Role**
+
+```
+resource "aws_iam_instance_profile" "ip" {
+    name = "aws_instance_profile_test"
+    role =  aws_iam_role.ec2_instance_role.name
+}
 ```
