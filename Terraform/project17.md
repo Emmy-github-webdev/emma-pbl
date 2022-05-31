@@ -98,7 +98,7 @@ resource "aws_subnet" "private" {
   tags = merge(
   var.tags,
     {
-      Name = format("%s-privateubnet-%s", var.name, count.index)
+      Name = format("%s-privatesubnet-%s", var.name, count.index)
     },
   )
 
@@ -120,7 +120,7 @@ variable "tags" {
   type = map(string)
   default = {}
 }
-
+```
 _terraform.tfvars_
 
 ```
@@ -137,4 +137,33 @@ _run_
 ```
 terraform plan
 ```
-The nice thing about this is – anytime we need to make a change to the tags, we simply do that in one single place (terraform.tfvars).
+The nice thing about this is – anytime we need to make a change to the tags, we simply do that in one single place (***terraform.tfvars***).
+
+> #### Internet Gateways & format() function
+
+Create an Internet Gateway in a separate Terraform file **internet_gateway.tf**
+
+_internet_gateway.tf_
+
+```
+resource "aws_internet_gateway" "ig" {
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(
+    var.tags,
+    {
+      Name = format("%s-%s!", aws_vpc.main.id,"IG")
+    } 
+  )
+}
+```
+
+Did you notice how we have used **format()** function to dynamically generate a unique name for this resource? The first part of the **%s** takes the interpolated value of **aws_vpc.main.id** while the second **%s** appends a literal string **IG** and finally an exclamation mark is added in the end.
+
+<br>
+
+If any of the resources being created is either using the **count** function, or creating multiple resources using a loop, then a key-value pair that needs to be unique must be handled differently.
+
+<br>
+
+For example, each of our subnets should have a unique name in the tag section. Without the **format()** function, we would not be able to see uniqueness. With the **format** function, each private subnet’s tag will look like this.
