@@ -237,6 +237,8 @@ _run_
 terraform plan
 ```
 
+![](images/project17/internet-gateway.png)
+
 > #### AWS ROUTES
 
 Create a file called ***route_tables.tf** and use it to create routes for both public and private subnets, create the below resources. Ensure they are properly tagged.
@@ -1567,7 +1569,7 @@ resource "aws_db_instance" "ACS-rds" {
 }
 ```
 
-Before Applying, if you take note, we gave refrence to a lot of varibales in our resources that has not been declared in the **variables.tf** file. Go through the entire code and spot this variables and declare them in the **variables.tf file**.
+Before Applying, if you take note, we gave reference to a lot of varibales in our resources that has not been declared in the **variables.tf** file. Go through the entire code and spot this variables and declare them in the **variables.tf file**.
 
 <br>
 
@@ -1707,6 +1709,10 @@ terraform destroy
 ```
 
 At this point, you shall have pretty much all infrastructure elements ready to be deployed automatically, but before we paln and apply our code we need to take note of two things;
+
+
+![](images/project17/project-folder-structure.png)
+
 
 <br>
 
