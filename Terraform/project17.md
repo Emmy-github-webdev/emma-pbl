@@ -50,6 +50,9 @@ terraform init
 terraform plan
 
 ```
+
+![](images/project17/run-without-tag.png)
+
 - Tags all the resources you have created so far. Explore how to use **format()** and **count** functions to automatically tag subnets with its respective number.
 
 ##### A little bit more about Tagging
@@ -137,6 +140,9 @@ _run_
 ```
 terraform plan
 ```
+
+![](images/project17/public-private-subnets-tags.png)
+
 The nice thing about this is – anytime we need to make a change to the tags, we simply do that in one single place (***terraform.tfvars***).
 
 > #### Internet Gateways & format() function
@@ -1674,7 +1680,7 @@ keypair = "devops"
 # Ensure to change this to your acccount number
 account_no = "680361416611"
 
-db-username = "david"
+db-username = "emmanuel"
 
 db-password = "devopspbl"
 
@@ -1684,6 +1690,20 @@ tags = {
   Managed-By      = "Terraform"
   Billing-Account = "1234567890"
 }
+```
+
+_run_
+
+```
+terraform plan
+terraform apply
+```
+
+_run_
+
+```
+terraform destroy
+
 ```
 
 At this point, you shall have pretty much all infrastructure elements ready to be deployed automatically, but before we paln and apply our code we need to take note of two things;
