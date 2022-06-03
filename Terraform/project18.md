@@ -32,11 +32,87 @@ _Here is our plan to Re-initialize Terraform to use S3 backend:_
 5. Add **outputs**
 6. **terraform apply**
 
+- Add the following code to the **maint.tf** in the root directory
+
+```
+# Note: The bucket name may not work for you since buckets are unique globally in AWS, so you must give it a unique name.
+resource "aws_s3_bucket" "terraform_state" {
+  bucket = "dev-terraform-bucket"
+  # Enable versioning so we can see the full revision history of our state files
+  versioning {
+    enabled = true
+  }
+  # Enable server-side encryption by default
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+}
+
+resource "aws_dynamodb_table" "terraform_locks" {
+  name         = "terraform-locks"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+}
+```
+
+> #### REFACTOR YOUR PROJECT USING MODULES
+
+_**QUICK TASK FOR YOU**: Break down your Terraform codes to have all resources in their respective modules. Combine resources of a similar type into directories within a ‘modules’ directory, for example, like this:_
+
+```
+- modules
+  - ALB: For Apllication Load balancer and similar resources
+  - EFS: For Elastic file system resources
+  - RDS: For Databases resources
+  - Autoscaling: For Autosacling and launch template resources
+  - compute: For EC2 and rlated resources
+  - VPC: For VPC and netowrking resources such as subnets, roles, e.t.c.
+  - security: for creating security group resources
+  ```
+
+  _Each module shall contain following files:_
+
+  ```
+  - main.tf (or %resource_name%.tf) file(s) with resources blocks
+- outputs.tf (optional, if you need to refer outputs from any of these resources in your root module)
+- variables.tf (as we learned before - it is a good practice not to hard code the values and use variables)
+```
+
+It is also recommended to configure **providers** and **backends** sections in separate files but should be placed in the root module.
+
+<br>
+
+After you have given it a try, you can check out this repository for guidiance and erors fixing.
+
+**IMPORTANT**: In the configuration sample from the repository, you can observe two examples of referencing the module:
+
+<br>
+
+Import module as a **source** and have access to its variables via **var** keyword:
+
+```
+module "VPC" {
+  source = "./modules/VPC"
+  region = var.region
+  ...
+```
+
+> #### COMPLETE THE TERRAFORM CONFIGURATION
+
 ##### Create a new folder _modules_
 
 _New folder structure_
 
 ![](images/project18/folder-structure.png)
+![](images/project18/folder-structure-2)
 
 _Details of restucrured code and folder, see the repo for [project18](https://github.com/Emmy-github-webdev/pbl-terraform/tree/prj-18)_
 
@@ -84,3 +160,42 @@ _Auto scaling_
 _Tags_
 
 ![](images/project18/tags)
+
+_DynamoDB_
+
+![](images/project18/dynamo)
+
+> ##### Configure S3 Backend
+
+_Create a file and name it **backend.tf**. Add the below code._
+
+```
+terraform {
+  backend "s3" {
+    bucket         = "dev-terraform-bucket"
+    key            = "global/s3/terraform.tfstate"
+    region         = "eu-central-1"
+    dynamodb_table = "terraform-locks"
+    encrypt        = true
+  }
+}
+```
+
+```
+terraform init
+terraform plan
+
+```
+
+![](images/project18/backend-bucket)
+
+> ##### Destroy the resources
+
+- Go to the backend.tf and comment out the code
+- Run the command
+
+```
+terraform init -migrate-state
+
+terraform destroy --auto-approve
+```
