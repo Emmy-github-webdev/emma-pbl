@@ -112,7 +112,7 @@ module "VPC" {
 _New folder structure_
 
 ![](images/project18/folder-structure.png)
-![](images/project18/folder-structure-2)
+![](images/project18/folder-structure-2.png)
 
 _Details of restucrured code and folder, see the repo for [project18](https://github.com/Emmy-github-webdev/pbl-terraform/tree/prj-18)_
 
@@ -135,35 +135,35 @@ terraform apply --auto-approve
 
 _EC2 Instance_
 
-![](images/project18/ec2-instances)
+![](images/project18/ec2-instances.png)
 
 _Security group_
 
-![](images/project18/security-group)
+![](images/project18/security-group.png)
 
 _Elastic IP_
 
-![](images/project18/elastic-ip)
+![](images/project18/elastic-ip.png)
 
 _Load balancer_
 
-![](images/project18/loadbalancer)
+![](images/project18/loadbalancer.png)
 
 _Target group_
 
-![](images/project18/target-group)
+![](images/project18/target-group.png)
 
 _Auto scaling_
 
-![](images/project18/autoscaling)
+![](images/project18/autoscaling.png)
 
 _Tags_
 
-![](images/project18/tags)
+![](images/project18/tags.png)
 
 _DynamoDB_
 
-![](images/project18/dynamo)
+![](images/project18/dynamo.png)
 
 > ##### Configure S3 Backend
 
@@ -187,7 +187,7 @@ terraform plan
 
 ```
 
-![](images/project18/backend-bucket)
+![](images/project18/backend-bucket.png)
 
 > ##### Destroy the resources
 
