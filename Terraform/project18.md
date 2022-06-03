@@ -37,3 +37,50 @@ _Here is our plan to Re-initialize Terraform to use S3 backend:_
 _New folder structure_
 
 ![](images/project18/folder-structure.png)
+
+_Details of restucrured code and folder, see the repo for [project18](https://github.com/Emmy-github-webdev/pbl-terraform/tree/prj-18)_
+
+###### Run the following commands to create the resources
+
+```
+# Check the validity of the code should there be any error
+terraform validate
+
+# Check terraform plan
+terraform plan
+
+# create tha plans
+terraform apply --auto-approve
+```
+
+![](images/project18/1-appy-plans.png)
+
+###### See the resources created below
+
+_EC2 Instance_
+
+![](images/project18/ec2-instances)
+
+_Security group_
+
+![](images/project18/security-group)
+
+_Elastic IP_
+
+![](images/project18/elastic-ip)
+
+_Load balancer_
+
+![](images/project18/loadbalancer)
+
+_Target group_
+
+![](images/project18/target-group)
+
+_Auto scaling_
+
+![](images/project18/autoscaling)
+
+_Tags_
+
+![](images/project18/tags)
