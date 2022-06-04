@@ -6,4 +6,6 @@ There are different ways to setup kubernete:
 
 <br>
 
-[minikube](https://minikube.sigs.k8s.io/docs/start/)
+1. [Install kunectl](https://kubernetes.io/docs/tasks/tools/)
+
+2. [Install minikube](https://minikube.sigs.k8s.io/docs/start/)
