@@ -1,4 +1,4 @@
-# Simple Application - Voting application
+# Simple Application - Voting application on Docker
 
 ![](voting-app.png)
 
@@ -49,3 +49,83 @@ docker run -d --name=result -p 5001:80 --link db:db result-app
 
 docker run -d --name=worker --link db:db --link redis:redis worker
 ```
+
+# Simple Application - Voting application on Kubernete
+
+_Goals_
+<br>
+
+![](voting-app-on-kubernetes-goal.png)
+
+_Steps_
+
+<br>
+
+![](step.png)
+
+_Docker Images_
+<br>
+
+![](docker-image.png)
+
+
+#### [Demo  - Deploying Microservices Application on Kubernetes](https://github.com/Emmy-github-webdev/microverse-on-kubernetes/tree/voting-app)
+
+1. Create five pods
+- postgres-pod
+- redis-pod
+- result-app-pod
+- voting-app-pod
+- worker-pod
+2. Create four services
+- Redis service
+- Postgres service
+- Voting app service
+- Result app service
+
+3. Run the following commands
+
+```
+# Create voting app pod and service
+kubectl create -f voting-app-pod.yaml
+kubectl create -f voting-app-service.yaml
+
+# View the pods and services
+kubectl get pods, svc
+# Get the service URL
+minikube service voting-service --url
+# Launch the URL on the browser
+# Create all the pods and services using the above commands
+# Delete all the Pods in the cluster
+```
+
+4. Create four deploy file for all the five pods
+- postgres-deploy
+- redis-deploy
+- result-app-deploy
+- voting-app-deploy
+- worker-deploy
+
+_Note_ - Check the [repo](https://github.com/Emmy-github-webdev/microverse-on-kubernetes/tree/voting-app)
+
+5. Run the following command
+
+```
+# Create voting app deploy and service
+kubectl create -f voting-app-deploy.yaml
+kubectl create -f voting-app-service.yaml
+
+# View the deploy and services
+kubectl get deployment, svc
+# Get the service URL
+minikube service voting-service --url
+# Launch the URL on the browser
+# Create all the deploymentss and services using the above commands
+# Delete all the Pods in the cluster
+```
+
+## To scale up 
+```
+kubectl scale deoloyment voting-app-deploy --replicas=3
+```
+
