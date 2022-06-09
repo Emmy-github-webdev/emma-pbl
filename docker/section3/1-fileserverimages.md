@@ -1,4 +1,4 @@
-1. #### Build a file server image
+#### Build a file server image
 1. _Create project directory and docker image_
 - Create a folder **docker**
 - Change directory to **docker** folder
@@ -87,4 +87,13 @@ docker image ls
 docker run --name=serve -p=3001:5000 fileserverimage_emma/serve
 
 # Run the local port on the browser
+```
+
+4. _List containers_
+
+```
+docker container ls
+
+# Remove the container
+docker rm -f container ID
 ```
