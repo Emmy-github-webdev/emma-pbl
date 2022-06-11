@@ -281,3 +281,26 @@ Verify that the path is exported
 ```
 
 ![](database.png)
+
+4. Update the **.env** file with connection details to the database
+
+<br>
+
+The **.env** file is located in the html **tooling/html/.env** folder but not visible in terminal. you can use vi or nano
+
+```
+sudo vi .env
+
+MYSQL_IP=mysqlserverhost
+MYSQL_USER=username
+MYSQL_PASS=client-secrete-password
+MYSQL_DBNAME=toolingdb
+```
+<br>
+
+_Flags used_:
+
+- **MYSQL_IP** mysql ip address "leave as mysqlserverhost"
+- **MYSQL_USER** mysql username for user export as environment variable
+- **MYSQL_PASS** mysql password for the user exported as environment varaible
+- **MYSQL_DBNAME** mysql databse name "toolingdb"
