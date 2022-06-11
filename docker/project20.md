@@ -113,6 +113,20 @@ Finally, change the server root password to protect your database. Exit the the 
 - **-u** mysql username
 - **-p** mysql password
 
+<br>
+
+**Approach 2**
+
+<br>
+
+At this stage you are now able to create a docker container but we will need to add a network. So, stop and remove the previous mysql docker container.
+
+```
+docker ps -a
+docker stop mysql 
+docker rm mysql or <container ID> 04a34f46fb98
+```
+
 ![](remove-mysql-container.png)
 
 _First, create a network:_
@@ -206,3 +220,35 @@ Ensure you are in the directory **create_user.sql** file is located or declare a
 ```
 docker exec -i mysql-server mysql -uroot -p$MYSQL_PW < create_user.sql
 ```
+
+![](mysql.png)
+
+#### Connecting to the MySQL server from a second container running the MySQL client utility
+
+The good thing about this approach is that you do not have to install any client tool on your laptop, and you do not need to connect directly to the container running the MySQL server.
+
+<br>
+
+Run the MySQL Client Container:
+
+```
+ $ docker run --network tooling_app_network --name mysql-client -it --rm mysql mysql -h mysqlserverhost -u  -p
+ ```
+ ###### Flags used:
+
+- **--name** gives the container a name
+- **-it** runs in interactive mode and Allocate a pseudo-TTY
+- **--rm** automatically removes the container when it exits
+- **--network** connects a container to a network
+- **-h** a MySQL flag specifying the MySQL server Container hostname
+- **-u** user created from the SQL script
+- **admin** username-for-user-created-from-the-SQL-script-create_user.sql
+- **-p** password specified for the user created from the SQL script
+
+![](mysql-client.png)
+
+#### Prepare database schema
+
+Now you need to prepare a database schema so that the Tooling application can connect to it.
+
+1. Clone the Tooling-app repository from here
