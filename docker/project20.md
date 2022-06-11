@@ -304,3 +304,5 @@ _Flags used_:
 - **MYSQL_USER** mysql username for user export as environment variable
 - **MYSQL_PASS** mysql password for the user exported as environment varaible
 - **MYSQL_DBNAME** mysql databse name "toolingdb"
+
+5. Run the Tooling App
