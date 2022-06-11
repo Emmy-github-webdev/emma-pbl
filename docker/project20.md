@@ -252,3 +252,32 @@ Run the MySQL Client Container:
 Now you need to prepare a database schema so that the Tooling application can connect to it.
 
 1. Clone the Tooling-app repository from here
+
+```
+ git clone https://github.com/darey-devops/tooling.git
+ ```
+2. On your terminal, export the location of the SQL file
+
+```
+export tooling_db_schema=/tooling_db_schema.sql 
+```
+
+![](clone-repo.png)
+
+<br>
+
+You can find the ***tooling_db_schema.sql** in the **tooling/html/tooling_db_schema.sql** folder of cloned repo
+
+<br>
+
+Verify that the path is exported
+
+![](verify-db.png)
+
+3. Use the SQL script to create the database and prepare the schema. With the **docker exec** command, you can execute a command in a running container.
+
+```
+ docker exec -i mysql-server mysql -uroot -p$MYSQL_PW < $tooling_db_schema
+```
+
+![](database.png)
