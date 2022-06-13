@@ -72,4 +72,70 @@ docker container ls
 # Remove the container
 docker rm -f container ID
 ```
+#### Layer Image Cache and .dockerignore
 
+1. ##### Add README.md file
+
+```
+An express.js Docker container
+```
+
+2. Ensure you have .git initialized. 
+
+```
+git init
+```
+
+3. Install node_module directory
+
+```
+npm install
+```
+
+4. Add .dockerignore file
+
+```
+touch .dockerignore
+
+# Add the following
+
+README.md
+node_modules/
+.git/
+```
+5. Update the Dockerfile
+
+```
+FROM node
+COPY package.json package.json
+RUN npm install
+COPY ./app ./app
+CMD ["node", "app/server.js"]
+
+```
+
+![](file-structure.png)
+
+6. Rebild the container
+
+```
+docker image ls
+
+# Remove the previous container
+docker rm -rf express
+# Rebuild the container
+
+docker build . -t emma/express
+
+docker image ls
+```
+
+7. Run the container
+
+```
+docker run -d -p=3002:80 --name=express emma/express
+
+# Run the app on the browser
+
+localhost:3002
+```
