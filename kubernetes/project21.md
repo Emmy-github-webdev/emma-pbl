@@ -109,3 +109,37 @@ aws ec2 describe-vpcs
 
 and check if you can see VPC details.
 
+_Install kubectl_
+
+Kubernetes cluster has a Web API that can receive HTTP/HTTPS requests, but it is quite cumbersome to **curl** an API each and every time you need to send some command, so **kubectl** command tool was developed to ease a K8s administrator’s life.
+
+<br>
+
+With this tool you can easily interact with Kubernetes to deploy applications, inspect and manage cluster resources, view logs and perform many more administrative operations.
+
+###### Linux
+
+```
+# Download the binary
+
+wget https://storage.googleapis.com/kubernetes-release/release/v1.21.0/bin/linux/amd64/kubectl
+
+# Make it executable
+
+chmod +x kubectl
+
+# Move to the Bin directory
+
+sudo mv kubectl /usr/local/bin/
+
+# Verify that kubectl version 1.21.0 or higher is installed:
+
+kubectl version --client
+```
+
+_Output_
+
+```
+Client Version: version.Info{Major:"1", Minor:"20+", GitVersion:"v1.20.4-dirty", GitCommit:"e87da0bd6e03ec3fea7933c4b5263d151aafd07c", GitTreeState:"dirty", BuildDate:"2021-03-15T10:03:32Z", GoVersion:"go1.16.2", Compiler:"gc", Platform:"darwin/amd64"}
+```
+
