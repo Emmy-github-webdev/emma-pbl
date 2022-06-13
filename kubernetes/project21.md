@@ -66,3 +66,46 @@ To know when to choose between Docker Swarm and Kubernetes, [Here is an interest
 #### [KUBERNETES ARCHITECTURE](https://kubernetes.io/docs/concepts/overview/components/)
 
 Kubernetes is a not a single package application that you can install with one command, it is comprised of several components, some of them can be deployed as services, some can be also deployed as separate containers
+
+<br>
+
+First, you will need some client tools installed and configurations made on your client workstation:
+
+- [awscli](https://aws.amazon.com/cli/) – is a unified tool to manage your AWS services
+
+- [kubectl](https://kubernetes.io/docs/reference/kubectl/) – this command line utility will be your main control tool to manage your K8s cluster. You will use this tool so many times, so you will be able to type ‘kubetcl’ on your keyboard with a speed of light. You can always make a shortcut (alias) to just one character ‘k’. Also, add this extremely useful official kubectl Cheat Sheet to your bookmarks, it has examples of the most used **‘kubectl’** commands.
+
+- [cfssl](https://blog.cloudflare.com/introducing-cfssl/) – an open source toolkit for everything TLS/SSL from [Cloudflare](https://www.cloudflare.com/)
+
+- [cfssljson](https://github.com/cloudflare/cfssl) – a program, which takes the JSON output from the **cfssl** and writes certificates, keys, [CSRs](https://en.wikipedia.org/wiki/Certificate_signing_request), and bundles to disk.
+
+_Install and configure AWS CLI_
+
+<br>
+
+- Configure AWS CLI to access all AWS services used, for this you need to have a user with programmatic access keys configured in AWS Identity and Access Management (IAM)
+
+- Generate access keys and store them in a safe place.
+
+- On your local workstation download and install [the latest version of AWS CLI](https://aws.amazon.com/cli/)
+
+<br>
+
+To [configure your AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html) – run your shell (or cmd if using Windows) and run:
+
+```
+aws configure --profile %your_username%
+AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
+AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+Default region name [None]: us-west-2
+Default output format [None]: json
+```
+
+Test your AWS CLI by running:
+
+```
+aws ec2 describe-vpcs
+```
+
+and check if you can see VPC details.
+
