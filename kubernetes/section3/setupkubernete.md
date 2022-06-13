@@ -50,3 +50,20 @@ kubectl get pods
 kubectl get pods
 ```
 
+#### K8s installation options
+
+To successfully implement "K8s From-Ground-Up", the following and even more will be done by you as a K8s administrator:
+
+<br>
+
+- Install and configure master (also known as control plane) components and worker nodes (or just nodes).
+- Apply security settings across the entire cluster (i.e., encrypting the data 
+  * in transit, and at rest)
+In transit encryption means encrypting communications over the network using HTTPS
+  * At rest encryption means encrypting the data stored on a disk
+- Plan the capacity for the backend data store etcd
+Configure network plugins for the containers to communicate
+- Manage periodical upgrade of the cluster
+- Configure observability and auditing
+
+#### STEP 0-INSTALL CLIENT TOOLS BEFORE BOOTSTRAPPING THE CLUSTER.

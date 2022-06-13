@@ -62,3 +62,7 @@ As mentioned earlier, there are other alternatives to Docker Compose. But, throu
 <br>
 
 To know when to choose between Docker Swarm and Kubernetes, [Here is an interesting article to read](https://dzone.com/articles/quotdocker-swarm-or-kubernetesquot-is-it-the-right) with some very enlightening stats.
+
+#### [KUBERNETES ARCHITECTURE](https://kubernetes.io/docs/concepts/overview/components/)
+
+Kubernetes is a not a single package application that you can install with one command, it is comprised of several components, some of them can be deployed as services, some can be also deployed as separate containers
