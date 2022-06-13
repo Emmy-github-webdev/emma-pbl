@@ -5,3 +5,8 @@ https://www.youtube.com/playlist?list=PLtPuNR8I4TvmKE9LJI11vALrnrXt8wLXD
 
 https://docs.google.com/spreadsheets/d/122gYwmPSd1pC7yJbN0sylKbbtMqZbuhdteU47r481do/edit#gid=0
 
+
+
+Docker
+
+https://semaphoreci.com/community/tutorials/dockerizing-a-php-application
