@@ -166,4 +166,32 @@ wget -q --show-progress --https-only --timestamping \
 
   sudo mv cfssl cfssljson /usr/local/bin/
   ```
+#### AWS CLOUD RESOURCES FOR KUBERNETES CLUSTER
 
+ it is highly recommended to start out first with manual provisioning using **awscli** and have thorough knowledge about the whole setup. After that, you can destroy the entire project and start all over again using Terraform. 
+
+ <br>
+
+_Step 1 – Configure Network Infrastructure_
+
+##### Virtual Private Cloud – VPC
+
+1. Create a directory named **k8s-cluster-from-ground-up**
+2. Create a VPC and store the ID as a variable:
+
+```
+VPC_ID=$(aws ec2 create-vpc \
+--cidr-block 172.31.0.0/16 \
+--output text --query 'Vpc.VpcId'
+)
+```
+
+3. Tag the VPC so that it is named:
+
+```
+NAME=k8s-cluster-from-ground-up
+
+aws ec2 create-tags \
+  --resources ${VPC_ID} \
+  --tags Key=Name,Value=${NAME}
+ ```
