@@ -352,6 +352,8 @@ $ docker run --network tooling_app_network -p 8085:80 -it tooling:0.0.1
 
 ```
 
+![](fina.png)
+
 Let us observe those flags in the command.
 
 - We need to specify the **--network** flag so that both the Tooling app and the database can easily connect on the same virtual network we created earlier.
