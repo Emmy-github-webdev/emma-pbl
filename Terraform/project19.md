@@ -31,3 +31,106 @@ Choose _version control workflow_ and you will be promped to connect your GitHub
 <br>
 
 Move on to "Configure settings", provide a description for your workspace and leave all the rest settings default, click "Create workspace".
+
+![](images/project19/terraform-cloud.png)
+
+4. Configure variables
+
+<br>
+
+Terraform Cloud supports two types of variables: environment variables and Terraform variables. Either type can be marked as sensitive, which prevents them from being displayed in the Terraform Cloud web UI and makes them write-only.
+
+<br>
+
+Set two environment variables: **AWS_ACCESS_KEY_ID** and **AWS_SECRET_ACCESS_KEY**, set the values that you used in [Project 16](https://readthedocs.com/cas/login?service=https%3A%2F%2Fexpert-pbl.darey.io%2Fen%2Flatest%2Fproject16.html%3Fnext%3Dhttps%253A%252F%252Fexpert-pbl.darey.io%252Fen%252Flatest%252Fproject16.html). These credentials will be used to provision your AWS infrastructure by Terraform Cloud.
+
+![](images/project19/env.png)
+
+<br>
+
+After you have set these 2 environment variables – yout Terraform Cloud is all set to apply the codes from GitHub and create all necessary AWS resources.
+
+<br>
+
+5. Now it is time to run our Terrafrom scripts, but in our previous project which was [project 18](https://www.darey.io/docs/automate-infrastructure-with-iac-using-terraform-part-3-refactoring/), we talked about using Packer to build our images, and Ansible to configure the infrastructure, so for that we are going to make few changes to our our existing [respository](https://github.com/darey-devops/PBL-project-18) from Project 18.
+
+<br>
+
+The files that would be Addedd is;
+
+<br>
+
+- AMI: for building packer images
+- Ansible: for Ansible scripts to configure the infrastucture
+
+<br>
+
+- [packer](https://learn.hashicorp.com/tutorials/packer/get-started-install-cli)
+- [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+
+Before you proceed ensure you have the following tools installed on your local machine;
+
+<br>
+
+Repository use for this project is [pbl-terraform](https://github.com/Emmy-github-webdev/pbl-terraform/tree/prj-19/PBL)
+
+```
+# format the packer code
+packer fmt
+
+# Initialize packer if all the packer codes are written in one filw
+
+packer init
+
+# Connect your IAM account to the computer
+
+Aws configure
+```
+
+### Build images using packer
+
+##### Build AMI for Bastion
+
+
+
+```
+pbl/ami> packer build bastion.pkr.hcl
+
+```
+
+##### Build AMI for Nginx
+
+
+
+```
+pbl/ami> packer build nginx.pkr.hcl
+
+```
+
+##### Build AMI for Ubuntu
+
+
+
+```
+pbl/ami> packer build ubuntu.pkr.hcl
+
+```
+
+##### Build AMI for Web
+
+
+
+```
+pbl/ami> packer build web.pkr.hcl
+
+```
+
+### confirm the AMIs in the console
+
+### update terrafrom script with new ami IDs generated from packer build
+- Go to the AMI created in the AWS console
+- Select the bastion AMI
+- In the detal page, copy the **AMI ID**
+- Go back to the visual studio code, in the **terraform => terraform.auto.tfvars => ami-bastion => Add the AMI-ID**
+
+_Do the same for **Nginx**, **ubuntu**, **web** AMI_
