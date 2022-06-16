@@ -1628,3 +1628,147 @@ sudo systemctl status kube-scheduler
 1. The problem relates to etcd configuration.
 2. Check the **systemd** logs for the **api-server**. The problem will be clearly logged, and it will give you an idea what is wrong. Find out how to fix it.
 
+#### Test that Everything is working fine
+
+1. To get the cluster details run:
+
+```
+kubectl cluster-info  --kubeconfig admin.kubeconfig
+
+```
+
+#### OUTPUT:
+
+```
+Add the output here
+
+Kubernetes control plane is running at https://k8s-api-server.svc.darey.io:6443
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+```
+
+2. To get the current namespaces:
+
+```
+kubectl get namespaces --kubeconfig admin.kubeconfig
+```
+
+#### OUTPUT:
+
+```
+Add the output here
+```
+
+3. To reach the Kubernetes API Server publicly
+
+```
+curl --cacert /var/lib/kubernetes/ca.pem https://$INTERNAL_IP:6443/version
+```
+
+#### OUTPUT:
+```
+Add output here
+```
+
+4. To get the status of each component:
+
+```
+kubectl get componentstatuses --kubeconfig admin.kubeconfig
+```
+
+```
+Add the output image here
+```
+
+5. On one of the controller nodes, configure Role Based Access Control (RBAC) so that the **api-server** has necessary authorization for for the **kubelet**.
+
+<br>
+
+_Create the ClusterRole:_
+
+```
+cat <<EOF | kubectl apply --kubeconfig admin.kubeconfig -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    rbac.authorization.kubernetes.io/autoupdate: "true"
+  labels:
+    kubernetes.io/bootstrapping: rbac-defaults
+  name: system:kube-apiserver-to-kubelet
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes/proxy
+      - nodes/stats
+      - nodes/log
+      - nodes/spec
+      - nodes/metrics
+    verbs:
+      - "*"
+EOF
+```
+
+_Create the **ClusterRoleBinding** to bind the **kubernetes** user with the role created above:_
+
+```
+cat <<EOF | kubectl --kubeconfig admin.kubeconfig  apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: system:kube-apiserver
+  namespace: ""
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:kube-apiserver-to-kubelet
+subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: User
+    name: kubernetes
+EOF
+```
+
+#### Configuring the Kubernetes Worker nodes
+
+Before we begin to bootstrap the worker nodes, it is important to understand that the K8s API Server authenticates to the **kubelet** as the **kubernetes** user using the same _kubernetes.pem_ certificate.
+
+<br>
+
+We need to configure **Role Based Access** (RBAC) for Kubelet Authorization:
+
+1. Configure RBAC permissions to allow the Kubernetes API Server to access the Kubelet API on each worker node. Access to the Kubelet API is required for retrieving metrics, logs, and executing commands in pods.
+
+<br>
+
+Create the **system:kube-apiserver-to-kubelet** [ClusterRole](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#role-and-clusterrole) with permissions to access the Kubelet API and perform most common tasks associated with managing pods on the worker nodes:
+
+<br>
+
+Run the below script on the Controller node:
+
+```
+cat <<EOF | kubectl apply --kubeconfig admin.kubeconfig -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    rbac.authorization.kubernetes.io/autoupdate: "true"
+  labels:
+    kubernetes.io/bootstrapping: rbac-defaults
+  name: system:kube-apiserver-to-kubelet
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes/proxy
+      - nodes/stats
+      - nodes/log
+      - nodes/spec
+      - nodes/metrics
+    verbs:
+      - "*"
+EOF
+```
+

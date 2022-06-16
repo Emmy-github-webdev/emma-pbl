@@ -134,3 +134,8 @@ pbl/ami> packer build web.pkr.hcl
 - Go back to the visual studio code, in the **terraform => terraform.auto.tfvars => ami-bastion => Add the AMI-ID**
 
 _Do the same for **Nginx**, **ubuntu**, **web** AMI_
+
+- Push the changes to GitHub
+- Merge with the main branch
+- Check the plan in Terraform cloud
+- If you are okay, run the apply in the terraform cloud to create the resources
