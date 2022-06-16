@@ -135,7 +135,77 @@ pbl/ami> packer build web.pkr.hcl
 
 _Do the same for **Nginx**, **ubuntu**, **web** AMI_
 
+### run terraform script
+
 - Push the changes to GitHub
 - Merge with the main branch
 - Check the plan in Terraform cloud
 - If you are okay, run the apply in the terraform cloud to create the resources
+
+### update ansible script with values from teraform output
+- [Install and Enable OpenSSH on Ubuntu 20.04](https://linuxhint.com/how-to-install-and-enable-openssh-on-ubuntu/)
+- Go to the AWS console
+- Copy the public address of the **Bastion** instance
+- Connect to Bastion via Visual studio code
+- [Install aws command](https://www.fosstechnix.com/how-to-install-aws-cli-on-linux/)
+- Clone [project 19](https://github.com/Emmy-github-webdev/pbl-terraform/tree/prj-19) repository
+- Run **AWS configure** on the Bastion instance
+- Confirm Bastion can connect to AWS console
+
+```
+aws s3 ls
+```
+
+- Change directory to Ansible directory and run, and confirm the ansible can pull the Ip addrtesses for playbook to run
+
+```
+ansible-inventory -i inventory/aws_ec2.yml --graph
+```
+
+#### RDS endpoints for wordpress and tooling
+- Go to the AWS Console -> RDS -> Connectivity and security
+- Copy the **Endpoint**
+- Go back to Vs code -> Ansible/roles/tooling/tasks/setup-db.yml. Update the **regexp: '^mysql.tooling.svc.cluster.local', line: "terraform-2021111611530321750000000c.cdqpbjkethv0.us-east-1.rds.amazonaws.com"** in the _name: Input tooling credentials_ and _name: create database_
+
+```
+- name: Input tooling credentials
+  ansible.builtin.replace:
+    path: /var/www/html/functions.php
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.line }}"
+  loop:
+    - { regexp: '^mysql.tooling.svc.cluster.local', line: "terraform-2021111611530321750000000c.cdqpbjkethv0.us-east-1.rds.amazonaws.com" }
+    - { regexp: '^admin', line: "david" }
+    - { regexp: '^tooling', line: "toolingdb" }
+    - { regexp: '^admin', line: "devopspblproject" }
+```
+
+- Go back to Vs code -> Ansible/roles/wordpress/tasks/setup-db.yml Update the **regexp: '^localhost', line: "terraform-2021111611530321750000000c.cdqpbjkethv0.us-east-1.rds.amazonaws.com"** in the _name: Input wordpress credentials_ and _name: create database_
+#### Database name, password and username for wordpress and tooling
+Ensure the database credentials are the same
+#### Access point ID for wordpress and tooling
+- Go to the AWS Console -> EFS -> Access point for wordpress -> Attach -> Copy fs-app for wordpress
+![](images/project19/accesspoint-wordpress.png) 
+- Go back to Vs code -> Ansible/roles/wordpress/tasks/main.yml 
+- Update the fsap in **Name: mounting share(s)**
+- Go to the AWS Console -> EFS -> Access point for wordpress -> Attach -> Copy fs for wordpress
+- Update the fs in **Name: mounting share(s)**
+
+**Note**: Repeat the same step for tolling
+
+#### Internal load balancee DNS for nginx reverse proxy
+- Go to the AWS Console -> Load Balancer -> Description
+- Copy the **DNS Name**
+- Back to the VS code -> Ansible folder/roles/nginx/templates/nginx.conf.j2. Update the loadbalancer in **proxy_pass**
+
+```
+location / {
+            proxy_set_header             Host $host;
+            proxy_pass                   https://internal-ialb-506677692.us-east-1.elb.amazonaws.com/; 
+           }
+```
+
+- Run ansible-playbook
+```
+ansible-playbook -i inventory/aws_ec2.yml playbooks/site.yml
+```
