@@ -1,4 +1,7 @@
 ## EXPERIENCE CONTINUOUS INTEGRATION WITH JENKINS | ANSIBLE | ARTIFACTORY | SONARQUBE | PHP
+
+_[Project repo](https://github.com/Emmy-github-webdev/blue-ocean-jenk-ansible/tree/prj-14-run-ansible-from-jenkins)_
+
 _Executable file_ is a file created by a building stage of a compiled programming languages. Example are >Net, Java(.jar). The executable file contains the neccessary dependencies, all the code embedded, which application needs to run and work successfully.
 
 <br>
