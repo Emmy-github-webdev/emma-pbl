@@ -204,8 +204,23 @@ location / {
             proxy_pass                   https://internal-ialb-506677692.us-east-1.elb.amazonaws.com/; 
            }
 ```
-
+- Ensure the role path in **ansible.cfg** is correct
+- Export ansible.cfg path
+```
+- Right click the ansible.cfg and copy the path
+- export the path
+export ANSIBLE_CONFIG=the ansible.config path
+```
 - Run ansible-playbook
+
 ```
 ansible-playbook -i inventory/aws_ec2.yml playbooks/site.yml
 ```
+
+On the browser, run the service name for both tooling and wordpress
+
+![](images/project19/tsl-1.png)
+
+<br>
+
+![](images/project19/wordpress.png)
