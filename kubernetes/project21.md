@@ -326,6 +326,7 @@ aws ec2 create-route \
   --destination-cidr-block 0.0.0.0/0 \
   --gateway-id ${INTERNET_GATEWAY_ID}
 ```
+![](images/project21/route-table.png)
 
 #### Output:
 
@@ -340,6 +341,8 @@ aws ec2 create-route \
     "Return": true
 }
 ```
+
+![](images/project21/route-table-output.png)
 
 #### SECURITY GROUPS
 
