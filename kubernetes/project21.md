@@ -287,6 +287,7 @@ aws ec2 create-tags \
   --tags Key=Name,Value=${NAME}
  
   ```
+![](images/project21/create-subnet.png)
 
 #### Internet Gateway – IGW
 
