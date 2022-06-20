@@ -447,6 +447,8 @@ aws elbv2 create-listener \
 --default-actions Type=forward,TargetGroupArn=${TARGET_GROUP_ARN} \
 --output text --query 'Listeners[].ListenerArn'
 ```
+![](images/project21/add-listener-cmd.png)
+![](images/project21/add-listener.png
 
 #### K8s Public Address
 
