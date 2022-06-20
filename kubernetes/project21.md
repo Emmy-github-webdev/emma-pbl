@@ -409,7 +409,8 @@ LOAD_BALANCER_ARN=$(aws elbv2 create-load-balancer \
 --type network \
 --output text --query 'LoadBalancers[].LoadBalancerArn')
 ```
-
+![](images/project21/loadbalancer-cmd.png)
+![](images/project21/loadbalancer.png)
 #### Tagret Group
 
 15. Create a target group: (For now it will be unhealthy because there are no real targets yet.)
