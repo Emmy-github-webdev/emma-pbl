@@ -393,6 +393,10 @@ aws ec2 authorize-security-group-ingress \
   --cidr 0.0.0.0/0
 ```
 
+![](images/project21/security-group-1.png)
+![](images/project21/security-group-2.png)
+![](images/project21/security-group-3.png)
+
 #### Network Load Balancer
 
 14. Create a network Load balancer,
