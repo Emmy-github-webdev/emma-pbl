@@ -145,6 +145,8 @@ _Output_
 Client Version: version.Info{Major:"1", Minor:"20+", GitVersion:"v1.20.4-dirty", GitCommit:"e87da0bd6e03ec3fea7933c4b5263d151aafd07c", GitTreeState:"dirty", BuildDate:"2021-03-15T10:03:32Z", GoVersion:"go1.16.2", Compiler:"gc", Platform:"darwin/amd64"}
 ```
 
+![](images/project21/kubectl-version.png)
+
 ##### Install CFSSL and CFSSLJSON
 
 _cfssl_ is an open source tool by **Cloudflare** used to setup a **Public Key Infrastructure** ([PKI Infrastructure](https://en.wikipedia.org/wiki/Public_key_infrastructure)) for generating, signing and bundling TLS certificates. In previous projects you have experienced the use of **Letsencrypt** for the similar use case. Here, **cfssl** will be configured as a Certificate Authority which will issue the certificates required to spin up a Kubernetes cluster.
@@ -197,7 +199,7 @@ aws ec2 create-tags \
   --resources ${VPC_ID} \
   --tags Key=Name,Value=${NAME}
 
- ```
+```
 
 ##### Domain Name System – DNS
 4. Enable DNS support for your VPC:
@@ -214,6 +216,10 @@ aws ec2 modify-vpc-attribute \
 --vpc-id ${VPC_ID} \
 --enable-dns-hostnames '{"Value": true}'
 ```
+
+![](images/project21/vpc.png)
+
+![](images/project21/create-vpc.png)
 
 ##### AWS Region
 
@@ -252,6 +258,7 @@ aws ec2 create-tags \
   --resources ${DHCP_OPTION_SET_ID} \
   --tags Key=Name,Value=${NAME}
   ```
+![](images/project21/dhcp.png)
 
 9. Associate the DHCP Option set with the VPC: 
 
