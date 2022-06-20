@@ -527,3 +527,109 @@ Forwarding from [::1]:8089 -> 80
 ```
 
 Then go to your web browser and enter **localhost:8089** – You should now be able to see the nginx page in the browser.
+
+### CREATE A REPLICA SET
+Let us create a **rs.yaml** manifest for a ReplicaSet object:
+```
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-rs
+spec:
+  replicas: 3
+  selector:
+    app: nginx-pod
+#Part 2
+  template:
+    metadata:
+      name: nginx-pod
+      labels:
+         app: nginx-pod
+    spec:
+      containers:
+      - image: nginx:latest
+        name: nginx-pod
+        ports:
+        - containerPort: 80
+          protocol: TCP
+```
+```
+kubectl apply -f rs.yaml
+```
+<br>
+
+The manifest file of ReplicaSet consist of the following fields:
+
+- apiVersion: This field specifies the version of kubernetes Api to which the object belongs. ReplicaSet belongs to apps/v1 apiVersion.
+- kind: This field specify the type of object for which the manifest belongs to. Here, it is ReplicaSet.
+- metadata: This field includes the metadata for the object. It mainly includes two fields: name and labels of the ReplicaSet.
+- spec: This field specifies the label selector to be used to select the Pods, number of replicas of the Pod to be run and the container or list of containers which the Pod will run. In the above example, we are running 3 replicas of nginx container.
+
+<br>
+
+Let us check what Pods have been created:
+
+```
+kubectl get pods
+```
+#### Output
+
+```
+NAME              READY   STATUS    RESTARTS   AGE     IP               NODE                                              NOMINATED NODE   READINESS GATES
+nginx-pod-j784r   1/1     Running   0          7m41s   172.50.197.5     ip-172-50-197-52.eu-central-1.compute.internal    <none>           <none>
+nginx-pod-kg7v6   1/1     Running   0          7m41s   172.50.192.152   ip-172-50-192-173.eu-central-1.compute.internal   <none>           <none>
+nginx-pod-ntbn4   1/1     Running   0          7m41s   172.50.202.162   ip-172-50-202-18.eu-central-1.compute.internal    <none>           <none>
+```
+
+Here we see three **ngix-pods** with some random suffixes (e.g., **-j784r**) – it means, that these Pods were created and named automatically by some other object (higher level of abstraction) such as ReplicaSet.
+
+<br>
+
+Try to delete one of the Pods:
+
+```
+kubectl delete po nginx-pod-j784r
+```
+
+#### Output
+```
+pod "nginx-pod-j784r" deleted
+```
+```
+❯ kubectl get pods
+NAME              READY   STATUS    RESTARTS   AGE
+nginx-rc-7xt8z   1/1     Running   0          22s
+nginx-rc-kg7v6   1/1     Running   0          34m
+nginx-rc-ntbn4   1/1     Running   0          34m
+```
+
+You can see, that we still have all 3 Pods, but one has been recreated (can you differentiate the new one?)
+
+<br>
+
+Explore the ReplicaSet created:
+```
+kubectl get rs -o wide
+```
+
+#### Output
+```
+NAME        DESIRED   CURRENT   READY   AGE   CONTAINERS   IMAGES         SELECTOR
+nginx-rs   3         3         3       34m   nginx-pod    nginx:latest   app=nginx-pod
+```
+
+N**otice**, that ReplicaSet understands which Pods to create by using SELECTOR key-value pair.
+
+<br>
+
+Get detailed information of a ReplicaSet
+To display detailed information about any Kubernetes object, you can use 2 differen commands:
+
+kubectl describe %object_type% %object_name% (e.g. kubectl describe rs nginx-rs)
+kubectl get %object_type% %object_name% -o yaml (e.g. kubectl describe rs nginx-rs -o yaml)
+Try both commands in action and see the difference. Also try get with -o json instead of -o yaml and decide for yourself which output option is more readable for you.
+
+Scale ReplicaSet up and down:
+In general, there are 2 approaches of Kubernetes Object Management: imperative and declarative.
+
+Let us see how we can use both to scale our Replicaset up and down:
