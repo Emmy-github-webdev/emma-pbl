@@ -434,6 +434,8 @@ aws elbv2 register-targets \
   --target-group-arn ${TARGET_GROUP_ARN} \
   --targets Id=172.31.0.1{0,1,2}
 ```
+![](images/project21/register-target-group-cmd.png)
+![](images/project21/register-target-group.png)
 
 17. Create a listener to listen for requests and forward to the target nodes on TCP port **6443**
 
