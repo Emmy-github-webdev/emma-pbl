@@ -95,3 +95,55 @@ These objects are **"record of intent"** – once you create the object, the Kub
 <br>
 
 To work with Kubernetes objects – whether to create, modify, or delete them – you will need to use the Kubernetes API. When you use the kubectl command-line interface, for example, the CLI makes the necessary Kubernetes API calls for you. It is also possible to use curl to directly interact with the Kubernetes API, or it can be as part of developing a program in different programming languages. That will require some advance knowledge. You can [read more about client libraries](https://kubernetes.io/docs/reference/using-api/client-libraries/) to get an idea on how that works.
+
+### UNDERSTANDING THE CONCEPT
+
+Let us try to understand a bit more about how the service object is able to route traffic to the Pod.
+
+<br>
+
+If you run the below command:
+
+```
+kubectl get service nginx-service -o wide
+```
+You will get the output similar to this::
+```
+NAME            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE   SELECTOR
+nginx-service   ClusterIP   10.100.71.130   <none>        80/TCP    4d    app=nginx-pod
+```
+
+As you already know, the service’s type is **ClusterIP**, and in the above output, it has the IP address of **10.100.71.130** – This IP works just like an internal loadbalancer. It accepts requests and forwards it to an IP address of any Pod that has the respective **selector label**. In this case, it is **app=nginx-pod**. If there is more than one Pod with that label, service will distribute the traffic to all theese pofs in a Round [Robin fashion](https://en.wikipedia.org/wiki/Round-robin_scheduling).
+
+<br>
+
+Now, let us have a look at what the Pod looks like:
+```
+kubectl get pod nginx-pod --show-labels
+```
+
+#### Output:
+
+```
+NAME        READY   STATUS    RESTARTS   AGE   LABELS
+nginx-pod   1/1     Running   0          31m   app=nginx-pod
+```
+**Notice that the IP address of the Pod, is NOT the IP address of the server it is running on. Kubernetes, through the implementation of network plugins assigns virtual IP adrresses to each Pod.**
+
+```
+kubectl get pod nginx-pod -o wide
+```
+
+#### Output:
+```
+NAME        READY   STATUS    RESTARTS   AGE   IP               NODE                                              NOMINATED NODE   READINESS GATES
+nginx-pod   1/1     Running   0          57m   172.50.197.236   ip-172-50-197-215.eu-central-1.compute.internal   <none>           <none>
+```
+
+Therefore, Service with IP **10.100.71.130** takes request and forwards to Pod with IP **172.50.197.236**
+
+<br>
+
+#### Self Side Task:
+1. Build the Tooling app **Dockerfile** and push it to Dockerhub registry
+2. Write a Pod and a Service manifests, ensure that you can access the Tooling app’s frontend using port-forwarding feature.
