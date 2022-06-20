@@ -260,6 +260,8 @@ aws ec2 create-tags \
   ```
 ![](images/project21/dhcp.png)
 
+![](images/project21/dhcp-set.png)
+
 9. Associate the DHCP Option set with the VPC: 
 
 ```
@@ -267,6 +269,9 @@ aws ec2 associate-dhcp-options \
   --dhcp-options-id ${DHCP_OPTION_SET_ID} \
   --vpc-id ${VPC_ID}
   ```
+![](images/project21/dhcp-vpc-cmd.png)
+
+![](images/project21/dhcp-vpc.png)
 
   #### Subnet
 
