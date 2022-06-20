@@ -459,6 +459,7 @@ KUBERNETES_PUBLIC_ADDRESS=$(aws elbv2 describe-load-balancers \
 --load-balancer-arns ${LOAD_BALANCER_ARN} \
 --output text --query 'LoadBalancers[].DNSName')
 ```
+![](images/project21/kubernete-public-ip.png)
 
 #### Step 2 – Create Compute Resources
 _AMI_
