@@ -147,3 +147,68 @@ Therefore, Service with IP **10.100.71.130** takes request and forwards to Pod w
 #### Self Side Task:
 1. Build the Tooling app **Dockerfile** and push it to Dockerhub registry
 2. Write a Pod and a Service manifests, ensure that you can access the Tooling app’s frontend using port-forwarding feature.
+
+#### Expose a Service on a server’s public IP address & static port
+Sometimes, it may be needed to directly access the application using the public IP of the server (when we speak of a K8s cluster we can replace ‘server’ with ‘node’) the Pod is running on. This is when the [NodePort](https://kubernetes.io/docs/concepts/services-networking/service/#nodeport) service type comes in handy.
+
+<br>
+
+A Node port service type exposes the service on a static port on the node’s IP address. NodePorts are in the **30000-32767** range by default, which means a NodePort is unlikely to match a service’s intended port (for example, 80 may be exposed as 30080).
+
+<br>
+
+Update the nginx-service **yaml** to use a NodePort Service.
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  type: NodePort
+  selector:
+    app: nginx-pod
+  ports:
+    - protocol: TCP
+      port: 80
+      nodePort: 30080
+```
+
+What has changed is:
+
+<br>
+
+1. Specified the type of service (Nodeport)
+2. Specified the NodePort number to use.
+<br>
+
+To access the service, you must:
+
+- Allow the inbound traffic in your EC2’s Security Group to the NodePort range **30000-32767**
+- Get the public IP address of the node the Pod is running on, append the nodeport and access the app through the browser.
+
+<br>
+
+You must understand that the port number **30080** is a port on the node in which the Pod is scheduled to run. If the Pod ever gets rescheduled elsewhere, that the same port number will be used on the new node it is running on. So, if you have multiple Pods running on several nodes at the same time – they all will be exposed on respective nodes’ IP addresses with a static port number.
+
+Read some more information regarding Services in Kubernetes in [this article](https://medium.com/avmconsulting-blog/service-types-in-kubernetes-24a1587677d6).
+
+#### How Kubernetes ensures desired number of Pods is always running?
+When we define a Pod manifest and appy it – we create a Pod that is running until it’s terminated for some reason (e.g., error, Node reboot or some other reason), but what if we want to declare that we always need at least 3 replicas of the same Pod running at all times? Then we must use an [ResplicaSet (RS)](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/) object – it’s purpose is to maintain a stable set of Pod replicas running at any given time. As such, it is often used to guarantee the availability of a specified number of identical Pods.
+
+<br>
+
+Note: In some older books or documents you might find the old version of a similar object – [ReplicationController (RC)](https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/), it had similar purpose, but did not support [set-base label selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#set-based-requirement) and it is now recommended to use ReplicaSets instead, since it is the next-generation RC.
+
+<br>
+
+Let us delete our nginx-pod Pod:
+```
+kubectl delete -f nginx-pod.yaml
+```
+
+#### Output
+
+```
+pod "nginx-pod" deleted
+```
