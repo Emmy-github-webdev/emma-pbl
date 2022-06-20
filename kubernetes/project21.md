@@ -486,6 +486,7 @@ aws ec2 create-key-pair \
   > ssh/${NAME}.id_rsa
 chmod 600 ssh/${NAME}.id_rsa
 ```
+![](images/project21/ssh-key.png)
 
 #### EC2 Instances for Controle Plane (Master Nodes)
 
