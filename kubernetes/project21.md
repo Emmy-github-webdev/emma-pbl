@@ -109,6 +109,8 @@ aws ec2 describe-vpcs
 
 and check if you can see VPC details.
 
+![](images/project21/configure-aws-cli.png)
+
 _Install kubectl_
 
 Kubernetes cluster has a Web API that can receive HTTP/HTTPS requests, but it is quite cumbersome to **curl** an API each and every time you need to send some command, so **kubectl** command tool was developed to ease a K8s administrator’s life.
