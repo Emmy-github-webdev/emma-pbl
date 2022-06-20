@@ -59,9 +59,39 @@ Other options will be to leverage a [Managed Service](https://www.adept.co.uk/th
 
 Most organisations choose Managed Service options for obvious reasons such as:
 
-Less administrative overheads
-Reduced cost of ownership
-Improved Security
-Seamless support
-Periodical updates to a stable and well-tested version
-Faster cluster spin up
+1. Less administrative overheads
+2. Reduced cost of ownership
+3. Improved Security
+4. Seamless support
+5. Periodical updates to a stable and well-tested version
+6. Faster cluster spin up
+
+<br>
+
+However, there is usually strong reasons why organisations with very strict compliance and security concerns choose to build their own Kubernetes clusters. Most of the companies that go this route will mostly use on-premises data centres. When there is need to store data privately due to its sensitive nature, companies will rather not use a public cloud provider. Because, if they do, they have no idea of the physical location of the data centre in which their data is being persisted. Banks and Governments are typical examples of this.
+
+<br>
+
+Some setup options can combine both public and private cloud together. For example, the master nodes, _etcd_ clusters, and some worker nodes that run [stateful](https://www.techtarget.com/whatis/definition/stateful-app) applications can be configured in private datacentres, while worker nodes that require heavy computations and [stateless](https://www.redhat.com/en/topics/cloud-native-apps/stateful-vs-stateless) applications can run in public clouds. This kind of hybrid architecture is ideal to satisfy compliance, while also benefiting from other public cloud capabilities.
+
+![](images/project22/structure.png)
+
+### Deploying the Tooling app using Kubernetes objects
+
+In this section, you will begin to write configuration files for Kubernetes objects (they are usually referred as **manifests**) in the form of files with **yaml** syntax and deploy them using **kubectl** console. But first, let us understand what a Kubernetes object is.
+
+<br>
+
+**Kubernetes objects** are persistent entities in the Kubernetes system. Kubernetes uses these entities to represent the state of your cluster. Specifically, they can describe:
+
+<br>
+
+What containerized applications are running (and on which nodes)
+The resources available to those applications
+The policies around how those applications behave, such as restart policies, upgrades, and fault-tolerance
+
+These objects are **"record of intent"** – once you create the object, the Kubernetes system will constantly work to ensure that the object exists. By creating an object, you are effectively telling the Kubernetes system what you want your cluster’s workload to look like; this is your cluster’s desired state.
+
+<br>
+
+To work with Kubernetes objects – whether to create, modify, or delete them – you will need to use the Kubernetes API. When you use the kubectl command-line interface, for example, the CLI makes the necessary Kubernetes API calls for you. It is also possible to use curl to directly interact with the Kubernetes API, or it can be as part of developing a program in different programming languages. That will require some advance knowledge. You can [read more about client libraries](https://kubernetes.io/docs/reference/using-api/client-libraries/) to get an idea on how that works.
