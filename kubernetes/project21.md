@@ -1108,11 +1108,9 @@ instance_hostname="ip-172-31-0-2${i}"
 done
 ```
 
-##### Output:
 
-```
-Add the ouput here
-```
+##### Output:
+![](images/project21/generate-kubeletconfig.png)
 
 ##### List the output
 ```
@@ -1121,9 +1119,7 @@ ls -ltr *.kubeconfig
 
 ##### OUTPUT:
 
-```
-Add the output here
-```
+![](images/project21/ls-1.png)
 
 Open up the **kubeconfig** files generated and review the 3 different sections that have been configured:
 
@@ -1167,7 +1163,7 @@ kubectl config use-context %context-name%
   kubectl config use-context default --kubeconfig=kube-proxy.kubeconfig
 }
 ```
-
+![](images/project21/kube-proxy-config.png)
 3. Generate the **Kube-Controller-Manager** kubeconfig
 
 <br>
@@ -1196,7 +1192,7 @@ Notice that the **--server** is set to use **127.0.0.1**. This is because, this 
   kubectl config use-context default --kubeconfig=kube-controller-manager.kubeconfig
 }
 ```
-
+![](images/project21/kube-cont-master.png)
 4. Generating the **Kube-Scheduler** Kubeconfig
 
 ```
@@ -1221,7 +1217,7 @@ Notice that the **--server** is set to use **127.0.0.1**. This is because, this 
   kubectl config use-context default --kubeconfig=kube-scheduler.kubeconfig
 }
 ```
-
+![](images/project21/kube-scheduler.png)
 5. Finally, generate the kubeconfig file for the **admin user**
 
 ```
@@ -1246,7 +1242,7 @@ Notice that the **--server** is set to use **127.0.0.1**. This is because, this 
   kubectl config use-context default --kubeconfig=admin.kubeconfig
 }
 ```
-
+![](images/project21/admin-user.png)
 <br>
 
 **TASK: Distribute the files to their respective servers, using _scp_ and a for loop like we have done previously. This is a test to validate that you understand which component must go to which node.**
