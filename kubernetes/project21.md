@@ -652,6 +652,9 @@ _Output_:
 2021/05/16 20:18:44 [INFO] signed certificate with serial number 478642753175858256977534824638605235819766817855
 ```
 
+![](images/project21/ca-authority-1.png)
+![](images/project21/ca-authority-2.png)
+
 _List the directory to see the created files_
 
 ```
@@ -663,7 +666,7 @@ ls -ltr
 -rw-------  1 dare  dare  1679 16 May 20:18 ca-key.pem
 -rw-r--r--  1 dare  dare  1001 16 May 20:18 ca.csr
 ```
-<br>
+![](images/project21/ls.png)
 
 The 3 important files here are:
 
@@ -746,6 +749,9 @@ cfssl gencert \
 }
 ```
 
+![](images/project21/sign-cert-1.png)
+![](images/project21/sign-cert-2.png)
+
 #### Creating the other certificates: for the following Kubernetes components:
 
 - Scheduler Client Certificate
@@ -788,6 +794,7 @@ cfssl gencert \
 }
 
 ```
+![](images/project21/client-cert.png)
 3. ##### _kube-proxy_ Client Certificate and Private Key
 
 ```
@@ -821,7 +828,7 @@ cfssl gencert \
 
 }
 ```
-
+![](images/project21/kube-proxy.png)
 4. ##### _kube-controller-manager_ Client Certificate and Private Key
 
 ```
@@ -855,7 +862,7 @@ cfssl gencert \
 }
 
 ```
-
+![](images/project21/kube-controller.png)
 5. ##### _kubelet_ Client Certificate and Private Key
 
 Similar to how you configured the **api-server's** certificate, Kubernetes requires that the hostname of each worker node is included in the client certificate.
@@ -908,7 +915,8 @@ EOF
     ${NAME}-worker-${i}-csr.json | cfssljson -bare ${NAME}-worker-${i}
 done
 ```
-
+![](images/project21/kubelet-client-1.png)
+![](images/project21/kubelet-client-2.png)
 6. ###### Finally, _kubernetes_ admin _user's_ Client Certificate and Private Key
 
 ```
@@ -940,7 +948,7 @@ cfssl gencert \
   admin-csr.json | cfssljson -bare admin
 }
 ```
-
+![](images/project21/admin-user-client.png)
 7. ##### Actually, we are not done yet! 
 
 
@@ -980,7 +988,7 @@ cfssl gencert \
   service-account-csr.json | cfssljson -bare service-account
 }
 ```
-
+![](images/project21/pki.png)
 #### Step 4 – Distributing the Client and Server Certificates
 
 Now it is time to start sending all the client and server certificates to their respective instances.
