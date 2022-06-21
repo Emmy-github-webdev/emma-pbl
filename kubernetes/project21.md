@@ -514,6 +514,8 @@ for i in 0 1 2; do
 done
 ```
 
+![](images/project21/create-instances-cmd.png)
+![](images/project21/register-target-group.png)
 #### EC2 Instances for Worker Nodes
 
 1. Create 3 worker nodes:
@@ -539,6 +541,10 @@ for i in 0 1 2; do
     --tags "Key=Name,Value=${NAME}-worker-${i}"
 done
 ```
+
+
+![](images/project21/instance-worker-cmd.png)
+![](images/project21/register-target-group.png)
 #### Step 3 Prepare The Self-Signed Certificate Authority And Generate TLS Certificates
 
 The following components running on the Master node will require TLS certificates.
