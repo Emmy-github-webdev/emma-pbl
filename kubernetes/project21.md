@@ -473,6 +473,10 @@ IMAGE_ID=$(aws ec2 describe-images --owners 099720109477 \
   'Name=name,Values=ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*' \
   | jq -r '.Images|sort_by(.Name)[-1]|.ImageId')
 ```
+
+**Note**: Install _jq_
+
+<br>
 _SSH key-pair_
 
 2. Create SSH Key-Pair
