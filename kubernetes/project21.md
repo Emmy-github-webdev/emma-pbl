@@ -475,6 +475,10 @@ IMAGE_ID=$(aws ec2 describe-images --owners 099720109477 \
 ```
 
 **Note**: Install _jq_
+```
+# Check jq is install
+which jq
+```
 
 <br>
 _SSH key-pair_
@@ -489,6 +493,8 @@ aws ec2 create-key-pair \
   --output text --query 'KeyMaterial' \
   > ssh/${NAME}.id_rsa
 chmod 600 ssh/${NAME}.id_rsa
+
+ls -ltr
 ```
 ![](images/project21/ssh-key.png)
 
@@ -1270,7 +1276,7 @@ To mitigate this risk, we must prepare to encrypt **etcd** at rest. "At rest" me
 ##### Generate the encryption key and encode it using _base64_
 
 ```
-ETCD_ENCRYPTION_KEY=$(head -c 64 /dev/urandom | base64) 
+ETCD_ENCRYPTION_KEY=$(head -c 32 /dev/urandom | base64) 
 ```
 
 See the output that will be generated when called. Yours will be a different random string.
@@ -1320,6 +1326,12 @@ The primary purpose of the **etcd** component is to store the state of the clust
 <br>
 
 **NOTE**: Don not just copy and paste the commands, ensure that you go through each and understand exactly what they will do on your servers. Use tools like **tmux** to make it easy to run commands on multiple terminal screens at once.
+
+#### Set environment variable
+Copy the code sample below and paste on the cmd
+
+#### Change directory to SSH path
+
 
 1. SH into the controller server
 - Master-1
