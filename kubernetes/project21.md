@@ -1118,11 +1118,9 @@ instance_hostname="ip-172-31-0-2${i}"
 done
 ```
 
-##### Output:
 
-```
-Add the ouput here
-```
+##### Output:
+![](images/project21/generate-kubeletconfig.png)
 
 ##### List the output
 ```
@@ -1131,9 +1129,7 @@ ls -ltr *.kubeconfig
 
 ##### OUTPUT:
 
-```
-Add the output here
-```
+![](images/project21/ls-1.png)
 
 Open up the **kubeconfig** files generated and review the 3 different sections that have been configured:
 
@@ -1177,7 +1173,7 @@ kubectl config use-context %context-name%
   kubectl config use-context default --kubeconfig=kube-proxy.kubeconfig
 }
 ```
-
+![](images/project21/kube-proxy-config.png)
 3. Generate the **Kube-Controller-Manager** kubeconfig
 
 <br>
@@ -1206,7 +1202,7 @@ Notice that the **--server** is set to use **127.0.0.1**. This is because, this 
   kubectl config use-context default --kubeconfig=kube-controller-manager.kubeconfig
 }
 ```
-
+![](images/project21/kube-cont-master.png)
 4. Generating the **Kube-Scheduler** Kubeconfig
 
 ```
@@ -1231,7 +1227,7 @@ Notice that the **--server** is set to use **127.0.0.1**. This is because, this 
   kubectl config use-context default --kubeconfig=kube-scheduler.kubeconfig
 }
 ```
-
+![](images/project21/kube-scheduler.png)
 5. Finally, generate the kubeconfig file for the **admin user**
 
 ```
@@ -1256,7 +1252,7 @@ Notice that the **--server** is set to use **127.0.0.1**. This is because, this 
   kubectl config use-context default --kubeconfig=admin.kubeconfig
 }
 ```
-
+![](images/project21/admin-user.png)
 <br>
 
 **TASK: Distribute the files to their respective servers, using _scp_ and a for loop like we have done previously. This is a test to validate that you understand which component must go to which node.**
@@ -1287,9 +1283,7 @@ echo $ETCD_ENCRYPTION_KEY
 
 #### OUTPUT:
 
-```
-Add the output here
-```
+![](images/project21/encrypt-key.png)
 
 ##### Create an _encryption-config.yaml_ file as [documented officially by kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/#understanding-the-encryption-at-rest-configuration)
 
@@ -1311,7 +1305,7 @@ EOF
 
 Send the encryption file to the Controller nodes using **scp** and a **for** loop.
 
-<br>
+![](images/project21/gen-encrypt-key.png)
 
 #### Bootstrap _etcd_ cluster
 
@@ -1342,6 +1336,7 @@ master_1_ip=$(aws ec2 describe-instances \
 --output text --query 'Reservations[].Instances[].PublicIpAddress')
 ssh -i k8s-cluster-from-ground-up.id_rsa ubuntu@${master_1_ip}
 ```
+![](images/project21/master-0.png)
 
 - Master-2
 
@@ -1351,7 +1346,7 @@ master_2_ip=$(aws ec2 describe-instances \
 --output text --query 'Reservations[].Instances[].PublicIpAddress')
 ssh -i k8s-cluster-from-ground-up.id_rsa ubuntu@${master_2_ip}
 ```
-
+![](images/project21/master-1.png)
 - Master-3
 
 ```
@@ -1360,12 +1355,8 @@ master_3_ip=$(aws ec2 describe-instances \
 --output text --query 'Reservations[].Instances[].PublicIpAddress')
 ssh -i k8s-cluster-from-ground-up.id_rsa ubuntu@${master_3_ip}
 ```
+![](images/project21/master-2.png)
 
-You should have a a similar pane like below. You should be able to see all the files that have been sent to the nodes.
-
-```
-Add the image
-```
 
 2. Download and install etcd
 
@@ -1382,6 +1373,8 @@ tar -xvf etcd-v3.4.15-linux-amd64.tar.gz
 sudo mv etcd-v3.4.15-linux-amd64/etcd* /usr/local/bin/
 }
 ```
+![](images/project21/etcd.png)
+
 4. Configure the etcd server
 ```
 {
@@ -1390,7 +1383,7 @@ sudo mv etcd-v3.4.15-linux-amd64/etcd* /usr/local/bin/
   sudo cp ca.pem master-kubernetes-key.pem master-kubernetes.pem /etc/etcd/
 }
 ```
-
+![](images/project21/configure-etcd.png)
 5. The instance internal IP address will be used to serve client requests and communicate with **etcd** cluster peers. Retrieve the internal IP address for the current compute instance:
 
 ```
@@ -1405,7 +1398,7 @@ ETCD_NAME=$(curl -s http://169.254.169.254/latest/user-data/ \
 
 echo ${ETCD_NAME}
 ```
-
+![](images/project21/retrive-ip.png)
 7. Create the _etcd.service_ systemd unit file:
 
 <br>
@@ -1455,7 +1448,7 @@ sudo systemctl enable etcd
 sudo systemctl start etcd
 }
 ```
-
+![](images/project21/etcd-service.png)
 9. Verify the etcd installation
 ```
 sudo ETCDCTL_API=3 etcdctl member list \
@@ -1465,15 +1458,11 @@ sudo ETCDCTL_API=3 etcdctl member list \
   --key=/etc/etcd/master-kubernetes-key.pem
 ```
 
-#### Output:
-
-```
-Display the output here
-```
 
 ```
 systemctl status etcd
 ```
+![](images/project21/status.png)
 
 #### BOOTSTRAP THE CONTROL PLANE
 
