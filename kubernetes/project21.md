@@ -583,6 +583,10 @@ _Create a directory and cd into it:_
 ```
 mkdir ca-authority && cd ca-authority
 ```
+Copy the environment variable below to the _ca-authority_ folder
+**Note** - the variables are obtained by runing **echo the variable name e.g (echo $NAME)_
+![](images/project21/envirable.png)
+![](images/project21/envirable-cmd.png)
 
 _Generate the CA configuration file, Root Certificate, and Private key:_
 
@@ -1126,7 +1130,7 @@ done
 ```
 ls -ltr *.kubeconfig
 ```
-
+![](images/project21/config.png)
 ##### OUTPUT:
 
 ![](images/project21/ls-1.png)
@@ -1256,6 +1260,17 @@ Notice that the **--server** is set to use **127.0.0.1**. This is because, this 
 <br>
 
 **TASK: Distribute the files to their respective servers, using _scp_ and a for loop like we have done previously. This is a test to validate that you understand which component must go to which node.**
+1. List all the kubeconfig files
+![](images/project21/kubeconfig-files.png)
+2. Copy **kube-proxy.kubeconfig** to worker node 0, 1, 2
+![](images/project21/distribute-file-worker-nodes.png)
+
+![](images/project21/distribute-file-worker-nodes-cmd.png)
+3. Copy **admin, controller, scheduler .kubeconfig** to master node 0, 1, 2
+![](images/project21/distribute-file-master-nodes.png)
+
+![](images/project21/distribute-file-master-nodes-cmd.png)
+
 
 #### STEP 6 PREPARE THE _ETCD_ DATABASE FOR ENCRYPTION AT REST.
 
