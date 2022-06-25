@@ -1339,8 +1339,13 @@ The primary purpose of the **etcd** component is to store the state of the clust
 #### Set environment variable
 Copy the code sample below and paste on the cmd
 
+![](images/project21/envirable.png)
+
+![](images/project21/envirable-cmd.png)
+
 #### Change directory to SSH path
 
+![](images/project21/ssh-directory.png)
 
 1. SH into the controller server
 - Master-1
@@ -1372,6 +1377,8 @@ ssh -i k8s-cluster-from-ground-up.id_rsa ubuntu@${master_3_ip}
 ```
 ![](images/project21/master-2.png)
 
+![](images/project21/master-node-ssh.png)
+
 
 2. Download and install etcd
 
@@ -1398,6 +1405,14 @@ sudo mv etcd-v3.4.15-linux-amd64/etcd* /usr/local/bin/
   sudo cp ca.pem master-kubernetes-key.pem master-kubernetes.pem /etc/etcd/
 }
 ```
+error configuring etcd server
+
+etcd-server-error.png
+
+[Solution](https://linuxhandbook.com/sudo-unable-resolve-host/) 
+
+![](images/project21/configure-etcd.png)
+
 ![](images/project21/configure-etcd.png)
 5. The instance internal IP address will be used to serve client requests and communicate with **etcd** cluster peers. Retrieve the internal IP address for the current compute instance:
 
@@ -1413,7 +1428,7 @@ ETCD_NAME=$(curl -s http://169.254.169.254/latest/user-data/ \
 
 echo ${ETCD_NAME}
 ```
-![](images/project21/retrive-ip.png)
+![](images/project21/machine.png)
 7. Create the _etcd.service_ systemd unit file:
 
 <br>
@@ -1473,7 +1488,7 @@ sudo ETCDCTL_API=3 etcdctl member list \
   --key=/etc/etcd/master-kubernetes-key.pem
 ```
 
-
+![](images/project21/verify-etcd.png)
 ```
 systemctl status etcd
 ```
@@ -1506,6 +1521,14 @@ sudo mv kube-apiserver kube-controller-manager kube-scheduler kubectl /usr/local
 }
 ```
 4. Configure the Kubernetes API Server:
+
+<br>
+
+Import encryption-config.yaml file
+
+![](images/project21/copy-yaml-file.png)
+
+![](images/project21/copy-yaml-file-cmd.png)
 
 ```
 {
@@ -1679,6 +1702,16 @@ sudo systemctl status kube-apiserver
 sudo systemctl status kube-controller-manager
 sudo systemctl status kube-scheduler
 }
+```
+
+![](images/project21/apiserver-error.png)
+
+#### Troubleshoot
+
+```
+# Run journalctl command
+sudo journalctl -u kube-apiserver
+cat /etc/systemd/system/kube-apiserver.service
 ```
 
 **NOTE**: There is a trap in the entire setup you have been going through, and so the api-server will not start up on your server if you have followed the exact steps so far. As a DevOps engineer, you must be able to solve problems.
