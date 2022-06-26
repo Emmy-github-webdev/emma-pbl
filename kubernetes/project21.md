@@ -1933,6 +1933,9 @@ orker_3_ip=$(aws ec2 describe-instances \
 --output text --query 'Reservations[].Instances[].PublicIpAddress')
 ssh -i k8s-cluster-from-ground-up.id_rsa ubuntu@${worker_3_ip}
 ```
+![](images/project21/worker-node-0.png)
+![](images/project21/worker-node-1.png)
+![](images/project21/worker-node-2.png)
 
 2. Install OS dependencies:
 
