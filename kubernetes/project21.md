@@ -1946,6 +1946,10 @@ ssh -i k8s-cluster-from-ground-up.id_rsa ubuntu@${worker_3_ip}
 }
 ```
 
+![](images/project21/install-os-0.png)
+![](images/project21/install-os-1.png)
+![](images/project21/install-os-2.png)
+
 #### More about the dependencies:
 
 - [socat](https://www.redhat.com/sysadmin/getting-started-socat). Socat is the default implementation for Kubernetes port-forwarding when using dockershim for the kubelet runtime. You will get to experience port-forwarding with Kubernetes in the next project. But what is Dockershim?
@@ -2004,6 +2008,7 @@ Test if swap is already enabled on the host:
 ```
 sudo swapon --show
 ```
+![](images/project21/show-swapon.png)
 
 If there is no output, then you are good to go. Otherwise, run below command to turn it off
 
@@ -2042,6 +2047,7 @@ sudo apt -y install docker-ce && \
 sudo usermod -aG docker ${USER} && \
 sudo systemctl status docker
 ```
+![](images/project21/docker-runtime.png)
 
 **NOTE**: _exit the shell and log back in. Otherwise, you will face a permission denied error. Alternatively, you can run **newgrp docker** without exiting the shell. But you will need to provide the password of the logged in user_
 
@@ -2056,6 +2062,8 @@ wget https://github.com/opencontainers/runc/releases/download/v1.0.0-rc93/runc.a
   https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.21.0/crictl-v1.21.0-linux-amd64.tar.gz \
   https://github.com/containerd/containerd/releases/download/v1.4.4/containerd-1.4.4-linux-amd64.tar.gz 
 ```
+![](images/project21/download-container.png)
+
 - Configure containerd:
 
 ```
@@ -2069,6 +2077,7 @@ wget https://github.com/opencontainers/runc/releases/download/v1.0.0-rc93/runc.a
   sudo mv containerd/bin/* /bin/
 }
 ```
+![](images/project21/configure-container.png)
 
 ```
 sudo mkdir -p /etc/containerd/
@@ -2140,6 +2149,7 @@ Download the plugins available from[ containernetworking’s](https://github.com
 wget -q --show-progress --https-only --timestamping \
   https://github.com/containernetworking/plugins/releases/download/v0.9.1/cni-plugins-linux-amd64-v0.9.1.tgz
 ```
+![](images/project21/download-plugin.png)
 
 - Install CNI into **/opt/cni/bin/**
 
@@ -2149,9 +2159,7 @@ sudo tar -xvf cni-plugins-linux-amd64-v0.9.1.tgz -C /opt/cni/bin/
 
 #### The output shows the plugins that comes with the CNI.
 
-```
-Add the output here
-```
+![](images/project21/install-plugin.png)
 
 There are few other plugins that are not included in the CNI, which are also widely used in the industry. They all have their unique implementation approach and set of features.
 
@@ -2179,6 +2187,7 @@ wget -q --show-progress --https-only --timestamping \
   https://storage.googleapis.com/kubernetes-release/release/v1.21.0/bin/linux/amd64/kube-proxy \
   https://storage.googleapis.com/kubernetes-release/release/v1.21.0/bin/linux/amd64/kubelet
 ```
+![](images/project21/download-binary.png)
 
 8. Install the downloaded binaries
 
@@ -2197,7 +2206,7 @@ wget -q --show-progress --https-only --timestamping \
 
 In the home directory, you should have the certificates and **kubeconfig** file for each node. A list in the home folder should look like below:
 
-<br>
+![](images/project21/kube-config.png)
 
 #### Configuring the network
 
@@ -2210,6 +2219,8 @@ POD_CIDR=$(curl -s http://169.254.169.254/latest/user-data/ \
   | tr "|" "\n" | grep "^pod-cidr" | cut -d"=" -f2)
 echo "${POD_CIDR}"
 ```
+
+![](images/project21/pod-cidr.png)
 
 In case you are wondering where this **POD_CIDR** is coming from. Well, this was configured at the time of creating the worker nodes. Remember the for loop below? The **--user-data** flag is where we specified what we want the POD_CIDR to be. It is very important to ensure that the CIDR does not overlap with EC2 IPs within the subnet. In the real world, this will be decided in collaboration with the Network team.
 
@@ -2468,3 +2479,4 @@ EOF
 2. Review your PKI setup again. Ensure that the certificates you generated have the hostnames properly configured.
 3. It is okay to start all over again. Each time you attempt the solution is an opportunity to learn something.
 
+![](images/project21/final.png)
