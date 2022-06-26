@@ -1610,6 +1610,7 @@ export EC2_MAC_ADDRESS=$(curl -s $AWS_METADATA/network/interfaces/macs/ | head -
 export VPC_CIDR=$(curl -s $AWS_METADATA/network/interfaces/macs/$EC2_MAC_ADDRESS/vpc-ipv4-cidr-block/)
 export NAME=k8s-cluster-from-ground-up
 ```
+![](images/project21/export-variable.png)
 
 Create the kube-controller-manager.service systemd unit file:
 
@@ -1642,6 +1643,7 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 ```
+![](images/project21/create-kube-cont-mgr.png)
 
 6. Configure the Kubernetes Scheduler:
 Move the kube-scheduler kubeconfig into place:
@@ -1650,6 +1652,7 @@ Move the kube-scheduler kubeconfig into place:
 sudo mv kube-scheduler.kubeconfig /var/lib/kubernetes/
 sudo mkdir -p /etc/kubernetes/config
 ```
+![](images/project21/move-scheduler.png)
 
 Create the kube-scheduler.yaml configuration file:
 
@@ -1683,6 +1686,7 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 ```
+![](images/project21/kube-yml.png)
 
 7. Start the Controller Services
 
@@ -1693,6 +1697,7 @@ sudo systemctl enable kube-apiserver kube-controller-manager kube-scheduler
 sudo systemctl start kube-apiserver kube-controller-manager kube-scheduler
 }
 ```
+![](images/project21/start-cont-serv.png)
 
 Check the status of the services. Start with the **kube-scheduler** and **kube-controller-manager**. It may take up to 20 seconds for **kube-apiserver** to be fully loaded.
 
@@ -1705,6 +1710,8 @@ sudo systemctl status kube-scheduler
 ```
 
 ![](images/project21/apiserver-error.png)
+![](images/project21/apiserver-error-1.png)
+![](images/project21/apiserver-error-1.png)
 
 #### Troubleshoot
 
@@ -1752,9 +1759,9 @@ kubectl get namespaces --kubeconfig admin.kubeconfig
 
 #### OUTPUT:
 
-```
-Add the output here
-```
+![](images/project21/cluster-namespace.png)
+![](images/project21/cluster-namespace-1.png)
+![](images/project21/cluster-namespace-1.png)
 
 3. To reach the Kubernetes API Server publicly
 
@@ -1762,10 +1769,7 @@ Add the output here
 curl --cacert /var/lib/kubernetes/ca.pem https://$INTERNAL_IP:6443/version
 ```
 
-#### OUTPUT:
-```
-Add output here
-```
+![](images/project21/curl-output.png)
 
 4. To get the status of each component:
 
@@ -1773,9 +1777,9 @@ Add output here
 kubectl get componentstatuses --kubeconfig admin.kubeconfig
 ```
 
-```
-Add the output image here
-```
+![](images/project21/component-status.png)
+![](images/project21/component-status-1.png)
+![](images/project21/component-status-2.png)
 
 5. On one of the controller nodes, configure Role Based Access Control (RBAC) so that the **api-server** has necessary authorization for for the **kubelet**.
 
@@ -1806,6 +1810,7 @@ rules:
       - "*"
 EOF
 ```
+![](images/project21/cluster-role.png)
 
 _Create the **ClusterRoleBinding** to bind the **kubernetes** user with the role created above:_
 
@@ -1826,6 +1831,7 @@ subjects:
     name: kubernetes
 EOF
 ```
+![](images/project21/cluster-role-binding.png)
 
 #### Configuring the Kubernetes Worker nodes
 
