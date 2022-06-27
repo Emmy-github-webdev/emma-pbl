@@ -5,7 +5,14 @@ https://www.youtube.com/playlist?list=PLtPuNR8I4TvmKE9LJI11vALrnrXt8wLXD
 
 https://docs.google.com/spreadsheets/d/122gYwmPSd1pC7yJbN0sylKbbtMqZbuhdteU47r481do/edit#gid=0
 
+AWS Instance connection iss - https://stackoverflow.com/questions/17698876/aws-ssh-access-port-22-operation-timed-out-issue
 
+Go to VPC and click "Internet Gateways" from the left menu.
+Click "Create internet gateway" button and provide Name tag (any name - optional) and click create.
+By default, it is detached. So click the Actions drop-down and select "Attach to VPC" and attach it with default VPC
+Now go to "Route Table" and select default route table and edit the route by clicking "Edit routes" button under Routes tab
+Then in the Destination text box provide "0.0.0.0/0" and in target select the newly created Internet gateway (starts with igw-alphanumeric) and save the route.
+Now you should be able to SSH EC2 instance.
 
 20. https://github.com/akingo7/DockerProject
 21. https://github.com/Anefu/K8s-from-ground-up

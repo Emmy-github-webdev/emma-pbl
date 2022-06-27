@@ -229,10 +229,6 @@ kubectl apply -f nginx-service.yaml
 kubectl get service -o wide
 ```
 
-![](images/project22/browser.png)
-
-![](images/project22/curl.png)
-
 #### How Kubernetes ensures desired number of Pods is always running?
 When we define a Pod manifest and appy it – we create a Pod that is running until it’s terminated for some reason (e.g., error, Node reboot or some other reason), but what if we want to declare that we always need at least 3 replicas of the same Pod running at all times? Then we must use an [ResplicaSet (RS)](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/) object – it’s purpose is to maintain a stable set of Pod replicas running at any given time. As such, it is often used to guarantee the availability of a specified number of identical Pods.
 
@@ -568,6 +564,10 @@ Forwarding from [::1]:8089 -> 80
 
 Then go to your web browser and enter **localhost:8089** – You should now be able to see the nginx page in the browser.
 
+![](images/project22/browser.png)
+
+![](images/project22/curl.png)
+
 ### CREATE A REPLICA SET
 Let us create a **rs.yaml** manifest for a ReplicaSet object:
 ```
@@ -596,7 +596,7 @@ spec:
 ```
 kubectl apply -f rs.yaml
 ```
-<br>
+![](images/project22/kube-apply.png)
 
 The manifest file of ReplicaSet consist of the following fields:
 
@@ -620,6 +620,8 @@ nginx-pod-j784r   1/1     Running   0          7m41s   172.50.197.5     ip-172-5
 nginx-pod-kg7v6   1/1     Running   0          7m41s   172.50.192.152   ip-172-50-192-173.eu-central-1.compute.internal   <none>           <none>
 nginx-pod-ntbn4   1/1     Running   0          7m41s   172.50.202.162   ip-172-50-202-18.eu-central-1.compute.internal    <none>           <none>
 ```
+
+![](images/project22/get-pod.png)
 
 Here we see three **ngix-pods** with some random suffixes (e.g., **-j784r**) – it means, that these Pods were created and named automatically by some other object (higher level of abstraction) such as ReplicaSet.
 
@@ -657,6 +659,7 @@ kubectl get rs -o wide
 NAME        DESIRED   CURRENT   READY   AGE   CONTAINERS   IMAGES         SELECTOR
 nginx-rs   3         3         3       34m   nginx-pod    nginx:latest   app=nginx-pod
 ```
+![](images/project22/get-pod.png)
 
 **Notice**, that ReplicaSet understands which Pods to create by using SELECTOR key-value pair.
 
@@ -699,6 +702,9 @@ We can easily scale our ReplicaSet up by specifying the desired number of replic
 ❯ kubectl scale rs nginx-rs --replicas=5
 replicationcontroller/nginx-rc scaled
 ```
+
+![](images/project22/replica.png)
+
 ```
 ❯ kubectl get pods
 NAME             READY   STATUS    RESTARTS   AGE
@@ -724,13 +730,16 @@ spec:
 ```
 and applying the updated manifest:
 
-<br>
+![](images/project22/replica-3.png)
 
 There is another method – **‘ad-hoc’**, it is definitely not the best practice and we do not recommend using it, but you can edit an existing ReplicaSet with following command:
 
 ```
 kubectl edit -f rs.yaml
 ```
+
+
+
 _Advanced label matching_
 
 As Kubernetes mature as a technology, so does its features and improvements to k8s objects. **ReplicationControllers** do not meet certain complex business requirements when it comes to using **selectors**. Imagine if you need to select Pods with multiple lables that represents things like:
@@ -943,6 +952,9 @@ spec:
 ```
 kubectl apply -f deployment.yaml
 ```
+
+![](images/project22/kube-ap.png)
+
 Run commands to get the following
 1. Get the Deployment
 ```
@@ -1126,9 +1138,12 @@ for skills acquisition
  kubectl delete po nginx-deployment-56466d4948-tg9j8
 pod "nginx-deployment-56466d4948-tg9j8" deleted
 ```
+
+![](images/project22/delete-po.png)
+
 7. Refresh the web page – You will see that the content you saved in the container is no longer there. That is because Pods do not store data when they are being recreated – that is why they are called **ephemeral** or **stateless**. (But not to worry, we will address this with persistent volumes in the next project)
 
-<br>
+![](images/project22/display.png)
 
 Storage is a critical part of running containers, and Kubernetes offers some powerful primitives for managing it. **Dynamic volume provisioning**, a feature unique to Kubernetes, which allows storage volumes to be created on-demand. Without dynamic provisioning, DevOps engineers must manually make calls to the cloud or storage provider to create new storage volumes, and then create PersistentVolume objects to represent them in Kubernetes. The dynamic provisioning feature eliminates the need for DevOps to pre-provision storage. Instead, it automatically provisions storage when it is requested by users.
 
