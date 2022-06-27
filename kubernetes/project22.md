@@ -112,6 +112,7 @@ You will get the output similar to this::
 NAME            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE   SELECTOR
 nginx-service   ClusterIP   10.100.71.130   <none>        80/TCP    4d    app=nginx-pod
 ```
+![](images/project22/kubectl-cmd.png)
 
 As you already know, the service’s type is **ClusterIP**, and in the above output, it has the IP address of **10.100.71.130** – This IP works just like an internal loadbalancer. It accepts requests and forwards it to an IP address of any Pod that has the respective **selector label**. In this case, it is **app=nginx-pod**. If there is more than one Pod with that label, service will distribute the traffic to all theese pofs in a Round [Robin fashion](https://en.wikipedia.org/wiki/Round-robin_scheduling).
 
@@ -157,6 +158,34 @@ A Node port service type exposes the service on a static port on the node’s IP
 
 <br>
 
+Update the a Pod **yaml** on a master node.
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+  labels:
+    app: nginx-pod
+spec:
+  containers:
+    - name: nginx
+      image: nginx:latest
+      ports:
+        - containerPort: 80
+          protocol: TCP
+  nodeSelector:
+    post: st
+```
+Appy the manifest and get the pod
+
+```
+kubectl apply -f nginx-pod.yaml
+kubectl get pod
+```
+
+![](images/project22/pod.png)
+
 Update the nginx-service **yaml** to use a NodePort Service.
 
 ```
@@ -192,6 +221,17 @@ To access the service, you must:
 You must understand that the port number **30080** is a port on the node in which the Pod is scheduled to run. If the Pod ever gets rescheduled elsewhere, that the same port number will be used on the new node it is running on. So, if you have multiple Pods running on several nodes at the same time – they all will be exposed on respective nodes’ IP addresses with a static port number.
 
 Read some more information regarding Services in Kubernetes in [this article](https://medium.com/avmconsulting-blog/service-types-in-kubernetes-24a1587677d6).
+
+- Create a nginx-service resource by applying the manifest and Check the created service
+
+```
+kubectl apply -f nginx-service.yaml
+kubectl get service -o wide
+```
+
+![](images/project22/browser.png)
+
+![](images/project22/curl.png)
 
 #### How Kubernetes ensures desired number of Pods is always running?
 When we define a Pod manifest and appy it – we create a Pod that is running until it’s terminated for some reason (e.g., error, Node reboot or some other reason), but what if we want to declare that we always need at least 3 replicas of the same Pod running at all times? Then we must use an [ResplicaSet (RS)](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/) object – it’s purpose is to maintain a stable set of Pod replicas running at any given time. As such, it is often used to guarantee the availability of a specified number of identical Pods.
