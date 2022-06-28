@@ -1,5 +1,14 @@
 # PERSISTING DATA IN KUBERNETES
 
+NOTE: Create EKS cluster first before the below section
+
+![](images/project23/eks-1.png)
+
+![](images/project23/eks-2.png)
+
+![](images/project23/eks-3.png)
+
+
 Now we know that containers are stateless by design, which means that data does not persist in the containers. Even when you run the containers in kubernetes pods, they still remain stateless unless you ensure that your configuration supports statefulness.
 
 <br>
@@ -88,6 +97,18 @@ spec:
 EOF
 ```
 
+
+![](images/project23/eks-4.png)
+
+- Create the kubeconfig file
+
+```
+aws eks update-kubeconfig --region <eks_region> --name <eks_name>
+```
+
+![](images/project23/eks-5.png)
+
+
 ##### Tasks
 
 * Verify that the pod is running
@@ -103,7 +124,24 @@ EOF
 * Those instances need to be in the same region and availability zone as the EBS volume
 * EBS only supports a single EC2 instance mounting a volume
 
-<br>
+
+- Check the pods
+
+![](images/project23/eks-6.png)
+
+- Check pod logs
+
+![](images/project23/eks-7.png)
+
+![](images/project23/eks-8.png)
+
+- Exec into pos
+
+![](images/project23/eks-9.png)
+
+- Open config file
+
+- ![](images/project23/eks-10.png)
 
 Now that we have the pod running without a volume, Lets now create a volume from the AWS console.
 
@@ -113,7 +151,7 @@ Now that we have the pod running without a volume, Lets now create a volume from
 2. Click on Volumes
 3. At the top right, click on Create Volume
 
-<br>
+![](images/project23/vol-1.png)
 
 Part of the requirements is to ensure that the volume exists in the same region and availability zone as the EC2 instance running the pod. Hence, we need to find out
 
@@ -131,7 +169,7 @@ kubectl describe node ip-10-0-3-233.eu-west-2.compute.internal
 The information is written in the labels section of the descibe command.
 4. So, in the case above, we know the AZ for the node is in eu-west-2c hence, the volume must be created in the same AZ. Choose the size of the required volume.
 
-<br>
+![](images/project23/vol-2.png)
 
 The **create volume** selection should be like:
 5. Copy the VolumeID
@@ -353,13 +391,14 @@ Run get on the pvc and you will notice that it is in pending state.
 
 kubectl get pvc
 ```
+![](images/project23/vol-3.png)
 
 NAME STATUS VOLUME CAPACITY ACCESS MODES STORAGECLASS AGE
 nginx-volume-claim Pending gp2 61s
 
 ```
 To troubleshoot this, simply run a describe on the pvc. Then you will see in the Message section that this pvc is waiting for the first consumer to be created before binding the PV to a PV
-```
+
 ```
 Name: nginx-volume-claim
 Namespace: default
@@ -435,8 +474,11 @@ Notice that the volumes section nnow has a `persistentVolumeClaim`. With the new
 
 Now lets check the dynamically created PV
 ```
-```
 kubectl get pv
+```
+![](images/project23/vol-2.png)
+
+
 NAME CAPACITY ACCESS MODES RECLAIM POLICY STATUS CLAIM STORAGECLASS REASON AGE
 pvc-89ba00d9-68f4-4039-b19e-a6471aad6a1e 2Gi RWO Delete Bound default/nginx-volume-claim gp2 7s
 ```
@@ -526,6 +568,9 @@ EOF
 ```
  kubectl apply -f nginx-configmap.yaml 
 ```
+
+![](images/project23/vol-4.png)
+
 - Update the deployment file to use the configmap in the volumeMounts section
 ```
 cat <<EOF | tee ./nginx-pod-with-cm.yaml
