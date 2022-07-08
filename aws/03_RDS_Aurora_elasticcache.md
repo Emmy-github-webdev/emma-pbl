@@ -73,7 +73,16 @@ RDS - How to change from single-AZ to Multi-AZ: You do not need to stop the DB. 
   * Enter Initial database name - e.g **mydb**
   * Update the rest information as required. Else leave as default
 - Create database.
+- In the database **security group**, ensure anywhere IPV4 is set.
 
+#### [Download Sqlectron](https://sqlectron.github.io/)
+- Click the link and download the **gui** version you want
+- Go to the database and copy the endpoint.
+![](images/tutorial/rds-connection.png)
+- Connect to the database using the database endpoint on the sqlectron
+![](images/tutorial/sqlsectron.client.png)
+- Click at test to confirm everything is fine
+- If the connection is fine, click on save
 
 
 
