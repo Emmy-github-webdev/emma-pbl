@@ -84,5 +84,11 @@ RDS - How to change from single-AZ to Multi-AZ: You do not need to stop the DB. 
 - Click at test to confirm everything is fine
 - If the connection is fine, click on save
 
+#### Create Replica database
+- On the RDS console, click on **Database**
+- Click create replica
+- On the create read replica DB instance
+  * fill all the neded information and create
+
 
 
