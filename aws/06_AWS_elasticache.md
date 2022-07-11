@@ -53,3 +53,7 @@ Using ElastiCache involoves heavy application code changes.
 ![](images/tutorial/cache-pattern.png)
 
 ![](images/tutorial/redis-user-case.png)
+
+![](images/tutorial/list-ports-1.png)
+
+![](images/tutorial/list-ports-2.png)
