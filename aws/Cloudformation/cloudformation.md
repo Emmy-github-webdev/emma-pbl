@@ -1,6 +1,6 @@
 # What is ClodFormation?
 
-AWS cloudFormation provides users with a simple way to create and mange a collection of Amazon web service (AWS)nresources by provisioning and updating them in a predictable way. AWS CloudFormation enables you to manage your complete infrastructure or AWS resources in a text file. In simple terms, it allows you to create and model your infrastructure and applications without having to perform actions manually.
+AWS cloudFormation provides users with a simple way to create and mange a collection of Amazon web service (AWS) resources by provisioning and updating them in a predictable way. AWS CloudFormation enables you to manage your complete infrastructure or AWS resources in a text file. In simple terms, it allows you to create and model your infrastructure and applications without having to perform actions manually.
 
 <br>
 
@@ -36,3 +36,42 @@ An AWS cloudFormation template is a formated text file in JSON or YAML language 
 ![](images/resources.png)
 9. **Output**: In a template, the output section describes the output values that you can import into other stacks or the values that are returned when you view your own stack properties. For example, for an S3 bucket name, you can declare an output and use the “Description-stacks” command from the AWS CloudFormation service to make the bucket name easier to find.
 ![](images/output.png)
+
+### AWS CloudFormation - Template Resource Attributes
+
+Attributes allow you add to a resource, to control additional behavior and relationships between your templates.
+1. CreationPolicy
+2. DeletionPolicy
+3. DependsOn
+4. Metadata
+5. UpdatePolicy
+
+### Infrastructure as Code - IaC
+
+IaC is the process of provisioning and managing computer datacenter using code.
+
+![](images/iac.png)
+
+Important of cloudformation
+![](images/cf.png)
+
+Stack is a regional support. Stack created in one region cannot be access in another reghion. StackSet is the collection of stacks across region.
+
+### DEMO
+
+1. Long your AWS console and search for **Cloudformation**
+2. Click on **Create stack**
+3. Under **Prerequsite - Prepare template** select **Template is ready** if you already have your template saved locally or in s3 bucket or **Use a sample template** if you do not have template created. 
+4. Click next
+5. On the specify stack details, provide
+ - stack name
+6. On parameters provide
+ - instance type - t2.micro
+ - keyName
+ - SSHLocation - 0.0.0.0/0 to enable public access
+7. click next
+8. On the Configure stack options
+ - Enter tag
+9. Permission 
+ - Select the IAM policy
+ 10. next, review and create

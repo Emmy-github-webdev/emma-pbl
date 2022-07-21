@@ -23,3 +23,14 @@ In the variables.tf file change the region to where your aws cli is set and chan
 run init, plan, and apply
 when you deploy the infra
 run this command to update your kubeconfig file: aws eks --region <your region> update-kubeconfig --name <your clustername>
+
+
+
+Clodformation Demo
+
+https://www.youtube.com/watch?v=UmvwUIoFgu4
+https://www.youtube.com/watch?v=GP-wknHzPpI
+
+Clodformation Template
+
+https://github.com/awslabs/aws-cloudformation-templates/blob/master/aws/services/EC2/EIP_With_Association.yaml
