@@ -7,4 +7,17 @@ A peering connection can be made between your own VPCs or with a VPC in another 
 ### Private, Public, and Elastic IP Addresses
 - **Private IP addresses**: IP addresses not reachable over the internet are defined as private. Private IPs enable communication between instances in the same network.
 - **Public IP addresses**: Public IP addresses are used for communication between other instances on the internet and yours. Each instance with a public IP address is assigned an external DNS hostname too. Public IP addresses linked to your instances are from Amazon's list of public IPs. On stopping or terminating your instance, the public IP address gets released, and a new one is linked to the instance when it restarts. For retention of this public IP address even after stoppage or termination, an elastic IP address needs to be used.
-- **Elastic IP Addresses**: Elastic IP addresses are static or persistent public IPs that come with your account. If any of your software or instances fail, they can be remapped to another instance quickly with the elastic IP address. An elastic IP address remains in your account until you choose to release it. A charge is associated with an Elastic IP address if it is in your account, but not allocated to an instance. 
+- **Elastic IP Addresses**: Elastic IP addresses are static or persistent public IPs that come with your account. If any of your software or instances fail, they can be remapped to another instance quickly with the elastic IP address. An elastic IP address remains in your account until you choose to release it. A charge is associated with an Elastic IP address if it is in your account, but not allocated to an instance.
+
+### Subnet
+AWS defines a subnet as a range of IP addresses in your VPC. You can launch AWS resources into a selected subnet. 
+### Public and Private Subnets
+
+A public subnet is used for resources that must be connected to the internet; web servers are an example. Private subnets are for resources that don't need an internet connection, or that you want to protect from the internet; database instances are an example.
+
+### Networking
+- **Internet Gateway**: It enables communication between instances in your VPC and the internet.
+
+### It enables communication between instances in your VPC and the internet.
+
+Amazon defines a route table as a set of rules, called routes, which are used to determine where network traffic is directed.
