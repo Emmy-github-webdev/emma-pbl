@@ -75,3 +75,5 @@ Stack is a regional support. Stack created in one region cannot be access in ano
 9. Permission 
  - Select the IAM policy
  10. next, review and create
+
+[cloudformation sample template](https://github.com/awslabs/aws-cloudformation-templates)
