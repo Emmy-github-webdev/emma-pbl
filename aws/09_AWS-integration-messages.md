@@ -35,3 +35,49 @@ Amazon Simple Queue Service offers secure, durable, and available hosted queue t
 8. Test it by clicking on **Send and recieve messages**
 9. click on **Send messages**
 
+### SQS Queue Access Policy
+![](images/tutorials/sqs-queue.png)
+### SQS Queue Access Policy Hands on
+1. Launch AWS management console and search for **SQS**
+2. Click on create Queue
+3. Select standard 
+4. Name: DemoQueue
+5. On access policy, select **Basic** for this demo
+6. On encryption, select **Disabled** 
+7. Click on create
+8. Create S3 bucket to send notification to the SQS queue
+- After creating S3 bucket, click on the bucket and navigate to the **properties** tab
+- in **Event Notification**, click create **Event Notification**
+- name: demoEvent
+- Event Type: select all object
+- Destination: Select SQS Queue
+- Specify SQS queue: Select the queue created above **DemoQueue**
+- Save changes
+9. On the SQS queue, update the policy to enable S3 bucket to send message to SQS queue
+```
+{
+    "Version": "2012-10-17",
+    "Id": "example-ID",
+    "Statement": [
+        {
+            "Sid": "example-statement-ID",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "s3.amazonaws.com"
+            },
+            "Action": [
+                "SQS:SendMessage"
+            ],
+            "Resource": "SQS-queue-ARN",
+            "Condition": {
+                "ArnLike": {
+                    "aws:SourceArn": "arn:aws:s3:*:*:awsexamplebucket1"
+                },
+                "StringEquals": {
+                    "aws:SourceAccount": "bucket-owner-account-id"
+                }
+            }
+        }
+    ]
+}
+```
