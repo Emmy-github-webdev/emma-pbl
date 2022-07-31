@@ -81,3 +81,22 @@ Amazon Simple Queue Service offers secure, durable, and available hosted queue t
     ]
 }
 ```
+
+### SQS - Message Visibility Timeout
+After a message is polled by a consumer, it becomes invisble to other consumer. The visibility period is 30 seconds. The consumer could call the ChangeMessageVisibility API to get more time.
+
+### SQS Dead Letter Queues
+To make a SQS queue a dead letter queue, enable dead letter queue
+![](images/tutorials/sqs-dead-letter.png)
+
+### SQS Delay Queues
+To make a SQS queue a delay queue, set the queue **Delivery delay** to number more than 0. 0 is the default value.
+![](images/tutorials/sqs-delay.png)
+### SQS  - Long Polling
+![](images/tutorials/sqs-long.png)
+
+### SQS - Request-Response Systems
+![](images/tutorials/sqs-rr.png)
+### SQS - FIFO Queue 
+In creating SQS fifo queue, the name must end with **.fifo**
+![](images/tutorials/sqs-fifo.png)
