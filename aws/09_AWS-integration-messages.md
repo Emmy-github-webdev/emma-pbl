@@ -125,5 +125,24 @@ In creating SQS fifo queue, the name must end with **.fifo**
 9. Add the endpoint
 10. Create subscription
 
+### Amazon Kinesis
+Kinesis makes it easy to collect, process, and analyze streaming dtat in real-time. Ingest real-time data such as: Application logs, Metricx, Website clickstreams, IoT telemetry data. we have four type of Kinesis
+1. Kinesis Data Streams: Capture, process, and store data stream
+![](images/tutorials/kds.png)
+_Kinesis Data Stream Properties_
+![](images/tutorials/kdsp.png)
+_Kinesis Data Stream - Capacity Modes_
+![](images/tutorials/kdscm.png)
+2. Kinesis Data Firehose: Load data streams into AWS data stores
+![](images/tutorials/kdf.png)
+_Kinesis Data Firehose Properties_
+![](images/tutorials/kdfp.png)
+_Kinesis Data Firehose VS Kinesis Data Stream_
+![](images/tutorials/kds-kdf.png)
+3. Kinesis Data Analytics: Analyzes data streams with SQL or Apache Flink
+![](images/tutorials/kda.png)
+4. Kinesis Video Stream: Capture, process, and store video streams
+
+![](images/tutorials/sqs-sns-kinesis.png)
 
 
