@@ -100,3 +100,30 @@ To make a SQS queue a delay queue, set the queue **Delivery delay** to number mo
 ### SQS - FIFO Queue 
 In creating SQS fifo queue, the name must end with **.fifo**
 ![](images/tutorials/sqs-fifo.png)
+
+### SQS with Auto Scaling Group (ASG)
+![](images/tutorials/asg.png)
+
+### Amazon Simple Notification Service (SNS)
+![](images/tutorials/sns.png)
+![](images/tutorials/sns1.png)
+![](images/tutorials/snsp.png)
+
+### SNS + SQS: Fan Out
+![](images/tutorials/sns-sqs.png)
+
+### SNS - Hands on
+
+1. Open AWS management console and search for SNS
+2. Enter topic name
+3. Click next step
+4. Choose either FIFO or standard type of SNS
+5. Choose the choiced Access policy
+6. Create top
+7. Scrow down and click on create subscription
+8. Choose the subscription you want ()Amazon lambda, Amazon SQS, Email, Email JSon, HTTP, HTTPS, SMS
+9. Add the endpoint
+10. Create subscription
+
+
+
