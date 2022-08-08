@@ -77,3 +77,9 @@ Stack is a regional support. Stack created in one region cannot be access in ano
  10. next, review and create
 
 [cloudformation sample template](https://github.com/awslabs/aws-cloudformation-templates)
+
+### Hands on CloudFormation
+Check the JSON and Yaml files.
+
+1. For example, if you created a stack with the ec2.json or ec2.yaml template, CloudFormation provisions an instance with an ami-0ff8a91507f77f867 AMI ID, t2.micro instance type, testkey key pair name, and an Amazon EBS volume.
+
