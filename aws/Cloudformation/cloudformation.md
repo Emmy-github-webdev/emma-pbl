@@ -83,6 +83,9 @@ _Templates:_ A CloudFormation template is a JSON or YAML formatted text file. Yo
 _Stacks:_ Stack is the collection of resources as a single unit.
 _Change sets:_ If you need to make changes to the running resources in a stack, you update the stack. Before making changes to your resources, you can generate a change set, which is a summary of your proposed changes. Change sets allow you to see how your changes might impact your running resources, especially for critical resources, before implementing them.
 
+### How does AWS CloudFormation work?
+![](images/how-cloudformation-work.png)
+
 ### Hands on CloudFormation
 Check the JSON and Yaml files.
 
