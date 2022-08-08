@@ -78,6 +78,11 @@ Stack is a regional support. Stack created in one region cannot be access in ano
 
 [cloudformation sample template](https://github.com/awslabs/aws-cloudformation-templates)
 
+### AWS CloudFormation concepts
+_Templates:_ A CloudFormation template is a JSON or YAML formatted text file. You can save these files with any extension, such as .json, .yaml, .template, or .txt. CloudFormation uses these templates as blueprints for building your AWS resources
+_Stacks:_ Stack is the collection of resources as a single unit.
+_Change sets:_ If you need to make changes to the running resources in a stack, you update the stack. Before making changes to your resources, you can generate a change set, which is a summary of your proposed changes. Change sets allow you to see how your changes might impact your running resources, especially for critical resources, before implementing them.
+
 ### Hands on CloudFormation
 Check the JSON and Yaml files.
 
