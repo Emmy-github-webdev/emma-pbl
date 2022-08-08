@@ -83,3 +83,4 @@ Check the JSON and Yaml files.
 
 1. For example, if you created a stack with the ec2.json or ec2.yaml template, CloudFormation provisions an instance with an ami-0ff8a91507f77f867 AMI ID, t2.micro instance type, testkey key pair name, and an Amazon EBS volume.
 
+2. You can also specify multiple resources in a single template and configure these resources to work together. For example, you can modify the previous template to include an Elastic IP address (EIP) and associate it with the Amazon EC2 instance, as shown in the eip-ec2.json and eip-ec2.yaml files.
