@@ -86,9 +86,62 @@ _Change sets:_ If you need to make changes to the running resources in a stack, 
 ### How does AWS CloudFormation work?
 ![](images/how-cloudformation-work.png)
 
+### Updating a stack with change sets
+When you need to update your stack's resources, you can modify the stack's template. You don't need to create a new stack and delete the old one. To update a stack, create a change set by submitting a modified version of the original stack template, different input parameter values, or both. CloudFormation compares the modified template with the original template and generates a change set. The change set lists the proposed changes. After reviewing the changes, you can start the change set to update your stack or you can create a new change set. The following diagram summarizes the workflow for updating a stack.
+![](images/change-set.png.png)
+
 ### Hands on CloudFormation
 Check the JSON and Yaml files.
 
-1. For example, if you created a stack with the ec2.json or ec2.yaml template, CloudFormation provisions an instance with an ami-0ff8a91507f77f867 AMI ID, t2.micro instance type, testkey key pair name, and an Amazon EBS volume.
+1. For example, if you created a stack with the **ec2.json** or **ec2.yaml** template, CloudFormation provisions an instance with an ami-0ff8a91507f77f867 AMI ID, t2.micro instance type, testkey key pair name, and an Amazon EBS volume.
 
-2. You can also specify multiple resources in a single template and configure these resources to work together. For example, you can modify the previous template to include an Elastic IP address (EIP) and associate it with the Amazon EC2 instance, as shown in the eip-ec2.json and eip-ec2.yaml files.
+2. You can also specify multiple resources in a single template and configure these resources to work together. For example, you can modify the previous template to include an Elastic IP address (EIP) and associate it with the Amazon EC2 instance, as shown in the **eip-ec2.json** and **eip-ec2.yaml** files.
+
+3. The sample template in **wordpressblog.json** and **wordpressblog.yaml** files creates a basic WordPress blog that uses a single Amazon EC2 instance with a local MySQL database for storage. The template also creates an Amazon EC2 security group to control firewall settings for the Amazon EC2 instance.
+**Step 1: Pick a template** 
+The sample template in **wordpressblog.json** and **wordpressblog.yaml** files
+**Step 2: Make sure you have prepared any required items for the stack**
+**Step 3: Create the stack**
+1. Sign in to the AWS Management Console and open the AWS CloudFormation console at https://console.aws.amazon.com/cloudformation.
+
+2. If this is a new CloudFormation account, choose **Create New Stack**. Otherwise, choose Create Stack.
+
+3. In the **Template** section, select **Specify an Amazon S3 Template URL** to type or paste the URL for the sample WordPress template, and then choose Next:
+
+https://s3.us-west-2.amazonaws.com/cloudformation-templates-us-west-2/WordPress_Single_Instance.template
+4. In the **Specify Details** section, enter a stack name in the **Name** field. For this example, use MyWPTestStack. The stack name can't contain spaces.
+
+5. On the **Specify Parameters** page, you'll recognize the parameters from the Parameters section of the template. You must provide values for all parameters that don't have default values, including **DBUser**, **DBPassword**, **DBRootPassword**, and **KeyName**. In the **KeyName** field, enter the name of a valid Amazon EC2 pair in the same region you are creating the stack.
+
+6. Choose **Next**.
+
+7. In this scenario, we won't add any tags. Choose **Next**. Tags, which are key-value pairs, can help you identify your stacks. For more information, see Adding tags to your CloudFormation stack.
+
+**Step 4: Monitor the progress of stack creation**
+To view the events for the stack
+
+1. On the CloudFormation console, select the stack MyWPTestStack in the list.
+
+2. In the stack details pane, choose the Events tab.
+
+The console automatically refreshes the event list with the most recent events every 60 seconds.
+**Step 5: Use your stack resources**
+To complete the WordPress installation
+
+1. On the Outputs tab, in the WebsiteURL row, choose the link in the Value column.
+
+The WebsiteURL output value is the URL of the installation script for the WordPress website that you created with the stack.
+
+2. On the web page for the WordPress installation, follow the on-screen instructions to complete the WordPress installation. For more information about installing WordPress, see https://wordpress.org/support/article/how-to-install-wordpress/.
+
+After you complete the installation and log in, you are directed to the dashboard where you can set additional options for your WordPress blog. Then, you can start writing posts for your blog that you successfully created by using a CloudFormation template.
+**Step 6: Clean up**
+To delete the stack and its resources
+
+1. From the CloudFormation console, select the MyWPTestStack stack.
+
+2. Choose Delete Stack.
+
+3. In the confirmation message that appears, choose Yes, Delete.
+
+The status for MyWPTestStack changes to DELETE_IN_PROGRESS. In the same way you monitored the creation of the stack, you can monitor its deletion by using the Event tab. When CloudFormation completes the deletion of the stack, it removes the stack from the list.
