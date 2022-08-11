@@ -62,7 +62,3 @@ In kubernete, we have two types of servers: _Master_ and a _worker nodes_.
 - _kubectl run hello-minikube_ is used to deploy application on the cluster. In this case, the application name is **hello-minikube**
 - _kubectl cluster-info_ is used to get information about the cluster
 - _kubectl get nodes_ is used to list all nodes in the cluster
-
-
-
-
