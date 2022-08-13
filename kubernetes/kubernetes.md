@@ -12,7 +12,6 @@ Determine whether you already have **kubectl** installed on your device.
 ```
 kubectl version | grep Client | cut -d : -f 5
 ```
-
 ### [Installing or updating eksctl](https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html)
 
 eksctl is a command line tool use for creating and managing Kubernetes clusters in AWS Eks.
