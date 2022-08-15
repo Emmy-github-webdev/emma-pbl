@@ -16,3 +16,10 @@ kubectl version | grep Client | cut -d : -f 5
 ### [Installing or updating eksctl](https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html)
 
 eksctl is a command line tool use for creating and managing Kubernetes clusters in AWS Eks.
+
+### [Create Cluster using eksctl](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html)
+Node types includes
+1. **Fargate-Linux-** Select this type of node if you want to run Linux applications on AWS Fargate. Fargate is a serverless compute engine that allow you deploy kubernetes pod without managing the EC2 instances.
+2. **managed nodes**
+3. **Windows self managed**
+4. **Bottlerocket nodes**
