@@ -175,3 +175,103 @@ aws cloudformation list-stacks --query "StackSummaries[].StackName"
 ```
 aws cloudformation delete-stack --stack-name my-vpc-stack
 ```
+### Amazon EKS cluster endpoint access control
+This will helps you to enable private access for your Amazon EKS cluster's Kubernetes API server endpoint and limit, or completely disable, public access from the internet.
+
+<br>
+
+When you create a new cluster, Amazon EKS creates an endpoint for the managed Kubernetes API server that you use to communicate with your cluster (using Kubernetes management tools such as kubectl). By default, this API server endpoint is public to the internet, and access to the API server is secured using a combination of AWS Identity and Access Management (IAM) and native Kubernetes [Role Based Access Control](https://kubernetes.io/docs/reference/access-authn-authz/rbac/) (RBAC).
+
+<br>
+
+You can enable private access to the Kubernetes API server so that all communication between your nodes and the API server stays within your VPC. You can limit the IP addresses that can access your API server from the internet, or completely disable internet access to the API server.
+
+<br>
+
+When you enable endpoint private access for your cluster, Amazon EKS creates a Route 53 private hosted zone on your behalf and associates it with your cluster's VPC. This private hosted zone is managed by Amazon EKS, and it doesn't appear in your account's Route 53 resources. In order for the private hosted zone to properly route traffic to your API server, your VPC must have enableDnsHostnames and enableDnsSupport set to true, and the DHCP options set for your VPC must include AmazonProvidedDNS in its domain name servers list. For more information, see Updating DNS support for your VPC in the Amazon VPC User Guide
+
+<br>
+
+You can define your API server endpoint access requirements when you create a new cluster, and you can update the API server endpoint access for a cluster at any time.
+
+### Modifying cluster endpoint access 
+| API server endpoint access options |
+-
+| Endpoint public access|Endpoint private access|Behavior|
+-                        -                        -
+| Enabled | Disable |This is the default behavior for new Amazon EKS clusters. Kubernetes API requests that originate from within your cluster's VPC (such as node to control plane communication) leave the VPC but not Amazon's network. Your cluster API server is accessible from the internet. You can, optionally, limit the CIDR blocks that can access the public endpoint. If you limit access to specific CIDR blocks, then it is recommended that you also enable the private endpoint, or ensure that the CIDR blocks that you specify include the addresses that nodes and Fargate pods (if you use them) access the public endpoint from.|
+|Enabled | Enabled| Kubernetes API requests within your cluster's VPC (such as node to control plane communication) use the private VPC endpoint. Your cluster API server is accessible from the internet. You can, optionally, limit the CIDR blocks that can access the public endpoint.|
+|Disabled|Enabled| All traffic to your cluster API server must come from within your cluster's VPC or a connected network. There is no public access to your API server from the internet. Any kubectl commands must come from within the VPC or a connected network. For connectivity options, see Accessing a private only API server. The cluster's API server endpoint is resolved by public DNS servers to a private IP address from the VPC. In the past, the endpoint could only be resolved from within the VPC. If your endpoint does not resolve to a private IP address within the VPC for an existing cluster, you can: Enable public access and then disable it again. You only need to do so once for a cluster and the endpoint will resolve to a private IP address from that point forward. Update your cluster.|
+
+You can modify your cluster API server endpoint access using the AWS Management Console or AWS CLI. Select the tab with the name of the tool that you'd like to use to modify your endpoint access with.
+
+### To modify your cluster API server endpoint access using the AWS CLI
+1. Update your cluster API server endpoint access with the following AWS CLI command. Substitute your cluster name and desired endpoint access values. If you set endpointPublicAccess=true, then you can (optionally) enter single CIDR block, or a comma-separated list of CIDR blocks for publicAccessCidrs. 
+```
+aws eks update-cluster-config \
+    --region region-code \
+    --name my-cluster \
+    --resources-vpc-config endpointPublicAccess=true,publicAccessCidrs="203.0.113.5/32",endpointPrivateAccess=true
+```
+_Sample output_
+```
+{
+    "update": {
+        "id": "e6f0905f-a5d4-4a2a-8c49-EXAMPLE00000",
+        "status": "InProgress",
+        "type": "EndpointAccessUpdate",
+        "params": [
+            {
+                "type": "EndpointPublicAccess",
+                "value": "true"
+            },
+            {
+                "type": "EndpointPrivateAccess",
+                "value": "true"
+            },
+            {
+                "type": "publicAccessCidrs",
+                "value": "[\203.0.113.5/32\"]"
+            }
+        ],
+        "createdAt": 1576874258.137,
+        "errors": []
+    }
+}
+```
+2. Monitor the status of your endpoint access update with the following command, using the cluster name and update ID that was returned by the previous command.
+```
+aws eks describe-update \
+    --region region-code \
+    --name my-cluster \
+    --update-id e6f0905f-a5d4-4a2a-8c49-EXAMPLE00000
+```
+
+_Sample Output_
+```
+{
+    "update": {
+        "id": "e6f0905f-a5d4-4a2a-8c49-EXAMPLE00000",
+        "status": "Successful",
+        "type": "EndpointAccessUpdate",
+        "params": [
+            {
+                "type": "EndpointPublicAccess",
+                "value": "true"
+            },
+            {
+                "type": "EndpointPrivateAccess",
+                "value": "true"
+            },
+            {
+                "type": "publicAccessCidrs",
+                "value": "[\203.0.113.5/32\"]"
+            }
+        ],
+        "createdAt": 1576874258.137,
+        "errors": []
+    }
+}
+```
+### Accessing a private only API server
+Connected network, Amazon EC2 bastion host, or AWS Cloud9 IDE.
