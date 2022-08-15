@@ -125,3 +125,53 @@ aws eks describe-update \
   --update-id b5f0ba18-9a87-4450-b5a0-825e6e84496f
 ```
 4. After your cluster update is complete, update your nodes to the same Kubernetes minor version as your updated cluster.
+
+### To delete an Amazon EKS cluster with the AWS CLI
+1. List all services running in your cluster.
+```
+kubectl get svc --all-namespaces
+```
+2. Delete any services that have an associated EXTERNAL-IP value. These services are fronted by an Elastic Load Balancing load balancer, and you must delete them in Kubernetes to allow the load balancer and associated resources to be properly released.
+```
+kubectl delete svc service-name
+```
+3. Delete all node groups and Fargate profiles.
+- List the node groups in your cluster with the following command.
+```
+aws eks list-nodegroups --cluster-name my-cluster
+```
+- Delete each node group with the following command. Delete all node groups in the cluster.
+```
+aws eks delete-nodegroup --nodegroup-name my-nodegroup --cluster-name my-cluster
+```
+- List the Fargate profiles in your cluster with the following command.
+```
+aws eks list-fargate-profiles --cluster-name my-cluster
+```
+- Delete each Fargate profile with the following command. Delete all Fargate profiles in the cluster.
+```
+aws eks delete-fargate-profile --fargate-profile-name my-fargate-profile --cluster-name my-cluster
+```
+
+4. Delete all self-managed node AWS CloudFormation stacks.
+- List your available AWS CloudFormation stacks with the following command. Find the node template name in the resulting output.
+```
+aws cloudformation list-stacks --query "StackSummaries[].StackName"
+```
+- Delete each node stack with the following command, replacing node-stack with your node stack name. Delete all self-managed node stacks in the cluster.
+```
+aws cloudformation delete-stack --stack-name node-stack
+```
+5. Delete the cluster with the following command, replacing my-cluster with your cluster name.
+```
+aws eks delete-cluster --name my-cluster
+```
+6. Optional - Delete the VPC AWS CloudFormation stack.
+- List your available AWS CloudFormation stacks with the following command. Find the VPC template name in the resulting output.
+```
+aws cloudformation list-stacks --query "StackSummaries[].StackName"
+```
+- Delete the VPC stack with the following command, replacing my-vpc-stack with your VPC stack name.
+```
+aws cloudformation delete-stack --stack-name my-vpc-stack
+```
