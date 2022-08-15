@@ -89,3 +89,39 @@ Added new context arn:aws:eks:region-code:111122223333:cluster/my-cluster to /ho
 kubectl get svc
 ```
 
+### Updating Kubernetes version
+
+1. Compare the Kubernetes version of your cluster control plane to the Kubernetes version of your nodes.
+
+- Get the Kubernetes version of your cluster control plane with the **kubectl version --short** command.
+```
+kubectl version --short
+```
+- Get the Kubernetes version of your nodes with the kubectl get nodes command. This command returns all self-managed and managed Amazon EC2 and Fargate nodes. Each Fargate pod is listed as its own node.
+```
+kubectl get nodes
+```
+2. By default, the pod security policy admission controller is enabled on Amazon EKS clusters. Before updating your cluster, ensure that the proper pod security policies are in place. This is to avoid potential security issues. You can check for the default policy with the **kubectl get psp eks.privileged** command.
+```
+kubectl get psp eks.privileged
+```
+If you receive the following error, see default pod security policy before proceeding.
+```
+Error from server (NotFound): podsecuritypolicies.extensions "eks.privileged" not found
+```
+3. Updating Kubernetes version using AWS CLI
+ - Update your Amazon EKS cluster with the following AWS CLI command. Replace the example values with your own.
+```
+aws eks update-cluster-version \
+ --region region-code \
+ --name my-cluster \
+ --kubernetes-version 1.23
+```
+- Monitor the status of your cluster update with the following command. Use the cluster name and update ID that the previous command returned. When a Successful status is displayed, the update is complete. The update takes several minutes to complete.
+```
+aws eks describe-update \
+  --region region-code \
+  --name my-cluster \
+  --update-id b5f0ba18-9a87-4450-b5a0-825e6e84496f
+```
+4. After your cluster update is complete, update your nodes to the same Kubernetes minor version as your updated cluster.
