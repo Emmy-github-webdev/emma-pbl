@@ -275,3 +275,13 @@ _Sample Output_
 ```
 ### Accessing a private only API server
 Connected network, Amazon EC2 bastion host, or AWS Cloud9 IDE.
+
+### [Enabling secret encryption on an existing cluster](https://docs.aws.amazon.com/eks/latest/userguide/enable-kms.html)
+If you enable secrets encryption, the Kubernetes secrets are encrypted using the AWS KMS key that you select. The KMS key must meet the following conditions:
+Symmetric
+
+- Can encrypt and decrypt data
+
+- Created in the same AWS Region as the cluster
+
+- If the KMS key was created in a different account, the user must have access to the KMS key.
