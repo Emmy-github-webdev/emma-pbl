@@ -90,3 +90,67 @@ az webapp show \
     --query possibleOutboundIpAddresses \
     --output tsv
 ```
+
+## [Create a static HTML web app by using Azure Cloud Shell](https://docs.microsoft.com/en-us/training/modules/introduction-to-azure-app-service/7-create-html-web-app?source=learn)
+
+In this exercise, you'll deploy a basic HTML+CSS site to Azure App Service by using the Azure CLI **az webapp up** command. You'll then update the code and redeploy it by using the same command.
+
+<br>
+
+The **az webapp up** command makes it easy to create and update web apps. When executed it performs the following actions:
+
+- Create a default resource group if one isn't specified.
+- Create a default app service plan.
+- Create an app with the specified name.
+- Zip deploy files from the current working directory to the web app.
+
+### Download the sample app
+1. Create project directory and navifate into it
+```
+mkdir htmlapp
+
+cd htmlapp
+```
+2. Run git command to to clone the repository
+```
+git clone https://github.com/Azure-Samples/html-docs-hello-world.git
+```
+3. Set variables to hold the resource group and app names by running the command
+```
+resourceGroup=$(az group list --query "[].{id:name}" -o tsv)
+appName=az204app$RANDOM
+```
+
+### Create the web app
+1. Change to the directory that contains the sample code and run the az webapp up command.
+
+```
+cd html-docs-hello-world
+
+az webapp up -g $resourceGroup -n $appName --html
+```
+2. The command will display the following information
+
+```
+{
+"app_url": "https://<myAppName>.azurewebsites.net",
+"location": "westeurope",
+"name": "<app_name>",
+"os": "Windows",
+"resourcegroup": "<resource_group_name>",
+"serverfarm": "appsvc_asp_Windows_westeurope",
+"sku": "FREE",
+"src_path": "/home/<username>/demoHTML/html-docs-hello-world ",
+< JSON data removed for brevity. >
+}
+```
+3. Open a new tab in your browser and navigate to the app URL (https://myAppName.azurewebsites.net) and verify the app is running 
+
+### Update and redeploy the app
+
+1. You can update the code
+2. Use the command **ctrl-s** to save
+3. Redeploy the app with the same **az webapp up** command
+```
+az webapp up -g $resourceGroup -n $appName --html
+```
