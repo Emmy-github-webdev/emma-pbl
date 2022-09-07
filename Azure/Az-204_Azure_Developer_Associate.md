@@ -154,3 +154,25 @@ az webapp up -g $resourceGroup -n $appName --html
 ```
 az webapp up -g $resourceGroup -n $appName --html
 ```
+![](images/deploy-static-html.png)
+![](images/deploy-static-html1.png)
+![](images/deploy-static-html2.png)
+
+## [Configure web app settings](https://docs.microsoft.com/en-us/training/modules/configure-web-app-settings/1-introduction)
+_Objective_
+- Create application settings that are bound to deployment slots.
+- Explain the options for installing SSL/TLS certificates for your app.
+- Enable diagnostic logging for your app to aid in monitoring and debugging.
+- Create virtual app to directory mappings.
+
+#### [Configure application settings](https://docs.microsoft.com/en-us/training/modules/configure-web-app-settings/2-configure-application-settings)
+
+#### [Configure general settings](https://docs.microsoft.com/en-us/training/modules/configure-web-app-settings/3-configure-general-settings)
+
+#### [Configure path mappings](https://docs.microsoft.com/en-us/training/modules/configure-web-app-settings/4-configure-path-mappings)
+
+#### [Enable diagnostic logging](https://docs.microsoft.com/en-us/training/modules/configure-web-app-settings/5-enable-diagnostic-logging)
+
+#### [Configure security certificates](https://docs.microsoft.com/en-us/training/modules/configure-web-app-settings/6-configure-security-certificates)
+#### [Manage app features](https://docs.microsoft.com/en-us/training/modules/configure-web-app-settings/7-manage-app-features)
+It uses a technique called feature flags(also known as feature toggles, feature switch and so on) to dynamically administer a feature's lifecycle.
