@@ -176,3 +176,27 @@ _Objective_
 #### [Configure security certificates](https://docs.microsoft.com/en-us/training/modules/configure-web-app-settings/6-configure-security-certificates)
 #### [Manage app features](https://docs.microsoft.com/en-us/training/modules/configure-web-app-settings/7-manage-app-features)
 It uses a technique called feature flags(also known as feature toggles, feature switch and so on) to dynamically administer a feature's lifecycle.
+
+## [Scale apps in Azure App Service](https://docs.microsoft.com/en-us/training/modules/scale-apps-app-service/)
+Autoscaling can be triggered according to a schedule, or by assessing whether the system is running short on resources.
+
+**What is autoscaling?** Autoscaling is a cloud system or process that adjusts available resources based on the current demand. Autoscaling perform scaling in and out, as opposed to scaling up and down.
+
+#### E[nable autoscale in App Service](https://docs.microsoft.com/en-us/training/modules/scale-apps-app-service/4-autoscale-app-service)
+
+#### ][Explore autoscale best practices](https://docs.microsoft.com/en-us/training/modules/scale-apps-app-service/5-autoscale-best-practices)
+
+### [Explore Azure App Service deployment slots](https://docs.microsoft.com/en-us/training/modules/understand-app-service-deployment-slots/)
+_Objectives_
+- Describe the benefits of using deployment slots.
+- Understand how slot swapping operates in App Service.
+- Perform manual swaps and enable auto swap.
+- Route traffic manually and automatically.
+#### [Explore staging environments](https://docs.microsoft.com/en-us/training/modules/understand-app-service-deployment-slots/2-app-service-staging-environments)
+
+#### [Examine slot swapping](https://docs.microsoft.com/en-us/training/modules/understand-app-service-deployment-slots/3-app-service-slot-swapping)
+
+### [Swap deployment slots](https://docs.microsoft.com/en-us/training/modules/understand-app-service-deployment-slots/4-swap-deployment-slots)
+
+#### [Route traffic in App Service](https://docs.microsoft.com/en-us/training/modules/understand-app-service-deployment-slots/5-route-traffic-app-service)
+By default, all client requests to the app's production URL are routed to the production slot. You can route a portion of the traffic to another slot
