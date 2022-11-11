@@ -101,3 +101,19 @@ We can pass sensitive information in Kubernetes using secrets. Secrets can be cr
 <br>
 
 Sematext Docker agent is a log collection agent with events and metrics. It runs as small container in each Docker host. These agents gather metrics, events, and logs for all cluster nodes and conatiners
+
+[Resources 2](https://www.youtube.com/watch?v=2audUYEQlag)
+
+17. Let's say a kubernetes job should finish in 40 seconds, however on a rare occasion it takes 5 minutes, how can I make sure to stop application if it exceeds more than 40 seconds?
+
+<br>
+
+Add activeDealineSeconds: 200 to yaml file or the cron job
+
+18. How do you test a manifest without actually executing it?
+
+<br>
+
+Use **--dry-run** flag.
+
+[REsources 3](https://www.youtube.com/watch?v=5w8qVukxXXY)
