@@ -116,4 +116,10 @@ Add activeDealineSeconds: 200 to yaml file or the cron job
 
 Use **--dry-run** flag.
 
-[REsources 3](https://www.youtube.com/watch?v=5w8qVukxXXY)
+[REsources 3](https://www.youtube.com/watch?v=KDh7OpHaXu8)
+
+19. What is the difference between **Docker** and **Kubernetes**?
+
+<br>
+
+**Docker** is for building and running single container. While **Kubernetes** is a group of virtual machines that combined to form a cluster
