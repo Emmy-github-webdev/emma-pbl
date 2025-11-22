@@ -17,7 +17,9 @@ In vagrant there is no OS installation. It comes with a free box available on Va
 - history - To view prevous issued command
 - vagrant global-status - Tell the state of all active Vagrant environments on the system for the currently logged in user.
 
-![](images/linux/vagrant-architecture.jpg)
+#### Vagrant Architecture
+
+![](../images/linux/vagrant-architecture.jpg)
 
 - _Steps to setup VM using vigrant_
 1. Create a folder in the directory of your choice: mkdir /c/vagrant-vms
