@@ -129,6 +129,17 @@ VIM has three command modes
 | /var/log/nginx/error.log | Nginx specific error log |
 | /var/log/mysql/error.log | MySQL error log|
 
+| S/N | Problem | Log to Check | Example Command | Expected Outcome | Possible Fixes |
+|----|---------|--------------|-----------------|------------------|----------------|
+|**Diagnosing SSH Login Failures** | You’re trying to SSH into a server, but the authentication fails, or the connection hangs indefinitely | /var/log/auth.log (Debian/Ubuntu)<br>/var/log/secure (RHEL/CentOS) | `grep sshd /var/log/auth.log` | `Failed password for invalid user admin...`<br>`Accepted password for root...` | • Ensure username/password is correct<br>• For *public key denied*: verify `~/.ssh/authorized_keys` and permissions<br>• If many failures: check Fail2ban or IP blocks |
+| **Investigating High Disk Usage** | Your system has run out of space, as indicated by errors such as “No space left on device.” | Disk issues show indirectly in:<br>/var/log/syslog<br>/var/log/messages | `sudo du -sh /var/log/*` | `grep -i "disk full" /var/log/syslog`<br>`grep -i "no space" /var/log/syslog` | • Configure **logrotate**<br>• Clear /tmp, /var/cache<br>• Use `df -h` and `du -sh` to locate large files |
+| **Service Crashes / Failure (NGINX, Apache, MySQL)** | A service, such as NGINX, Apache, or MySQL, crashes or refuses to start. | /var/log/syslog<br>/var/log/messages<br>/var/log/nginx/error.log<br>/var/log/mysql/error.log | `grep nginx /var/log/syslog` | `nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)` | • Port in use → run `lsof -i :80`<br>• Validate config: `nginx -t` / `apachectl configtest`<br>• Check OOM kills in syslog |
+| **Boot Issues / Kernel Panics** | The system fails to boot properly or encounters kernel panics during startup. | /var/log/kern.log<br>/var/log/dmesg<br>/var/log/syslog | `dmesg | less` | `Kernel panic - not syncing: VFS: Unable to mount root fs...` | • Boot with live USB → run `fsck`<br>• Reinstall GRUB / update initramfs<br>• Verify `/etc/fstab` UUIDs |
+| **Unauthorized Access / Attacks** | You suspect brute force attacks or unauthorized access attempts are taking place against your system | /var/log/auth.log<br>/var/log/fail2ban.log<br>/var/log/messages | `grep "Failed password" /var/log/auth.log` | `Failed password for invalid user...` | • Enable fail2ban<br>• Change SSH port<br>• Disable root login<br>• Use SSH keys instead of passwords |
+| **Application-Level Issues** | Your custom application crashes, returns HTTP 500 errors, or behaves in an unexpected manner | /var/log/myapp.log<br>/var/log/syslog | `grep "Exception" /var/log/myapp.log` | Application stack traces / exceptions | • Improve app logging<br>• Use `tail -f` for live debugging<br>• Add alerts/monitoring tools |
+| **Troubleshooting Cron Jobs** | Scheduled cron tasks are not executing, or their output isn’t visible as expected. | /var/log/cron.log<br>/var/log/syslog | `grep CRON /var/log/syslog` | `CMD (/usr/local/bin/backup.sh)`<br>`CMDOUT (Permission denied)` | • Ensure script is executable: `chmod +x`<br>• Add `PATH=` inside script<br>• Log output: `script.sh >> /var/log/backup.log 2>&1` |
+
+
 
 | S/N| Problem | Log to check | Example command | Expected outcome | Possible fixex |
 | :-: | :-: | :-: | :-: | :-: | :-: |
