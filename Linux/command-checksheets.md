@@ -132,11 +132,7 @@ VIM has three command modes
 
 | S/N| Problem | Log to check | Example command | Expected outcome | Possible fixex |
 | :-: | :-: | :-: | :-: | :-: | :-: |
-| Diagnosing SSH Login failures | You’re trying to SSH into a server, but the authentication fails, or the connection hangs indefinitely | /var/log/auth.log (Debian/Ubuntu) <br>
-/var/log/secure (RHEL/CentOS)| grep sshd /var/log/auth.log | Jul 5 11:02:43 server sshd[1234]: Failed password for invalid user admin from 192.168.0.101 port 55888 ssh2 <br>
-Jul 5 11:03:10 server sshd[1234]: Accepted password for root from 192.168.0.105 port 57844 ssh2| For a Failed Password: Ensure that the username exists and confirm that the password used is correct. <br>
-For a Permission Denied (public key): Check that the ~/.ssh/authorized_keys file has the correct public key and verify permissions on the SSH configuration file sshd_config. <br>
-For Too Many Failed Attempts: Look for rate-limiting tools like fail2ban that may be blocking the IP address.|
+| Diagnosing SSH Login failures | You’re trying to SSH into a server, but the authentication fails, or the connection hangs indefinitely | /var/log/auth.log (Debian/Ubuntu), /var/log/secure (RHEL/CentOS)| grep sshd /var/log/auth.log | Jul 5 11:02:43 server sshd[1234]: Failed password for invalid user admin from 192.168.0.101 port 55888 ssh2, Jul 5 11:03:10 server sshd[1234]: Accepted password for root from 192.168.0.105 port 57844 ssh2| For a Failed Password: Ensure that the username exists and confirm that the password used is correct. For a Permission Denied (public key): Check that the ~/.ssh/authorized_keys file has the correct public key and verify permissions on the SSH configuration file sshd_config. For Too Many Failed Attempts: Look for rate-limiting tools like fail2ban that may be blocking the IP address.|
 
 |Investigating High Disk Usage | Your system has run out of space, as indicated by errors such as “No space left on device.” | While disk usage itself may not be logged directly, you might see side effects in: <br> /var/log/syslog <br> /var/log/messages <br> To check which logs are growing rapidly. | You can use: sudo du -sh /var/log/* | You can search for relevant messages using: <br> grep -i "disk full" /var/log/syslog <br> grep -i "no space" /var/log/syslog
  | Use logrotate to rotate large logs, ensuring they do not overwhelm your disk space. <br> Clear unnecessary files in directories such as /tmp or /var/cache. <br> Use df -h and du -sh to identify the largest disk users and analyze disk usage trends.|
