@@ -118,8 +118,8 @@ VIM has three command modes
 
 #### Common Log File Locations
 
-| - | - | - | - | - | - |
 | Log Files | Description |
+| :-: | :-: |
 | /var/log/syslog| General system logs (Debian/Ubuntu) |
 | /var/log/messages | General system logs (RHEL/CentOS) |
 | /var/log/auth.log | Authentication logs (SSH, sudo, login attempts)|
