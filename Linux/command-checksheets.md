@@ -139,44 +139,14 @@ VIM has three command modes
 | **Application-Level Issues** | Your custom application crashes, returns HTTP 500 errors, or behaves in an unexpected manner | /var/log/myapp.log<br>/var/log/syslog | `grep "Exception" /var/log/myapp.log` | Application stack traces / exceptions | • Improve app logging<br>• Use `tail -f` for live debugging<br>• Add alerts/monitoring tools |
 | **Troubleshooting Cron Jobs** | Scheduled cron tasks are not executing, or their output isn’t visible as expected. | /var/log/cron.log<br>/var/log/syslog | `grep CRON /var/log/syslog` | `CMD (/usr/local/bin/backup.sh)`<br>`CMDOUT (Permission denied)` | • Ensure script is executable: `chmod +x`<br>• Add `PATH=` inside script<br>• Log output: `script.sh >> /var/log/backup.log 2>&1` |
 
-
-
-| S/N| Problem | Log to check | Example command | Expected outcome | Possible fixex |
-| :-: | :-: | :-: | :-: | :-: | :-: |
-| Diagnosing SSH Login failures | You’re trying to SSH into a server, but the authentication fails, or the connection hangs indefinitely | /var/log/auth.log (Debian/Ubuntu), /var/log/secure (RHEL/CentOS)| grep sshd /var/log/auth.log | Jul 5 11:02:43 server sshd[1234]: Failed password for invalid user admin from 192.168.0.101 port 55888 ssh2, Jul 5 11:03:10 server sshd[1234]: Accepted password for root from 192.168.0.105 port 57844 ssh2| For a Failed Password: Ensure that the username exists and confirm that the password used is correct. For a Permission Denied (public key): Check that the ~/.ssh/authorized_keys file has the correct public key and verify permissions on the SSH configuration file sshd_config. For Too Many Failed Attempts: Look for rate-limiting tools like fail2ban that may be blocking the IP address.|
-
-|Investigating High Disk Usage | Your system has run out of space, as indicated by errors such as “No space left on device.” | While disk usage itself may not be logged directly, you might see side effects in: /var/log/syslog, /var/log/messages. To check which logs are growing rapidly. | You can use: sudo du -sh /var/log/* | You can search for relevant messages using: grep -i "disk full" /var/log/syslog, grep -i "no space" /var/log/syslog| Use logrotate to rotate large logs, ensuring they do not overwhelm your disk space. Clear unnecessary files in directories such as /tmp or /var/cache. Use df -h and du -sh to identify the largest disk users and analyze disk usage trends.|
-
-| Service crashes and failure | A service, such as NGINX, Apache, or MySQL, crashes or refuses to start. | General service logs include: <br> /var/log/syslog <br>
-/var/log/messages <br> Service-specific logs may include: <br> /var/log/nginx/error.log <br> /var/log/mysql/error.log | grep nginx /var/log/syslog | You might find entries similar to this: <br> Jul 5 14:20:01 server nginx[4782]: nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use) | _Address Already in Use_: Another service is likely using port 80. Use lsof -i :80 to identify which service is running on that port. <br> _Missing Configuration File_: Verify the configuration using nginx -t or apachectl configtest to check for syntax errors in the configuration file. <br> _Out-of-Memory Kills_: Check /var/log/syslog for Out-Of-Memory (OOM) messages that may indicate that the service was killed due to resource constraints. | 
-
-| Identifying Boot issues or Kernel panics | The system fails to boot properly or encounters kernel panics during startup. | /var/log/kern.log <br>/var/log/dmesg <br> 
-/var/log/syslog <br> Use _dmesg | less_ <br> Look for: <br> Hardware errors (related to disk, RAM, GPU) <br> Kernel panics <br> Missing kernel modules or drivers necessary for booting | [1.234567] Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(0,0) | Boot from a live CD or USB and check disk health using tools like fsck. <br> Reinstall GRUB or update initramfs to fix bootloader issues. <br> Check the fstab file and ensure that UUIDs and paths are correctly specified to avoid filesystem mounting issues. |
-
-| Detecting unauthorized access or attacks| You suspect brute force attacks or unauthorized access attempts are taking place against your system| /var/log/auth.log <br> /var/log/fail2ban.log <br> /var/log/messages | grep "Failed password" /var/log/auth.log | wc -l | You might see something like: <br> Jul 5 11:02:43 server sshd[1234]: Failed password for invalid user test from 192.168.0.105 <br> Jul 5 11:02:45 server sshd[1234]: Failed password for root from 192.168.0.105 | Utilize fail2ban or similar tools to automatically block IP addresses that make too many failed login attempts. <br> Change the default SSH port to prevent bots from targeting the standard port (22). <br>Disable root login via SSH for better security practices. <br>
-Implement public key authentication rather than password-based authentication to enhance security.|
-
-| Application -level issues | Your custom application crashes, returns HTTP 500 errors, or behaves in an unexpected manner | If you’ve configured rsyslog to capture logs for your application, look in: <br>
-/var/log/myapp.log <br> /var/log/syslog |grep "Exception" /var/log/myapp.log |Add appropriate logging in your application to capture errors effectively and trace issues when they arise.<br> During testing, monitor logs in real-time using tail -f to catch issues as they occur.<br>
-Set up alerts using log monitoring tools to be notified of critical errors or failures. |
-
-|Troubleshooting cron jobs | Scheduled cron tasks are not executing, or their output isn’t visible as expected. | /var/log/cron.log <br>
-/var/log/syslog |ggrep CRON /var/log/syslog | You might see entries like this: <br>
-
-Jul 5 07:15:01 server CRON[1212]: (root) CMD (/usr/local/bin/backup.sh) <br>
-Jul 5 07:15:01 server CRON[1213]: (root) CMDOUT (Permission denied) | _Permission Issues_: Ensure that the script being run is executable by using chmod +x /usr/local/bin/backup.sh. <br>
-_Environment Variables_: Remember that cron runs in a minimal shell environment. You may need to set the PATH variable inside the script to ensure it can find all necessary commands. <br>
-_Redirect Output_: Implement logging within the script to capture errors. You can add redirection within the cron entry itself (e.g., /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1) to log output and errors for easier troubleshooting.
-|
-
 #### Tools to enhance log troubleshooting
 
-|-|-|-|
+| Command | Example | Description |
 |:-:|:-:|:-:|
-|tail -f |/var/log/syslog|Monitor logs in real-time to see new entries as they are made|
-|journalctl | journalctl -u nginx.service --since "1 hour ago"| For systems using systemd, you can view service-specific logs|
-|logrotate |sudo logrotate -d /etc/logrotate.conf| Prevent logs from becoming excessively large and consuming disk space with log rotation|
-|watch | watch -n 2 tail -n 10 /var/log/syslog | run log checks at regular intervals|
+| tail -f | /var/log/syslog | Monitor logs in real-time to see new entries as they are made |
+| journalctl | journalctl -u nginx.service --since "1 hour ago" | For systems using systemd, you can view service-specific logs |
+| logrotate | sudo logrotate -d /etc/logrotate.conf | Prevent logs from becoming excessively large and consuming disk space with log rotation |
+| watch | watch -n 2 tail -n 10 /var/log/syslog | run log checks at regular intervals |
 
 
 | Command                          | Description                                              |                           |
