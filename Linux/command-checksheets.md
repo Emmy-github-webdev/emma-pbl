@@ -130,10 +130,8 @@ VIM has three command modes
 | /var/log/mysql/error.log | MySQL error log|
 
 
-| - | - | - | - | - | - |
-
 | S/N| Problem | Log to check | Example command | Expected outcome | Possible fixex |
-
+| :-: | :-: | :-: | :-: | :-: | :-: |
 | Diagnosing SSH Login failures | You’re trying to SSH into a server, but the authentication fails, or the connection hangs indefinitely | /var/log/auth.log (Debian/Ubuntu) <br>
 /var/log/secure (RHEL/CentOS)| grep sshd /var/log/auth.log | Jul 5 11:02:43 server sshd[1234]: Failed password for invalid user admin from 192.168.0.101 port 55888 ssh2 <br>
 Jul 5 11:03:10 server sshd[1234]: Accepted password for root from 192.168.0.105 port 57844 ssh2| For a Failed Password: Ensure that the username exists and confirm that the password used is correct. <br>
