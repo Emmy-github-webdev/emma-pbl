@@ -2,8 +2,13 @@
 Git is a free open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency.
 
 #### Sematic versioning
-
-Format: 1.2.0. Where 1 = Major(Major changes or backward incompatible), 2 = minor(New feature, or an improvement), 0 = patch(Bug fixes)
+```
+Format: 1.2.0. 
+Where 
+1 = Major(Major changes or backward incompatible) 
+2 = minor(New feature, or an improvement) 
+0 = patch(Bug fixes)
+```
 
 ```
 ### Tag a commit
