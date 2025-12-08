@@ -151,6 +151,7 @@ VIM has three command modes
 
 | Command                          | Description                                              |                           |
 | -------------------------------- | -------------------------------------------------------- | ------------------------- |
+| `sudo -i`                        | Switch to root user                                      |                           |
 | `whoami`                         | Displays the current logged-in username                  |                           |
 | `pwd`                            | Prints the current working directory                     |                           |
 | `ls`                             | Lists directory contents                                 |                           |
