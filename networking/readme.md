@@ -74,6 +74,8 @@ It has 7 layes
 
 ## DNS & DHCP
 
+DNS (Domain Name System) translates human-friendly domain names (like google.com) into computer-readable IP addresses, acting as the internet's phonebook, while DHCP (Dynamic Host Configuration Protocol) automatically assigns IP addresses and network settings (like subnet mask) to devices, simplifying network administration. DNS handles name resolution (e.g., www.example.com -> 192.0.2.1), whereas DHCP manages dynamic IP allocation, allowing devices to join a network easily without manual configuration
+
 ## Networking Commands
 
 | Command | Use |
