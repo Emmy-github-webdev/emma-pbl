@@ -27,3 +27,67 @@ Instead of starting containers one by one with long docker run commands, you des
 
 ## Dockerfile versus Compose file
 A Dockerfile provides instructions to build a container image while a Compose file defines your running containers. Quite often, a Compose file references a Dockerfile to build an image to use for a particular service.
+
+Different waye
+
+```
+version: "3"
+services:
+  web:
+    image: "nginx:latest"
+    ports:
+      - "8080:80"
+    restart: always
+  web2:
+    image: "nginx:latest"
+    ports:
+      - "8082:80"
+    restart: always
+networks:
+  coffee:
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.92.0/24"
+```
+ ```
+version: "3.8"
+services:
+  wordpress:
+    image: wordpress
+    ports:
+      - "8089:80"
+    depends_on:
+      - mysql
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: "coffee"
+      WORDPRESS_DB_NAME: wordpress
+  mysql:
+      image: mysql:5.7
+      environment:
+        MYSQL_ROOT_PASSWORD: "coffee"
+        MYSQL_DATABASE: wordpress
+      volumes:
+        - db_data:/var/lib/mysql
+networks:
+  wnet:
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.268.100.1/24"
+```
+etc
+
+## Image Layers
+Each layer in an image contains a set of filesystem changes - additions, deletions, or modifications.
+
+| No | Layer | Description |
+|----|-------|-------------|
+| 1  | App Source | 1st layer adds basic commands and package manager |
+| 2  | App dependencies | 2nd layer installs dependencies for management |
+| 3  | App requirements  | 3rd layer copies in an application's specificrequirements |
+| 4 | Python and pip | 4th layer installs the application specific dependencies |
+| 5 | Debian base | 5th layer copies in the actual source code of the application.
+
