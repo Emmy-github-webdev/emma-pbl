@@ -1,5 +1,4 @@
 # Docker
-https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/
 
 Docker is an open platform for developing, shipping and running applications.
 
@@ -89,5 +88,24 @@ Each layer in an image contains a set of filesystem changes - additions, deletio
 | 2  | App dependencies | 2nd layer installs dependencies for management |
 | 3  | App requirements  | 3rd layer copies in an application's specificrequirements |
 | 4 | Python and pip | 4th layer installs the application specific dependencies |
-| 5 | Debian base | 5th layer copies in the actual source code of the application.
+| 5 | Debian base | 5th layer copies in the actual source code of the application |
+
+```
+FROM python:3.13
+WORKDIR /usr/local/app
+
+# Install the application dependencies
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy in the source code
+COPY src ./src
+EXPOSE 8080
+
+# Setup an app user so the container doesn't run as the root user
+RUN useradd app
+USER app
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+```
 
