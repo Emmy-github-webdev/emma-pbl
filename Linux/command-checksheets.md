@@ -199,6 +199,29 @@ VIM has three command modes
 | `wget` | Download files from the web | |  `wget http://example.com//file.txt` <br> downloads "file.txt" from the specified URL. |
 | `curl` | Transfer data to or from a server. | | `curl http://example.com/` <br> retrieves the content of a webpage from the specified URL. |
 
+#### 7. IO Redirection Commands
+| Command | Description | Options | Examples |
+|--------|-------------|---------|----------|
+| `cmd < file` | Input of cmd is taken from file. | | |
+| `cmd > file` | Standard output (stdout) of cmd is redirected to file. | | |
+| `cmd 2> file` | Error output (stderr) of cmd is redirected to file. | | |
+| `cmd 2>&1` | stderr is redirected to the same place as stdout. | | |
+| `cmd1 <(cmd2)` | Output of cmd2 is used as the input file for cmd1. | | |
+| `cmd > /dev/null` | Discards the stdout of cmd by sending it to the null device. | | |
+| `cmd &> file` | Every output of cmd is redirected to file. | | |
+| `cmd 1>&2` | stdout is redirected to the same place as stderr. | | |
+| `cmd >> file` | Appends the stdout of cmd to file. | | |
+
+#### 8. Environment Variable Commands
+| Command | Description | Options | Examples |
+|--------|-------------|---------|----------|
+| `export VARIABLE_NAME=value` | Sets the value of an environment variable. | | |
+| `echo $VARIABLE_NAME` | Displays the value of a specific environment variable. | | |
+| `env` | Lists all environment variables currently set in the system. | | |
+| `unset VARIABLE_NAME` | Unsets or removes an environment variable. | | |
+| `export -p` | Shows a list of all currently exported environment variables. | | |
+| `env VAR1=value COMMAND` | Sets the value of an environment variable for a specific command. | | |
+| `printenv` | Displays the values of all environment variables. | | |
 
 
 
