@@ -190,7 +190,14 @@ VIM has three command modes
 #### 6. Networking Commands
 | Command | Description | Options | Examples |
 |--------|-------------|---------|----------|
-
+| `ifconfig` | Display network interface information. | | `ifconfig` <br> shows the details of all network interfaces. |
+| `ping` | Send ICMP echo requests to a host. | | `ping google.com` <br> sends ICMP echo requests to "google.com" to check connectivity. |
+| `netstat` | Display network connections and statistics. | | `netstat -tuln` <br> shows all listening TCP and UDP connections. |
+| `ss` | Display network socket information. | | `ss -tuln` <br> shows all listening TCP and UDP connections. |
+| `ssh` | Securely connect to a remote server. | | `ssh user@hostname` <br> initiates an SSH connection to the specified hostname. |
+| `scp` | Securely copy files between hosts. | | `scp file.txt user@hostname:/path/to/destination` <br> securely copies "file.txt" to the specified remote host. |
+| `wget` | Download files from the web | |  `wget http://example.com//file.txt` <br> downloads "file.txt" from the specified URL. |
+| `curl` | Transfer data to or from a server. | | `curl http://example.com/` <br> retrieves the content of a webpage from the specified URL. |
 
 
 
