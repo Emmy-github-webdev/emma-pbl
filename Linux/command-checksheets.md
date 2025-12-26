@@ -164,6 +164,7 @@ VIM has three command modes
 
 #### 4. Process Management Commands
 | Command | Description | Options | Examples |
+|--------|-------------|---------|----------|
 | `ps` | Display running processes. |` aux` <br> Show all processes. | `ps aux` <br> shows all running processes with detailed information. |
 | `top` | Monitor system processes in real-time. | `top` <br> displays a dynamic view of system processes and their resource usage. |
 | `kill` | Terminate a process. | `9` <br> Forcefully kill a process. | `kill PID` <br> terminates the process with the specified process ID. |
