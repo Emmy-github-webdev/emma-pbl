@@ -129,6 +129,116 @@ VIM has three command modes
 | /var/log/nginx/error.log | Nginx specific error log |
 | /var/log/mysql/error.log | MySQL error log|
 
+### Basic Linux Commands with Examples
+#### 1. File and Directory Operations Commands
+| Command | Description | Options | Examples |
+|--------|-------------|---------|----------|
+| `ls` | List files and directories. | `-l` : Long format listing<br>`-a` : Include hidden files<br>`-h` : Human-readable file sizes | `ls -l`<br>Displays files and directories with detailed information.<br><br>`ls -a`<br>Shows all files and directories, including hidden ones.<br><br>`ls -lh`<br>Displays file sizes in a human-readable format. |
+| `cd` | Change directory. |  | `cd /path/to/directory` <br> changes the current directory to the specified path. |
+| `pwd` | Print current working directory. | | `pwd` <br> displays the current working directory. |
+| `mkdir` | Create a new directory. | | `mkdir my_directory` <br> creates a new directory named "my_directory". |
+| `rm` | Remove files and directories | `-r` <br> Remove directories recursively. <br><br> `-f` <br> Force removal without confirmation. | `rm file.txt` <br> deletes the file named "file.txt".<br><br> `rm -r my_directory` <br> deletes the directory "my_directory" and its contents. <br><br> `rm -f file.txt` <br> forcefully deletes the file "file.txt" without confirmation.|
+| `cp` | Copy files and directories. | `-r` <br> Copy directories recursively. | ` cp -r directory destination` <br> copies the directory "directory" and its contents to the specified destination. <br><br> `cp file.txt destination` <br> copies the file "file.txt" to the specified destination. |
+| `mv` |Move/rename files and directories. | |` mv file.txt new_name.txt ` <br> renames the file "file.txt" to "new_name.txt". <br><br> `mv file.txt directory` moves the file "file.txt" to the specified directory. |
+| `touch` | Create an empty file or update file timestamps. | | `touch file.txt` <br> creates an empty file named "file.txt". |
+| `cat` | View the contents of a file. | | `cat file.txt` <br> displays the contents of the file "file.txt". |
+| `head` | Display the first few lines of a file. | `n` <br> Specify the number of lines to display. | `head file.txt` <br> shows the first 10 lines of the file "file.txt".<br><br> `head -n 5 file.txt` <br> displays the first 5 lines of the file "file.txt". |
+| `tail` | Display the last few lines of a file. | `n` <br> Specify the number of lines to display. | `tail file.txt` <br> shows the last 10 lines of the file "file.txt".<br><br> `tail -n 5 file.txt` displays the last 5 lines of the file "file.txt". |
+| `ln` | Create links between files. | `s` <br> Create symbolic (soft) links. | `ln -s source_file link_name` creates a symbolic link named "link_name" pointing to "source_file". |
+| `find` | Search for files and directories. | `name` <br> Search by filename.<br><br> `type` Search by file type | `find /path/to/search -name "*.txt"` searches for all files with the extension ".txt" in the specified directory. |
+
+#### 2. File Permission Commands
+
+| Command | Description | Options | Examples |
+|--------|-------------|---------|----------|
+| `chmod` | Change file permissions. | `u` <br> User/owner permissions.<br><br> `g` <br> Group permissions.<br><br> `o` <br> Other permissions.<br><br> `+` <br> Add permissions.<br><br> `-` <br> Remove permissions.<br><br> `=` <br> Set permissions explicitly. | `chmod u+rwx file.txt` <br> grants read, write, and execute permissions to the owner of the file. |
+| `chown` | Change file ownership. | | `chown user file.txt` <br> changes the owner of "file.txt" to the specified user. |
+| `chgrp` | Change group ownership. | | `chgrp group file.txt` <br> changes the group ownership of "file.txt" to the specified group. |
+| `unmask` |  Set default file permissions. | `umask 022` <br> sets the default file permissions to read and write for the owner, and read-only for group and others. |
+
+#### 3. File Compression and Archiving Commands
+| Command | Description | Options | Examples |
+|--------|-------------|---------|----------|
+| `tar` | Create or extract archive files. | `c` <br> Create a new archive.<br><br> `x` <br> Extract files from an archive.<br><br> `f` <br> Specify the archive file name.<br><br> `v` <br> Verbose mode.<br><br> `z` <br> Compress the archive with gzip.<br><br> `j` <br> Compress the archive with bzip2. | `tar -czvf archive.tar.gz files/` <br> creates a compressed tar archive named "archive.tar.gz" containing the files in the "files/" directory.<br><br> `tar –xvzf archive.tar.gz files/` <br> uncompressed tar archive named "archive.tar.gz |
+| `gzip` | Compress files. | `d` <br> Decompress files. | `gzip file.txt` <br> compresses the file "file.txt" and renames it as "file.txt.gz". |
+| `zip` | Create compressed zip archives. | `r` <br> Recursively include directories. | `zip archive.zip file1.txt file2.txt` <br> creates a zip archive named "archive.zip" containing "file1.txt" and "file2.txt". |
+
+#### 4. Process Management Commands
+| Command | Description | Options | Examples |
+|--------|-------------|---------|----------|
+| `ps` | Display running processes. |` aux` <br> Show all processes. | `ps aux` <br> shows all running processes with detailed information. |
+| `top` | Monitor system processes in real-time. | `top` <br> displays a dynamic view of system processes and their resource usage. |
+| `kill` | Terminate a process. | `9` <br> Forcefully kill a process. | `kill PID` <br> terminates the process with the specified process ID. |
+| `pkill` | Terminate processes based on their name. | | `pkill process_name` <br> terminates all processes with the specified name. |
+| `pgrep` | List processes based on their name. | | `pgrep process_name` <br> lists all processes with the specified name. |
+| `grep` | used to search for specific patterns or regular expressions in text files or streams and display matching lines. | | `i` <br> Ignore case distinctions while searching. <br><br> `v` <br> Invert the match, displaying non-matching lines.<br><br> `r` or -R <br> Recursively search directories for matching patterns.<br><br> `l`  <br> Print only the names of files containing matches.<br><br> `n`  <br> Display line numbers alongside matching lines.<br><br> `w`  <br> Match whole words only, rather than partial matches.<br><br> `c`  <br> Count the number of matching lines instead of displaying them.<br><br> `e`  <br> Specify multiple patterns to search for.<br><br> `A` <br> Display lines after the matching line.<br><br> `B` <br> Display lines before the matching line.<br><br> `C`<br> Display lines both before and after the matching line. | `grep -i "hello" file.txt` <br> `grep -v "error" file.txt` <br> `grep -r "pattern" directory/` <br> `grep -l "keyword" file.txt` <br>
+ grep -n "pattern" file.txt` <br><br> In these examples we are extracting our desirec output from filename (file.txt) |
+
+#### 5. System Information Commands
+| Command | Description | Options | Examples |
+|--------|-------------|---------|----------|
+| `uname` | Print system information. | `a` <br> All system information. |
+| `whoami` | Display current username. | | `whoami` <br> shows the current username. |
+| `df`     | Show disk space usage. | `h` <br> Human-readable sizes. |
+| `du`  | Estimate file and directory sizes. | `h` <br> Human-readable sizes. <br><br> `s` <br> Display total size only. |
+| `free` | Display memory usage information. | `h` <br> Human-readable sizes. | `free -h` displays memory usage in a human-readable format. |
+| `uptime` | Show system uptime. | | `uptime` <br> shows the current system uptime. |
+| `lscpu` | Display CPU information. | | `lscpu` <br> provides detailed CPU information. |
+| `lspci` | List PCI devices. | | `lspci` <br> List PCI devices. |
+| `lsusb` | List USB devices. | | `lsusb` <br> lists all connected USB devices. |
+
+#### 6. Networking Commands
+| Command | Description | Options | Examples |
+|--------|-------------|---------|----------|
+| `ifconfig` | Display network interface information. | | `ifconfig` <br> shows the details of all network interfaces. |
+| `ping` | Send ICMP echo requests to a host. | | `ping google.com` <br> sends ICMP echo requests to "google.com" to check connectivity. |
+| `netstat` | Display network connections and statistics. | | `netstat -tuln` <br> shows all listening TCP and UDP connections. |
+| `ss` | Display network socket information. | | `ss -tuln` <br> shows all listening TCP and UDP connections. |
+| `ssh` | Securely connect to a remote server. | | `ssh user@hostname` <br> initiates an SSH connection to the specified hostname. |
+| `scp` | Securely copy files between hosts. | | `scp file.txt user@hostname:/path/to/destination` <br> securely copies "file.txt" to the specified remote host. |
+| `wget` | Download files from the web | |  `wget http://example.com//file.txt` <br> downloads "file.txt" from the specified URL. |
+| `curl` | Transfer data to or from a server. | | `curl http://example.com/` <br> retrieves the content of a webpage from the specified URL. |
+
+#### 7. IO Redirection Commands
+| Command | Description | Options | Examples |
+|--------|-------------|---------|----------|
+| `cmd < file` | Input of cmd is taken from file. | | |
+| `cmd > file` | Standard output (stdout) of cmd is redirected to file. | | |
+| `cmd 2> file` | Error output (stderr) of cmd is redirected to file. | | |
+| `cmd 2>&1` | stderr is redirected to the same place as stdout. | | |
+| `cmd1 <(cmd2)` | Output of cmd2 is used as the input file for cmd1. | | |
+| `cmd > /dev/null` | Discards the stdout of cmd by sending it to the null device. | | |
+| `cmd &> file` | Every output of cmd is redirected to file. | | |
+| `cmd 1>&2` | stdout is redirected to the same place as stderr. | | |
+| `cmd >> file` | Appends the stdout of cmd to file. | | |
+
+#### 8. Environment Variable Commands
+| Command | Description | Options | Examples |
+|--------|-------------|---------|----------|
+| `export VARIABLE_NAME=value` | Sets the value of an environment variable. | | |
+| `echo $VARIABLE_NAME` | Displays the value of a specific environment variable. | | |
+| `env` | Lists all environment variables currently set in the system. | | |
+| `unset VARIABLE_NAME` | Unsets or removes an environment variable. | | |
+| `export -p` | Shows a list of all currently exported environment variables. | | |
+| `env VAR1=value COMMAND` | Sets the value of an environment variable for a specific command. | | |
+| `printenv` | Displays the values of all environment variables. | | |
+
+#### 9. User Management Commands
+| Command | Description | Options | Examples |
+|--------|-------------|---------|----------|
+| `who` | Show who is currently logged in. | | |
+| `sudo adduser username` | Create a new user account on the system with the specified username. | | |
+| `finger` | Display information about all the users currently logged into the system, including their usernames, login time, and terminal. | | |
+| `sudo deluser USER GROUPNAME` | Remove the specified user from the specified group. | | |
+| `last` | Show the recent login history of users. | | |
+| `finger username` | Provide information about the specified user, including their username, real name, terminal, idle time, and login time. | | |
+| `sudo userdel -r username` | Delete the specified user account from the system, including their home directory and associated files. The -r option ensures the removal of the user's files. | | |
+| `sudo userdel -r username` | Delete the specified user account from the system, including their home directory and associated files. The -r option ensures the removal of the user's files. | | |
+| `su - username` | Switch to another user account with the user's environment. | | |
+| `sudo usermod -a -G GROUPNAME USERNAME` | Add an existing user to the specified group. The user is added to the group without removing them from their current groups. | | |
+
+### Logs
+
 | S/N | Problem | Log to Check | Example Command | Expected Outcome | Possible Fixes |
 |----|---------|--------------|-----------------|------------------|----------------|
 |**Diagnosing SSH Login Failures** | You’re trying to SSH into a server, but the authentication fails, or the connection hangs indefinitely | /var/log/auth.log (Debian/Ubuntu)<br>/var/log/secure (RHEL/CentOS) | `grep sshd /var/log/auth.log` | `Failed password for invalid user admin...`<br>`Accepted password for root...` | • Ensure username/password is correct<br>• For *public key denied*: verify `~/.ssh/authorized_keys` and permissions<br>• If many failures: check Fail2ban or IP blocks |
