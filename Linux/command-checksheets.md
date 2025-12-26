@@ -139,6 +139,14 @@ VIM has three command modes
 | `mkdir` | Create a new directory. | | `mkdir my_directory` <br> creates a new directory named "my_directory". |
 | `rm` | Remove files and directories | `-r` <br> Remove directories recursively. <br><br> `-f` <br> Force removal without confirmation. | `rm file.txt` <br> deletes the file named "file.txt".<br><br> `rm -r my_directory` <br> deletes the directory "my_directory" and its contents. <br><br> `rm -f file.txt` <br> forcefully deletes the file "file.txt" without confirmation.|
 | `cp` | Copy files and directories. | `-r` <br> Copy directories recursively. | ` cp -r directory destination` <br> copies the directory "directory" and its contents to the specified destination. <br><br> `cp file.txt destination` <br> copies the file "file.txt" to the specified destination. |
+| `mv` |Move/rename files and directories. | |` mv file.txt new_name.txt ` <br> renames the file "file.txt" to "new_name.txt". <br><br> `mv file.txt directory` moves the file "file.txt" to the specified directory. |
+| `touch` | Create an empty file or update file timestamps. | | `touch file.txt` <br> creates an empty file named "file.txt". |
+| `cat` | View the contents of a file. | | `cat file.txt` <br> displays the contents of the file "file.txt". |
+| `head` | Display the first few lines of a file. | `n` <br> Specify the number of lines to display. | `head file.txt` <br> shows the first 10 lines of the file "file.txt".<br><br> `head -n 5 file.txt` <br> displays the first 5 lines of the file "file.txt". |
+| `tail` | Display the last few lines of a file. | `n` <br> Specify the number of lines to display. | `tail file.txt` <br> shows the last 10 lines of the file "file.txt".<br><br> `tail -n 5 file.txt` displays the last 5 lines of the file "file.txt". |
+| `ln` | Create links between files. | `s` <br> Create symbolic (soft) links. | `ln -s source_file link_name` creates a symbolic link named "link_name" pointing to "source_file". |
+| `find` | Search for files and directories. | `name` <br> Search by filename.<br><br> `type` Search by file type | `find /path/to/search -name "*.txt"` searches for all files with the extension ".txt" in the specified directory. |
+
 
 
 
