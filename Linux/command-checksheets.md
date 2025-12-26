@@ -134,6 +134,19 @@ VIM has three command modes
 | Command | Description | Options | Examples |
 |--------|-------------|---------|----------|
 | `ls` | List files and directories. | `-l` : Long format listing<br>`-a` : Include hidden files<br>`-h` : Human-readable file sizes | `ls -l`<br>Displays files and directories with detailed information.<br><br>`ls -a`<br>Shows all files and directories, including hidden ones.<br><br>`ls -lh`<br>Displays file sizes in a human-readable format. |
+| `cd` | Change directory. |  | `cd /path/to/directory` <br> changes the current directory to the specified path. |
+| `pwd` | Print current working directory. | | `pwd` <br> displays the current working directory. |
+| `mkdir` | Create a new directory. | | `mkdir my_directory` <br> creates a new directory named "my_directory". |
+| `rm` | Remove files and directories | `-r` <br> Remove directories recursively. `-f` <br> Force removal without confirmation. | `rm file.txt` <br> deletes the file named "file.txt". `rm -r my_directory` <br> deletes the directory "my_directory" and its contents. `rm -f file.txt` <br> forcefully deletes the file "file.txt" without confirmation.|
+| `cp` | Copy files and directories. | `-r` <br> Copy directories recursively. | ` cp -r directory destination` <br> copies the directory "directory" and its contents to the specified destination. `cp file.txt destination` <br> copies the file "file.txt" to the specified destination. |
+
+
+
+
+
+
+
+
 
 
 | S/N | Problem | Log to Check | Example Command | Expected Outcome | Possible Fixes |
