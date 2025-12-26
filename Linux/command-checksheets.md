@@ -157,6 +157,7 @@ VIM has three command modes
 | `unmask` |  Set default file permissions. | `umask 022` <br> sets the default file permissions to read and write for the owner, and read-only for group and others. |
 
 #### 3. File Compression and Archiving Commands
+|--------|-------------|---------|----------|
 | Command | Description | Options | Examples |
 | `tar` | Create or extract archive files. | `c` <br> Create a new archive.<br><br> `x` <br> Extract files from an archive.<br><br> `f` <br> Specify the archive file name.<br><br> `v` <br> Verbose mode.<br><br> `z` <br> Compress the archive with gzip.<br><br> `j` <br> Compress the archive with bzip2. | `tar -czvf archive.tar.gz files/` <br> creates a compressed tar archive named "archive.tar.gz" containing the files in the "files/" directory.<br><br> `tar –xvzf archive.tar.gz files/` <br> uncompressed tar archive named "archive.tar.gz |
 | `gzip` | Compress files. | `d` <br> Decompress files. | `gzip file.txt` <br> compresses the file "file.txt" and renames it as "file.txt.gz". |
@@ -173,6 +174,18 @@ VIM has three command modes
 | `grep` | used to search for specific patterns or regular expressions in text files or streams and display matching lines. | | `i` <br> Ignore case distinctions while searching. <br><br> `v` <br> Invert the match, displaying non-matching lines.<br><br> `r` or -R <br> Recursively search directories for matching patterns.<br><br> `l`  <br> Print only the names of files containing matches.<br><br> `n`  <br> Display line numbers alongside matching lines.<br><br> `w`  <br> Match whole words only, rather than partial matches.<br><br> `c`  <br> Count the number of matching lines instead of displaying them.<br><br> `e`  <br> Specify multiple patterns to search for.<br><br> `A` <br> Display lines after the matching line.<br><br> `B` <br> Display lines before the matching line.<br><br> `C`<br> Display lines both before and after the matching line. | `grep -i "hello" file.txt` <br> `grep -v "error" file.txt` <br> `grep -r "pattern" directory/` <br> `grep -l "keyword" file.txt` <br>
  grep -n "pattern" file.txt` <br><br> In these examples we are extracting our desirec output from filename (file.txt) |
 
+#### 5. System Information Commands
+| Command | Description | Options | Examples |
+|--------|-------------|---------|----------|
+| `uname` | Print system information. | `a` <br> All system information. |
+| `whoami` | Display current username. | | `whoami` <br> shows the current username. |
+| `df`     | Show disk space usage. | `h` <br> Human-readable sizes. |
+| `du`  | Estimate file and directory sizes. | `h` <br> Human-readable sizes. <br><br> `s` <br> Display total size only. |
+| `free` | Display memory usage information. | `h` <br> Human-readable sizes. | `free -h` displays memory usage in a human-readable format. |
+| `uptime` | Show system uptime. | | `uptime` <br> shows the current system uptime. |
+| `lscpu` | Display CPU information. | | `lscpu` <br> provides detailed CPU information. |
+| `lspci` | List PCI devices. | | `lspci` <br> List PCI devices. |
+| `lsusb` | List USB devices. | | `lsusb` <br> lists all connected USB devices. |
 
 
 
