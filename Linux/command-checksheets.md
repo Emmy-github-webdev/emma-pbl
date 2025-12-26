@@ -147,6 +147,15 @@ VIM has three command modes
 | `ln` | Create links between files. | `s` <br> Create symbolic (soft) links. | `ln -s source_file link_name` creates a symbolic link named "link_name" pointing to "source_file". |
 | `find` | Search for files and directories. | `name` <br> Search by filename.<br><br> `type` Search by file type | `find /path/to/search -name "*.txt"` searches for all files with the extension ".txt" in the specified directory. |
 
+#### 2. File Permission Commands
+
+| Command | Description | Options | Examples |
+|--------|-------------|---------|----------|
+| `chmod` | Change file permissions. | `u` <br> User/owner permissions.<br><br> `g` <br> Group permissions.<br><br> `o` <br> Other permissions.<br><br> `+` <br> Add permissions.<br><br> `-` <br> Remove permissions.<br><br> `=` <br> Set permissions explicitly. | `chmod u+rwx file.txt` <br> grants read, write, and execute permissions to the owner of the file. |
+| `chown` | Change file ownership. | | `chown user file.txt` <br> changes the owner of "file.txt" to the specified user. |
+| `chgrp` | Change group ownership. | | `chgrp group file.txt` <br> changes the group ownership of "file.txt" to the specified group. |
+| `unmask` |  Set default file permissions. | `umask 022` <br> sets the default file permissions to read and write for the owner, and read-only for group and others. |
+
 
 
 
