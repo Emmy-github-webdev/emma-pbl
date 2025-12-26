@@ -162,6 +162,16 @@ VIM has three command modes
 | `gzip` | Compress files. | `d` <br> Decompress files. | `gzip file.txt` <br> compresses the file "file.txt" and renames it as "file.txt.gz". |
 | `zip` | Create compressed zip archives. | `r` <br> Recursively include directories. | `zip archive.zip file1.txt file2.txt` <br> creates a zip archive named "archive.zip" containing "file1.txt" and "file2.txt". |
 
+#### 4. Process Management Commands
+| Command | Description | Options | Examples |
+| `ps` | Display running processes. |` aux` <br> Show all processes. | `ps aux` <br> shows all running processes with detailed information. |
+| `top` | Monitor system processes in real-time. | `top` <br> displays a dynamic view of system processes and their resource usage. |
+| `kill` | Terminate a process. | `9` <br> Forcefully kill a process. | `kill PID` <br> terminates the process with the specified process ID. |
+| `pkill` | Terminate processes based on their name. | | `pkill process_name` <br> terminates all processes with the specified name. |
+| `pgrep` | List processes based on their name. | | `pgrep process_name` <br> lists all processes with the specified name. |
+| `grep` | used to search for specific patterns or regular expressions in text files or streams and display matching lines. | | `i` <br> Ignore case distinctions while searching. <br><br> `v` <br> Invert the match, displaying non-matching lines.<br><br> `r` or -R <br> Recursively search directories for matching patterns.<br><br> `l`  <br> Print only the names of files containing matches.<br><br> `n`  <br> Display line numbers alongside matching lines.<br><br> `w`  <br> Match whole words only, rather than partial matches.<br><br> `c`  <br> Count the number of matching lines instead of displaying them.<br><br> `e`  <br> Specify multiple patterns to search for.<br><br> `A` <br> Display lines after the matching line.<br><br> `B` <br> Display lines before the matching line.<br><br> `C`<br> Display lines both before and after the matching line. | `grep -i "hello" file.txt` <br> `grep -v "error" file.txt` <br> `grep -r "pattern" directory/` <br> `grep -l "keyword" file.txt` <br>
+ grep -n "pattern" file.txt` <br><br> In these examples we are extracting our desirec output from filename (file.txt) |
+
 
 
 
