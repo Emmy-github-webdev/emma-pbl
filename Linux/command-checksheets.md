@@ -237,11 +237,7 @@ VIM has three command modes
 | `su - username` | Switch to another user account with the user's environment. | | |
 | `sudo usermod -a -G GROUPNAME USERNAME` | Add an existing user to the specified group. The user is added to the group without removing them from their current groups. | | |
 
-
-
-
-
-
+### Logs
 
 | S/N | Problem | Log to Check | Example Command | Expected Outcome | Possible Fixes |
 |----|---------|--------------|-----------------|------------------|----------------|
