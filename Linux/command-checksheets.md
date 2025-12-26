@@ -157,8 +157,8 @@ VIM has three command modes
 | `unmask` |  Set default file permissions. | `umask 022` <br> sets the default file permissions to read and write for the owner, and read-only for group and others. |
 
 #### 3. File Compression and Archiving Commands
-|--------|-------------|---------|----------|
 | Command | Description | Options | Examples |
+|--------|-------------|---------|----------|
 | `tar` | Create or extract archive files. | `c` <br> Create a new archive.<br><br> `x` <br> Extract files from an archive.<br><br> `f` <br> Specify the archive file name.<br><br> `v` <br> Verbose mode.<br><br> `z` <br> Compress the archive with gzip.<br><br> `j` <br> Compress the archive with bzip2. | `tar -czvf archive.tar.gz files/` <br> creates a compressed tar archive named "archive.tar.gz" containing the files in the "files/" directory.<br><br> `tar –xvzf archive.tar.gz files/` <br> uncompressed tar archive named "archive.tar.gz |
 | `gzip` | Compress files. | `d` <br> Decompress files. | `gzip file.txt` <br> compresses the file "file.txt" and renames it as "file.txt.gz". |
 | `zip` | Create compressed zip archives. | `r` <br> Recursively include directories. | `zip archive.zip file1.txt file2.txt` <br> creates a zip archive named "archive.zip" containing "file1.txt" and "file2.txt". |
@@ -187,7 +187,9 @@ VIM has three command modes
 | `lspci` | List PCI devices. | | `lspci` <br> List PCI devices. |
 | `lsusb` | List USB devices. | | `lsusb` <br> lists all connected USB devices. |
 
-
+#### 6. Networking Commands
+| Command | Description | Options | Examples |
+|--------|-------------|---------|----------|
 
 
 
