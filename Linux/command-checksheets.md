@@ -129,6 +129,13 @@ VIM has three command modes
 | /var/log/nginx/error.log | Nginx specific error log |
 | /var/log/mysql/error.log | MySQL error log|
 
+### Basic Linux Commands with Examples
+#### 1. File and Directory Operations Commands
+| Command | Description | Options | Examples |
+|--------|-------------|---------|----------|
+| `ls` | List files and directories. | `-l` : Long format listing<br>`-a` : Include hidden files<br>`-h` : Human-readable file sizes | `ls -l`<br>Displays files and directories with detailed information.<br><br>`ls -a`<br>Shows all files and directories, including hidden ones.<br><br>`ls -lh`<br>Displays file sizes in a human-readable format. |
+
+
 | S/N | Problem | Log to Check | Example Command | Expected Outcome | Possible Fixes |
 |----|---------|--------------|-----------------|------------------|----------------|
 |**Diagnosing SSH Login Failures** | You’re trying to SSH into a server, but the authentication fails, or the connection hangs indefinitely | /var/log/auth.log (Debian/Ubuntu)<br>/var/log/secure (RHEL/CentOS) | `grep sshd /var/log/auth.log` | `Failed password for invalid user admin...`<br>`Accepted password for root...` | • Ensure username/password is correct<br>• For *public key denied*: verify `~/.ssh/authorized_keys` and permissions<br>• If many failures: check Fail2ban or IP blocks |
