@@ -1,124 +1,223 @@
-TAWS Logging, Metrics & Alerting — Design Document
+# Executive Summary (One Page)
 
-Summary
-- Goal: Provide an AWS-native, centralized logging, metrics, and alerting strategy for TAWS that supports operations, security investigations, and compliance while balancing cost and simplicity.
-- Core approach: Short-term operational data in CloudWatch; centralized long-term archival in a logging account S3 bucket via Kinesis Firehose / direct delivery; cross-account roles and KMS for encryption; CloudWatch Metrics/Alarms + ADOT/X-Ray for tracing.
+This document defines the recommended strategy, architecture, and implementation approach for application logging, metrics, and alerting across all services deployed to TAWS (client AWS environment). The objective is to provide consistent observability, security visibility, and compliance-ready auditability while balancing cost, operational simplicity, and scalability.
 
-Logging Sources (what to enable)
-- Management / Audit: CloudTrail (org-wide, multi-region, management + data events) -> central S3 + CloudWatch Logs. Enable CloudTrail Insights where helpful.
-- API / App: Structured application logs -> CloudWatch Logs. Instrument with OpenTelemetry (ADOT) to send traces to X-Ray/CloudWatch.
-- Compute: EC2/ECS/EKS/Lambda logs -> CloudWatch Logs. Use Fluent Bit for containers to forward structured logs to Firehose or CloudWatch.
-- Network: VPC Flow Logs (VPC-level or subnet/ENI) -> CloudWatch or Firehose -> central S3. Transit Gateway flow logs if TGW used.
-- Load Balancers: ALB/NLB access logs -> S3 (enable access_logs).
-- Database: RDS audit & slow query logs -> CloudWatch or S3 depending on DB engine.
-- Security: AWS Network Firewall logs, WAF logs (via Firehose), GuardDuty findings (EventBridge/SNS).
-- Platform: AWS Config, VPC DNS logs, and optional VPC Traffic Mirroring for deep packet capture (use sparingly).
+The strategy adopts AWS-native services wherever possible, using CloudWatch for real-time observability, S3 for durable and cost-effective log retention, and centralized cross-account aggregation for security and audit workloads. Logging and monitoring capabilities are enabled by default through Infrastructure as Code (IaC) to ensure consistency across environments.
 
-Storage, Retention & Security
-- Central logging account: store long-term logs in a dedicated `ta-ws-logging` account S3 bucket.
-- Ingestion: CloudWatch Log Groups for operations; use Firehose to deliver to central S3 with compression (GZIP) and optional conversion to Parquet.
-- Encryption: Use `SSE-KMS` with a CMK owned by the logging account; cross-account key grants where necessary.
-- Retention: CloudWatch = short-term (operational window). Export to S3 for archival and compliance retention.
-- Immutability & integrity: Use S3 Object Lock (Governance/Compliance) where required; enable CloudTrail log file validation.
-- Cross-account delivery: grant minimal IAM roles for Firehose/ALB to write to central S3.
+Key outcomes:
+- End-to-end visibility across application, API, infrastructure, and network layers
+- Centralized, secure, and compliant log storage
+- Clear separation between operational monitoring and audit logging
+- Environment-aware configurations to control cost and noise
+- Reusable Terraform modules integrated into TAWS scaffolding
 
-Retention Recommendations (baseline)
-- Production CloudWatch Logs: 90 days, then export to S3.
-- Production S3 archival: 7 years (or as required by compliance), lifecycle to Glacier/Deep Archive.
-- Non-Prod: CloudWatch 14–30 days; no long-term archival unless required.
-- CloudTrail: keep at least 1 year in S3; enable log validation.
+---
 
-Access Control & Governance
-- Principle of least privilege for delivery roles. Central account owns KMS.
-- Enforce encryption-at-rest and in-transit via org policy/SCP.
-- Monitor access to logs via CloudTrail + S3 access logs; alert on suspicious access patterns.
+# 1. Introduction
 
-Metrics & Alarms (baseline)
-- Emit application business metrics as custom CloudWatch metrics (use ADOT).
-- Recommended infra/app metrics & thresholds:
-  - `CPUUtilization` (EC2/ECS host): >85% for 5m -> P2
-  - `MemoryUtilization`: >85% for 5m -> P2
-  - `HTTP 5XX rate` (ALB/API): >1% or >X/min -> P1/P2 (tune per app)
-  - `P95 latency` (API): greater than SLO threshold for 5m -> P2
-  - `LambdaErrors` & `Throttles`: sustained increase -> P2
-  - `RDS ReplicaLag`: >60s -> P2
-  - `GuardDuty Findings` severity HIGH -> P1
-  - `CloudTrail Suspicious` (root sign-in, console login fail spikes) -> P1
-- Notification: CloudWatch Alarm -> SNS -> PagerDuty/Slack/email. Use EventBridge for routing advanced workflows.
+## Purpose
+Define a comprehensive logging, metrics, and alerting strategy for TAWS-hosted workloads that supports:
+- Operational monitoring
+- Security investigations
+- Compliance and audit requirements
 
-Observability & Tracing
-- Use AWS X-Ray or ADOT to collect distributed traces. Correlate trace-id in logs.
-- For containers, enable Container Insights for ECS/EKS selectively.
+## Scope
+- Application and API logging
+- Infrastructure and network telemetry
+- Security and audit logging
+- Metrics and alerting
+- Integration into TAWS via IaC
 
-IAC Scaffolding (patterns & snippets)
-- Provide small, reusable modules for: logging account (S3 + KMS), cross-account Firehose delivery, CloudTrail, VPC Flow Logs, CloudWatch Alarm templates.
+## Out of Scope
+- Third-party SIEM customization beyond log delivery
+- Application-level logging library implementation details
 
-Example: VPC Flow Log -> CloudWatch
+---
+
+# 2. Design Principles
+
+- AWS-native first
+- Centralized logging, decentralized consumption
+- Metrics for alerting, logs for investigation
+- Environment-aware retention and verbosity
+- Secure-by-default with least privilege access
+
+---
+
+# 3. Logging Sources
+
+## Application & Service Logs
+- ECS / EKS / Lambda application logs
+- API Gateway and ALB access logs
+- Structured JSON logging standard
+
+## Infrastructure & Network Logs
+- CloudTrail (all regions, org-wide)
+- AWS Config
+- VPC Flow Logs
+- Load Balancer access logs
+- WAF logs (where applicable)
+
+## Security Logs
+- GuardDuty
+- Security Hub
+- IAM access and role assumption logs
+
+---
+
+# 4. Logging Architecture
+
+## High-Level Flow
+
+```
+Workloads / AWS Services
+        |
+        v
+CloudWatch Logs (Hot)
+        |
+        v
+Firehose / Subscription Filters
+        |
+        v
+Central S3 Buckets (Warm / Cold)
+        |
+        +--> Athena / OpenSearch (Analysis)
+```
+
+## Storage Strategy
+
+| Tier | Service | Purpose | Retention |
+|----|----|----|----|
+| Hot | CloudWatch Logs | Real-time troubleshooting | 14–90 days |
+| Warm | S3 Standard / IA | Investigations | 90–180 days |
+| Cold | S3 Glacier | Compliance | 1–7 years |
+
+## Security
+- KMS encryption (at rest)
+- TLS in transit
+- Separate security logging account
+- S3 Object Lock for audit logs
+
+---
+
+# 5. Metrics Strategy
+
+## Native Metrics
+- ALB latency, 4xx/5xx
+- Lambda duration and errors
+- ECS task health
+- Database performance
+
+## Custom Metrics
+- Business KPIs
+- Error rate per API
+- Queue backlog
+
+---
+
+# 6. Alerting & Monitoring
+
+## Alert Categories
+- Availability
+- Performance
+- Error rates
+- Security events
+- Cost anomalies
+
+## Tooling
+- CloudWatch Alarms
+- EventBridge rules
+- SNS integrations (PagerDuty / Slack)
+
+## Alert Fatigue Controls
+- Severity-based thresholds
+- Aggregation windows
+- Environment-specific tuning
+
+---
+
+# 7. Access Control & Retention
+
+## Access
+- IAM role-based access
+- Read-only access for developers
+- Security team ownership of audit logs
+
+## Retention Matrix
+
+| Log Type | Test | Production |
+|----|----|----|
+| Application | 14 days | 90 days |
+| VPC Flow Logs | 7 days | 180 days |
+| CloudTrail | 90 days | 1–7 years |
+| Security Logs | 180 days | Compliance-based |
+
+---
+
+# 8. Logging Decision Matrix
+
+| Capability | CloudWatch | S3 | OpenSearch |
+|----|----|----|----|
+| Real-time alerts | ✔ | ✖ | ✔ |
+| Long-term retention | ✖ | ✔ | ✖ |
+| Cost efficiency | Medium | High | Low |
+| Full-text search | Limited | ✖ | ✔ |
+| Compliance storage | ✖ | ✔ | ✖ |
+
+---
+
+# 9. IaC Integration (Terraform Examples)
+
+## CloudWatch Log Group
+
 ```hcl
-resource "aws_cloudwatch_log_group" "vpc_flow" {
-  name              = "/taws/${var.env}/vpc-flow/${var.vpc_id}"
-  retention_in_days = var.retention_days
+resource "aws_cloudwatch_log_group" "app" {
+  name              = "/taws/${var.env}/${var.service}"
+  retention_in_days = var.log_retention_days
   kms_key_id        = var.kms_key_arn
 }
+```
 
+## CloudWatch Alarm
+
+```hcl
+resource "aws_cloudwatch_metric_alarm" "high_5xx" {
+  alarm_name          = "${var.service}-5xx-errors"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 2
+  metric_name         = "HTTPCode_Target_5XX_Count"
+  namespace           = "AWS/ApplicationELB"
+  period              = 60
+  statistic           = "Sum"
+  threshold           = 10
+  alarm_actions       = [var.sns_topic_arn]
+}
+```
+
+## VPC Flow Logs to S3
+
+```hcl
 resource "aws_flow_log" "vpc" {
-  resource_type   = "VPC"
-  resource_id     = var.vpc_id
+  vpc_id          = var.vpc_id
   traffic_type    = "ALL"
-  log_destination = aws_cloudwatch_log_group.vpc_flow.arn
-  iam_role_arn    = var.flow_role_arn
+  log_destination = aws_s3_bucket.flow_logs.arn
+  log_destination_type = "s3"
 }
 ```
 
-Example: Firehose -> central S3
-```hcl
-resource "aws_kinesis_firehose_delivery_stream" "logs_to_s3" {
-  name        = "taws-logs-${var.env}"
-  destination = "s3"
-  s3_configuration {
-    role_arn           = var.firehose_role_arn
-    bucket_arn         = var.logging_bucket_arn
-    buffer_size        = 128
-    compression_format = "GZIP"
-    kms_key_arn        = var.kms_key_arn
-    prefix             = "${var.account_id}/%Y/%m/%d/"
-  }
-}
-```
+---
 
-Example: CloudTrail -> central S3
-```hcl
-resource "aws_cloudtrail" "org_trail" {
-  name                          = "taws-org-trail"
-  s3_bucket_name                = var.logging_bucket
-  include_global_service_events = true
-  is_multi_region_trail         = true
-  enable_log_file_validation    = true
-}
-```
+# 10. Operations & Runbook
 
-Cost Considerations & Optimizations
-- Big drivers: CloudWatch ingestion & retention, VPC Flow Logs volume, X-Ray traces.
-- Optimizations: sample VPC Flow Logs in non-prod; use filters to reduce flow log volume; compress and convert logs to columnar formats in S3.
-- Keep CloudWatch as operational window, use S3 for archival.
+- Verify log ingestion after deployments
+- Monitor ingestion cost trends
+- Review alarm effectiveness quarterly
+- Test audit log immutability annually
 
-Integration & Deployment Pattern
-- Per-account lightweight forwarders (CloudWatch Log Groups/Firehose) -> central logging account S3
-- Central account owns CMK and archival lifecycle
-- Enforce naming and tagging standards: `/taws/{env}/{account}/{service}/{component}` and tags `env`, `team`, `service`.
+---
 
-Acceptance Criteria Mapping
-- Network telemetry: VPC Flow Logs, ALB/NLB access logs, Network Firewall/WAF logs, Transit Gateway flow logs where applicable.
-- Storage & retention: CloudWatch short-term; central S3 long-term; KMS-protected; lifecycle to Glacier.
-- Monitoring & alerting: CloudWatch Alarms + EventBridge + SNS; GuardDuty and CloudTrail triggers for security.
-- Cost/operational balance: sampling in non-prod, shorter CloudWatch retention, compressed S3 archival.
+# 11. Open Items
 
-Implementation Checklist
-- Create `ta-ws-logging` account with S3 bucket & CMK
-- Enable Organization CloudTrail -> central S3
-- Deploy Firehose and cross-account roles for delivery
-- Enable VPC Flow Logs and ALB access logs for prod VPCs
-- Instrument apps with ADOT/X-Ray and structured logs
-- Create baseline CloudWatch alarms + SNS topics
-- Run 30-day pilot, tune retention and sampling
-
+- Final compliance retention confirmation
+- SIEM integration validation
+- Cost modeling for peak workloads
