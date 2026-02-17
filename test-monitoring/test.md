@@ -180,6 +180,8 @@ Central S3 Buckets (Warm / Cold)
 
 # 8. Logging Decision Matrix
 
+## Matrix
+
 | Capability | CloudWatch | S3 | OpenSearch |
 |----|----|----|----|
 | Real-time alerts | ✔ | ✖ | ✔ |
@@ -232,12 +234,132 @@ resource "aws_flow_log" "vpc" {
 ---
 
 # 10. Operations & Runbook
+Operational logging and monitoring controls are only effective if continuously validated. The following procedures ensure observability remains reliable, cost-effective, and audit-ready over time.
 
-- Verify log ingestion after deployments
-- Monitor ingestion cost trends
-- Review alarm effectiveness quarterly
-- Test audit log immutability annually
+## Verify log ingestion after deployments
 
+Objective 
+
+Ensure no deployment results in loss of observability.
+
+When:
+
+- After every production deployment
+- After infrastructure changes (IAM, KMS, networking, Firehose, log subscriptions)
+- After onboarding new services
+
+## What to Verify
+
+Application Layer:
+
+- Logs are appearing in the correct CloudWatch Log Group
+- Log format conforms to the structured JSON contract
+- Required fields (correlation_id, service, environment, level) are present
+- No PII fields are being logged
+- Error-level logs are correctly captured
+
+Infrastructure Layer:
+
+- NLB/API logs are delivered to S3
+- VPC Flow Logs (if enabled) are delivered successfully
+- CloudTrail logging is active in all regions
+
+Security Layer:
+
+- GuardDuty findings are flowing to Security account
+- CloudTrail events visible in centralized bucket
+- Object Lock enabled for audit buckets (production)
+
+## Validation Methods
+
+- Query CloudWatch Logs Insights for recent events
+- Confirm log group retention settings
+- Verify subscription filters are active
+- Validate S3 object delivery timestamps
+- Trigger controlled test error to confirm alarm path
+
+## Ownership
+
+- Dev team: application logs
+- Platform team: infrastructure logs
+- Security team: audit log ingestion
+
+## Monitor Ingestion Cost Trends
+
+Objective
+
+Prevent observability tooling from becoming a runaway cost driver.
+
+## Monthly Cost Review
+
+Track:
+
+- CloudWatch Logs ingestion (GB/day)
+- CloudWatch retention storage costs
+- S3 storage growth rate
+- Firehose data processing charges
+- OpenSearch indexing/storage (if used)
+
+## Key Indicators of Cost Drift
+
+- Sudden increase in INFO logs
+- Debug logging enabled in production
+- High-volume success events without sampling
+- Excessive VPC Flow Logs in non-production
+- Unexpected OpenSearch indexing spikes
+
+## Controls
+
+- Enforce environment-based log level configuration
+- Sample high-frequency success logs
+- Keep ERROR logs unsampled
+- Automatically transition S3 logs to Glacier after defined period
+- Review top log-producing services quarterly
+
+## Reporting
+
+Create a lightweight monthly report including:
+
+- Total log ingestion (GB)
+- Cost by service/environment
+- Top 5 log producers
+- Recommended tuning actions
+
+## Review Alarm Effectiveness Quarterly
+
+Objective 
+
+Ensure alerts remain actionable, meaningful, and aligned to business risk.
+
+Over time, alerts degrade in value due to:
+
+- Architecture changes
+- Traffic growth
+- Workflow changes
+- Threshold drift
+
+## Quarterly Review Checklist
+
+- Noise Evaluation
+- Number of alerts triggered
+- % of alerts that required action
+- Alerts acknowledged but no remediation needed
+- Repeated flapping alarms
+
+## Test Audit Log Immutability Annually
+
+Objective: Validate that compliance controls are enforceable and tamper-resistant.
+
+Audit logs are only compliant if:
+- They cannot be altered
+- They cannot be deleted prematurely
+- Retention policies are enforced
+
+## Ownership
+
+- Security team primary
+- Platform team support
+- Compliance oversight
 ---
 
 # 11. Application-Specific Logging & PII Strategy
@@ -454,12 +576,14 @@ This helps detect:
 
 ---
 # 14. Environment-Specific Behavior
+## Test
 Test:
 - Lower retention
 - Debug logging enabled
 - No PagerDuty
 - Relaxed thresholds
-Production
+## Production
+Production:
 - Info level logging
 - Strict thresholds
 - PagerDuty enabled
@@ -468,6 +592,7 @@ Production
 
 ---
 # 15. Cost Controls Specific to This Workload
+## Cost explosion
 To avoid cost explosion:
 - Disable VPC Flow Logs in non-prod unless debugging
 - Use sampling for high-volume success logs
@@ -479,6 +604,7 @@ To avoid cost explosion:
 
 # 16. Open Items
 
+## Items
 - Final compliance retention confirmation
 - SIEM integration validation
 - Cost modeling for peak workloads
