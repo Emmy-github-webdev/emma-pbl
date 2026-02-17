@@ -234,9 +234,10 @@ resource "aws_flow_log" "vpc" {
 ---
 
 # 10. Operations & Runbook
-Operational logging and monitoring controls are only effective if continuously validated. The following procedures ensure observability remains reliable, cost-effective, and audit-ready over time.
 
 ## Verify log ingestion after deployments
+
+Operational logging and monitoring controls are only effective if continuously validated. The following procedures ensure observability remains reliable, cost-effective, and audit-ready over time.
 
 Objective 
 
