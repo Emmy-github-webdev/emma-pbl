@@ -1,30 +1,41 @@
-resource "aws_s3_bucket_policy" "allow_lambda_access" {
-  bucket = aws_s3_bucket.this.id
+resource "aws_iam_role" "lambda_role" {
+  name = var.role_name
 
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Sid    = "AllowLambdaObjectAccess"
-        Effect = "Allow"
-        Principal = {
-          AWS = var.lambda_role_arns
-        }
-        Action = [
-          "s3:GetObject",
-          "s3:PutObject"
-        ]
-        Resource = "${aws_s3_bucket.this.arn}/*"
-      },
-      {
-        Sid    = "AllowLambdaListAccess"
-        Effect = "Allow"
-        Principal = {
-          AWS = var.lambda_role_arns
-        }
-        Action   = "s3:ListBucket"
-        Resource = aws_s3_bucket.this.arn
-      }
+  assume_role_policy = data.aws_iam_policy_document.assume.json
+}
+
+data "aws_iam_policy_document" "assume" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_policy" "issuer_policy" {
+  name = "${var.role_name}-policy"
+
+  policy = data.aws_iam_policy_document.issuer.json
+}
+
+data "aws_iam_policy_document" "issuer" {
+
+  statement {
+    actions = ["secretsmanager:GetSecretValue"]
+    resources = [var.secret_arn]
+  }
+
+  statement {
+    actions = ["s3:GetObject"]
+    resources = [
+      "arn:aws:s3:::${var.bucket_name}/${var.allowed_prefix}*"
     ]
-  })
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "attach" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = aws_iam_policy.issuer_policy.arn
 }
