@@ -61,6 +61,67 @@ _Step 3_ — Push to ECR
 ```
 docker push <account>.dkr.ecr.<region>.amazonaws.com/aware/knomi-liveness:latest
 ```
+
+### Automate the knomi-liveness image to ECS using Gitlab-ci.yml
+
+Note:
+_ECS_ and _ECR_ and all the associated permission, security group should be created using the infra repository
+
+_GitLab CI pipeline_
+
+```
+stages:
+  - deploy
+
+variables:
+  AWS_REGION: "eu-west-1"
+  REPO_NAME: "knomi-face-liveness"
+  IMAGE_TAR: "aware-knomifaceliveness-docker-centos8.tar.gz"
+
+deploy:
+  stage: deploy
+  image: amazon/aws-cli:latest
+
+  services:
+    - docker:dind
+
+What does this part do
+
+  before_script:
+    # Install Docker CLI (aws-cli image doesn't include it)
+    - yum install -y docker || apt-get update && apt-get install -y docker.io
+
+    # Set AWS account ID dynamically
+    - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+    - ECR_URI=$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME
+
+    # Login to ECR
+    - aws ecr get-login-password --region $AWS_REGION |
+      docker login --username AWS --password-stdin $ECR_URI
+
+  script:
+    - echo "Loading Docker image"
+    - docker load --input $IMAGE_TAR
+
+    - echo "Tagging image"
+    - IMAGE_ID=$(docker images -q | head -n 1)
+    - docker tag $IMAGE_ID $ECR_URI:latest
+
+    - echo "Pushing image"
+    - docker push $ECR_URI:latest
+
+    - echo "Deploying to ECS"
+    - aws ecs update-service \
+        --cluster my-cluster \
+        --service my-service \
+        --force-new-deployment
+
+  only:
+    changes:
+      - "*.tar.gz"
+
+  when: manual
+```
 ------------------------------------------------------------------------
 ## 3. Compute & Resource Specification
 
