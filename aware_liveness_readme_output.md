@@ -21,7 +21,11 @@ This is an investigation-phase architecture to:
 | Compute       | ECS (Fargate or EC2)  | Run container            |
 | Registry      | ECR                   | Store Aware image        |
 | Secrets       | AWS Secrets Manager   | License key              |
-| Networking    | VPC (private subnets) | Secure runtime           |
+| VPC           | Existing VPC          | Secure runtime           |
+| Private subnets    | existing private subnets | Secure runtime   |
+| Public subnets    | existing public subnets | Internet facing   |
+| Security group    | ECS SG | Allow traffic   |
+| Routing    | Existing routing (NAT, IGW) | Traffic route         |
 | Observability | CloudWatch            | Logs + metrics           |
 
 ### Deployment Model Recommendation
@@ -34,12 +38,6 @@ Why:
 - Fastest path to validation
 - Works with vendor container
 
-#### Alternative: EKS (Phase 2+)
-
-Use if:
-
-You already run Kubernetes
-Need advanced scaling or multi-service orchestration
 ------------------------------------------------------------------------
 ## 2. Image Sourcing Strategy (ECR)
 
@@ -73,6 +71,99 @@ docker push <account>.dkr.ecr.<region>.amazonaws.com/aware/knomi-liveness:latest
 | Minimum  | 1 vCPU | 2 GB   | Dev/testing      |
 | Baseline | 2 vCPU | 4 GB   | Stable workload  |
 | Scaled   | 4 vCPU | 8 GB   | High concurrency |
+
+## 6. Security Architecture
+
+### VPC Reuse Strategy
+
+#### Approach
+
+We do NOT create a new VPC. Instead:
+Reuse:
+Existing VPC
+Existing private subnets
+Existing public subnets
+Existing routing (NAT, IGW)
+
+#### Required Inputs
+
+| Parameter            | Description           |
+| -------------------- | --------------------- |
+| `vpc_id`             | Existing VPC ID       |
+| `private_subnet_ids` | Subnets for ECS tasks |
+| `public_subnet_ids`  | Subnets for ALB       |
+
+#### Placement Model
+
+```
+Public Subnet:
+  ALB (Internet-facing)
+
+Private Subnet:
+  ECS Tasks (Knomi container)
+```
+
+#### ALB Security Group
+
+_Inbound_
+
+| Port | Source    | Purpose       |
+| ---- | --------- | ------------- |
+| 443  | 0.0.0.0/0 | HTTPS traffic |
+
+
+_Outbound_
+| Port | Destination        |
+| ---- | ------------------ |
+| 8080 | ECS Security Group |
+
+#### ECS (Knomi) Security Group
+
+_Inbound_
+
+| Port | Source             | Purpose           |
+| ---- | ------------------ | ----------------- |
+| 8080 | ALB Security Group | Allow API traffic |
+
+
+_Outbound_
+
+| Port | Destination | Purpose                  |
+| ---- | ----------- | ------------------------ |
+| 443  | 0.0.0.0/0   | License server / updates |
+| ALL  | VPC CIDR    | Internal communication   |
+
+### Key Constraint
+
+The Knomi container:
+- Does NOT provide TLS
+- Does NOT manage certificates
+
+TLS must be handled externally
+
+### Recommended Approach: AWS ACM + ALB
+
+_Flow_
+
+Client (HTTPS)
+   ↓
+ALB (TLS termination via ACM)
+   ↓
+HTTP (8086)
+   ↓
+Knomi container
+
+### End-to-End Traffic Flow
+
+User → HTTPS (443)
+   ↓
+ALB (ACM Certificate)
+   ↓
+Target Group (port 8086)
+   ↓
+ECS Task (Knomi container)
+   ↓
+/faceliveness/version
 
 ### Workload Characteristics
 - CPU-bound (computer vision processing)
@@ -129,7 +220,7 @@ Container:
   Port: 8086
   Environment:
     - AWARE_LICENSE_KEY
-    - PORT=8086
+    - PORT=8080
 ```
 
 ### Service Setup
@@ -147,46 +238,38 @@ Container:
 curl http://<alb-endpoint>/faceliveness/version
 ```
 ------------------------------------------------------------------------
-## 6. Security Architecture
+## 6. Gap Analysis
 
-### Required Controls
-
-| Area    | Control               |
-| ------- | --------------------- |
-| Network | Private subnets       |
-| Ingress | ALB with HTTPS        |
-| Secrets | Secrets Manager       |
-| IAM     | Least privilege roles |
-
-------------------------------------------------------------------------
-## 7. Gap Analysis
-
-### Critical Risks
+This section outlines key risks identified during investigation, along with their impact and recommended mitigation approach.
 
 1. _Licensing Uncertainty_
-- Unknown activation model
-- Potential runtime dependency
+
+The Aware container requires a license, but the activation mechanism is not fully defined:
+- Could be file-based, environment variable, or external license server
+- No clarity on renewal, expiry, or failure behavior
 
 2. _Vendor Distribution Model_
-- Manual tarball delivery
-- No version automation
+The container is distributed as a manual .tar.gz artifact:
+- No Docker registry
+- No version tagging or pull mechanism
 
 3. _No Built-in Security_
-- No auth
-- No TLS
+The container exposes a REST API but:
+- No authentication mechanism
+- No TLS/HTTPS support
 
 4. _Operational Risks_
-- No healthcheck endpoint standard
-- Logging format unclear
-- No metrics exposed
+Limited operational visibility:
+- No standard healthcheck endpoint
+- Logging format not documented
+- No native metrics exposed
 
 5. _Scaling Risks_
-- Unknown max concurrency
-- No official performance benchmarks
+No official guidance on:
+- Maximum concurrency
+- Throughput limits
+- Resource consumption patterns
 
-6. _Platform Gaps_
-- No IaC from vendor
-- No Helm charts / ECS templates
 ------------------------------------------------------------------------
 ## Final Recommendation
 
