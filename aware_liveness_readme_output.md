@@ -85,7 +85,9 @@ deploy:
   services:
     - docker:dind
 
-What does this part do
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_TLS_CERTDIR: ""
 
   before_script:
     # Install Docker CLI (aws-cli image doesn't include it)
