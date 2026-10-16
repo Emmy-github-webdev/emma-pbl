@@ -103,3 +103,18 @@ Is a centralized hub service by Microsoft designed to discover, assess, and migr
 - Execute
 
 ![](./images/azure-migrate.png)
+
+## Identity, Access, and Security
+- Entra ID formerly called Azure active Directory: Entra ID used SAML, OpenID, and Oauth protocols, while Active Directory used LDAP and kerberos protocol for communication.
+  - external identity (B2B-Bsiness 2 Business and B2C - Bsiness 2 Consumer for application ens users)
+  - Entra Conditional Access
+  - Role based access control - RBAC: (Reader, contributor and owner)
+  - Single sign on
+  - Passwordless
+  - MFA
+
+## Azure monitoring tools
+- Azure Advisor
+- Azure service health
+- Azure monitor centralized dashboard
+- Azure monitor report
