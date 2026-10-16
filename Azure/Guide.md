@@ -65,3 +65,41 @@ VNet is the foundamental building block for private cloud infrastrucrure in Azur
 - _Azure Traffic Manager_: A DNS -based global traffic load balancer
 - _Peering_: to connecting two vnsts together to allow communication between a VM on one network and a VM on a different network.
 - _Azure VPN Gateway_: vitrual private networking that allow communication between a workstation and a network, or between two networks.
+
+## Azure storage
+Azure Storage is an Infrastructure as a Service (IaaS). Divided into four types of data it can store
+  - Container
+  - File
+  - Queue
+  - Table
+### Types of Azure Storage Services
+- Container (Azure blob) storage: Object storage for massive amounts of unstructured data like text, binary files, media, and data lakes.
+- Azure Disk storage - for Virtual Hard Disks (VHDs):  Block-level storage volumes (managed disks) for Azure Virtual Machines
+- Azure File Storage:  Serverless cloud file shares accessed via standard SMB and NFS protocols.
+- Azure Queue Storage:  Message storage for small messages enabling reliable, asynchronous communication between application components.
+- Azure table storage:  A NoSQL store for semi-structured, schema-less data.
+
+### Storage Access tiers
+- Hot: the default, balanced access
+- Cool: Cheaper storage with more expensive read/write operations
+- Cold: Much cheaper storage, more expensive read/write operations
+- Archive: Cannot immediately access the files, cheapest storage, most expensive operations
+
+You can access Azure storage using
+- Storage explorer
+- Storage browser
+
+### AZCopy
+Is a command-line utility from Microsoft designed to copy data to, from, or between Azure Storage accounts
+```
+azcopy copy 'source_path' 'destination_path'
+```
+
+## Azure migrate
+Is a centralized hub service by Microsoft designed to discover, assess, and migrate on-premises or multi-cloud infrastructure, databases, web applications, and virtual desktops to Microsoft Azure.
+### Migration Phases
+- Decide (Discovery)
+- Plan
+- Execute
+
+![](./images/azure-migrate.png)
